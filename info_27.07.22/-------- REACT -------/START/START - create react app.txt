@@ -1,0 +1,131 @@
+урок 121
+1.
+Create React App (CRA) - готовая сборка которая в одну команду создает готовое и собранное приложение для начала проекта.
+
+npx create-react-app my-app
+
+my-app - это название проекта (папки)
+
+1.1
+
+Если проект уже готов и просто скачан, то нужно инициализировать работу пакетов npm:
+
+npm i ----- создастся папка node_modules
+
+npm start ---- запустит реакт и сборщик
+
+вот в файле package.json скрипт сокращенного запуска:
+
+"scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+
+
+
+2.
+После установки появится папка my-app c готовой структурой на базовом уровне.
+в нем основные папки src и public. 
+А таже node_modules, gutignore, package.json 
+
+В src - самые главные файлы index.js  и App.js
+
+index.js - самый глаыный файл сборки!
+
+17 версия реакта.
+-------------------  ----- сначала идут импорты 
+import React from 'react';       ----- импорт самой библиотеки из node_modules
+import ReactDOM from 'react-dom';   --- эта библиотека позволяет работать с дом-структурой на странице и рендерить проект
+import './index.css';   ----- стили
+import App from './App';  ---- само приложение app
+
+
+
+ReactDOM.render(
+  <App/>,       --------------- приложение
+  document.getElementById('root')
+);
+-------------------
+
+18 версия - тут есть изменения в синтаксисе:
+
+import React from 'react';
+import ReactDOM from 'react-dom/client';   ----тут добавлени client
+import './index.css';
+import App from './App';
+
+
+const root = ReactDOM.createRoot(document.getElementById('root')); --- по id получаем элемент и рендерим в него приложение
+root.render (
+    <React.StrictMode>
+        <App/>
+    </React.StrictMode>
+);
+
+
+Импортировать библиотеку реакт в каждый файл js уже не нужно на последних версиях
+
+import React from 'react';
+
+но в старых проектах именно так и делали.
+
+
+
+
+
+В папке public -
+
+index.html
+------------------------------------
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Web site created using create-react-app"
+    />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+   
+    <title>React App</title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript> 
+    <div id="root"></div>----------------------------------------------------- в этот див будет рендерится все приложение
+    
+  </body>
+</html>
+--------------------------------
+
+('root') -  в папке public ест файл index.html и в нем подключен главный див с id 'root' - куда и будет
+помещаться приложение (реакт). Те буду вставлять все что сдклаю в реакте в этот блок. Именно дом-реак отвечает за взаимодействие 
+с дом- деревом.
+
+
+Также можно удалить файлы которые не будут использоваться:
+к примеру setupTest.js И reportWebVitals.js + App.test.js
+
+
+
+
+
+
+3. Нужно зайти в новосозданную папку my-app в терминале:
+
+cd my-app
+
+те должен быть путь вот так прописан:
+PS C:\Users\voits\OneDrive\Рабочий стол\React\Progect_Create_React\my-app>
+
+4.Запускаю страницу  с базовым приложением по команде в терминале:
+
+npm start
+
+должна открыться страница в хроме с версткой из файла app.js что в папке src.

@@ -1,0 +1,18 @@
+////////// This
+
+function showThis(a, b) {
+    function sum() {
+        
+        return a + b;
+    }
+    console.log(sum);//5
+}
+
+showThis(2, 3);
+
+
+
+1. Обычная функция: this = window, Но если 'use strict'; - то undefined
+2. Контекст у методов объекта -сам объект
+3. this в функциях-конструкторах - это новый экземпляр объекта
+4. Ручная привязка: this: sall, apply, bind

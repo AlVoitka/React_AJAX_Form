@@ -1,0 +1,9 @@
+document.getElementById()
+ 
+Возвращает ссылку на элемент по его идентификатору (ID); 
+идентификатор является строкой, которая может быть использована для идентификации элемента; 
+она может быть определена при помощи атрибута id в HTML или из скрипта.
+
+var elem = document.getElementById("myID");
+
+const total = document.getElementById('#total');  -- вот так

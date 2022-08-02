@@ -1,0 +1,66 @@
+1. Инициализирую работу пакетов:
+
+----------------- npm init
+
+
+
+2.нужно в пакет npm добавить это плагин командой:
+
+-----------------  npm install webpack webpack-cli --save-dev
+
+Установить можно как локально так и глобально.
+webpack-cli - позволяет запускать сборщик из командной строки 
+
+
+3. Настройка webpack.config.js
+
+'use strict';
+
+let path = require('path');
+
+module.exports = {
+  mode: 'production',  ---- режим работы конфига 'development' или 'production'
+  entry: './src/js/script.js',   ------ путь к файлу- сборщику
+  output: {
+    filename: 'bundle.js',     --- так назавется вновьсозданный файл
+    path: __dirname + '/dist/js/'   ---- место куда создастся файл bundle.js
+  },
+  watch: true,
+
+  devtool: "source-map",  ---инструмен предназначенный исключительно для разработки.  навигация в браузере по подключенным модулям. 
+  Те браузер подсасывае сжатый файл  из папки dist и в браузере во вкладке Sources ничего не видно по подключенным 
+  к нему файлам ( modal/slider/), так вот с техгологией
+  source-map я в консоли увижу все модуля и смогу по ним ориентироваться и отлаживать код в браузере.
+
+  module: {}
+};
+
+
+
+
+4. запуск сборщика:
+
+-----------------   npx webpack
+
+
+5. Для того чтобы webpack был в режиме вотчера (наблюдателя) и бужет смотреть и реагировать на все изменения мгновенно, 
+а не после ctrl + s
+
+{
+  "name": "food",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "./node_modules/.bin/webpack",
+    "dev": "./node_modules/.bin/webpack --watch"   ----- вот
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "json-server": "^0.16.1",
+    "webpack": "^5.69.1",
+    "webpack-cli": "^4.9.2"
+  }
+}

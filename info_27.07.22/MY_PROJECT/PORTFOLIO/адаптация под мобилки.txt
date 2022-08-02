@@ -1,0 +1,96 @@
+Основные подходы в адаптации:
+1- сверстал секцию - заадаптируй ее
+2- закоментить в hnml все секции, кроме той что верстаешь.
+
+
+1.
+https://mob-vers.ru/razmery-ekranov-dlya-adaptivnoj-verstki/  ---тут размеры и точки 
+Самые частоустанавливаемые контрольные точки:
+
+
+1
+@media (max-width: 1200px) {  -- четкий промежуток от 992 до 1200 
+    .container {
+        max-width: 960px;  -- на этом промежутке конейнер будет адекватно отображаться
+    }
+}
+
+
+
+2
+@media (max-width: 992px) { -- четкий промежуток от 768 до 992  -- обычно планшетные экраны
+    .container {
+        max-width: 720px;   --- тут такой размер будет гуд
+    }
+}
+
+
+
+
+3
+@media (max-width: 768px) { -- четкий промежуток от 576 до 768  -- для планшетных версий
+    .container {
+        max-width: 540px;  --- тут так  
+    }
+}
+
+
+
+
+4
+@media (max-width: 576px) {  -- четкий промежуток от 320 до 576
+    .container {
+        width: 100%;  
+        padding: 0 10px; --- ту обычно так
+    }
+}
+
+
+
+
+2.
+Скрою боковую панел 
+
+@media (max-width: 1439px) {  --- 1440 это формат обычного ноутбука,  все что меньше - уберу баковую панель
+    .sidepanel {
+        display: none;
+    }
+}
+
+3.
+auto-fit - это свойство автоматически подбирает колличество колонок исходя из ширины экрана.
+
+&__wrapper {
+    grid-template-columns: repeat(auto-fit, 280px); -- автоматически сформирует нужное колличество блоков по 280 вмещающихся в контейнера
+    grid-auto-rows: 280px;  -- выпадающим задас тысоту
+    justify-content: space-around;  --- раздвинет
+    row-gap: 25px;  и разрыва задаю
+
+4.
+&__ratings {
+        grid-template: repeat(2, minmax(70px, auto))/repeat(2, auto);
+        grid-template-areas: (70px, auto);
+        grid-auto-rows: minmax(70px, auto);   --задаю размер высоты для образующихся нывфх треков, если не задать то код автоматм стваит сам
+        justify-content: center;                                                                   и верска едет при адаптации
+        column-gap: 250px;
+        row-gap: 55px;
+    }
+
+5.
+Когда есть блоки вытянытые на несколько треков имеет смысл их не малениких экранах отключить
+
+.portfolio__wrapper .vertical {
+    grid-row: 1 / 3;      --- вот они растянутые
+    grid-column: 4 / 5;
+
+
+вот я их отключаю
+
+.portfolio {
+        &__wrapper {
+            .horizonal, .vertical {  --- вот
+                grid-row: unset;
+                grid-column: unset;
+            }
+        }
+    }

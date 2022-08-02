@@ -1,0 +1,22 @@
+
+
+1. 
+Создаю функцию меняющую состояние onValueChange
+
+onValueChange = (e) => {   ----- функция принемает объект события
+    this.setState({  ------ метод меняет састояние
+        [e.target.name] : e.target.value ------  хз вот так добераюсь к ипуту и туда записываю значение
+    })
+}
+
+
+1.
+На импут вешаю обработчик на изменения и при активности  в инпуте он запистит функцию onValueChange
+
+<input
+    id="name"
+    name="name"  ---- обязатеьный атрибут
+    type="text"
+    value={name}
+    onChange={this.onValueChange}
+/>

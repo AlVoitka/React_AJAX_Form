@@ -1,0 +1,58 @@
+ 
+ 1.
+ Запросы к серверу или к API нужно делать строго в хуке  componentDidMount()!!!!!!!!!!!!!!!!!!!
+ Но никак не в конструкторе.
+
+2.
+Если в коде есть интервалы setInterval  по обращению к серверу, то его обязательно нужно остановить clearInterval 
+в хуке componentWillUnmount() - иначе будет большая утечка памяти, тк запросы будут продолжаться даже после размонтирования компонента.
+
+
+index.js:1 Warning: Can't call setState on a component that is not yet mounted. This is a no-op, but it might indicate a bug in 
+your application. Instead, assign to `this.state` directly or define a `state = {};` class property with the desired state in the
+ RandomChar component.
+
+ Невозможно вызвать setState для еще не смонтированного компонента.!!!
+ И поэтому кстати реакт делал по 2 запроса на сервер,  после полного монтирования он еще делал второй запрос и в итоге приходило 
+ 2 ответа от сервера.
+
+ class RandomChar extends Component {
+
+    
+    constructor(props) {
+        super(props);
+        this.updateChar();    --- я вызывал метод  в еще не смонтированном компоненте, отсюда и ошибка
+    }
+
+    state = {
+        char: {},
+        loading: true,
+        error: false 
+    }
+
+    marvelService = new MarvelService();
+
+
+    решение:
+
+    хук componentDidMount() - то место где нужно вызывать методы или функции по запросу к серверу или к API
+
+    class RandomChar extends Component {
+
+    
+    constructor(props) {
+        super(props); 
+                      ---- вот вырезал вызов функции
+    }
+
+    state = {
+        char: {},
+        loading: true,
+        error: false 
+    }
+
+    marvelService = new MarvelService();
+
+    componentDidMount() {
+        this.updateChar();       --- и поместил в хук  ,  а конструктор после такой манипуляции можно и восве удалать в этом случае
+    }

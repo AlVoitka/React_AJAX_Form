@@ -1,0 +1,40 @@
+Визуализация
+https://html5book.ru/css3-filtry/
+
+документация
+https://developer.mozilla.org/ru/docs/Web/CSS/filter
+
+CSS3-фильтры воспроизводят в браузере визуальные эффекты, похожие на фильтры Photoshop. Фильтры можно добавлять не только к изображениям, 
+но и к любым непустым элементам.
+
+filter: blur(3px);
+filter: brightness(50%);
+filter: brightness(.5);
+filter: contrast(20%);
+filter: contrast(.2);
+filter: drop-shadow(2px 3px 5px black);
+filter: grayscale(.5);
+filter: grayscale(50%);
+filter: hue-rotate(180deg);
+filter: invert(100%);
+filter: opacity(30%);
+filter: saturate(300%);
+filter: sepia(150%);
+filter: url(#filterId); /* если фильтр находится в этом документе */
+filter: url(filter.svg#filterId); /* если фильтр  с id="filterId" находится в файле filter.svg*/
+
+
+
+Пример
+
+&__item {
+    img {
+        width: 100%;
+        height: 100%;
+        transition: 0.5s all;
+    }
+    :hover {
+        transform: scale(1.15);
+        filter: invert(100%);  --- вот
+    }
+}

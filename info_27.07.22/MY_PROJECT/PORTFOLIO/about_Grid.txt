@@ -1,0 +1,38 @@
+Создам секцию при помощи грид-css
+
+.about {
+    &__wrapper {
+        display: grid;
+        grid-template-columns: 400px 670px; ----- создаю 2 колонки (вертикальная ось)
+        grid-template-rows: minmax(245px, auto) minmax(245px, auto);--- создаю 2 строки  с мин выс 245 и авторастягивание если конт не влезит 
+        column-gap: 70px;   --- разрыв по колоночной оси (вертикалка)
+        row-gap: 40px;  --- разрыв по строчной оси
+    }
+    размещаю элементы по сетке ссылаясь на грид-линии
+    &__photo {
+        grid-row: 1/3;  --- элем будет начинатся на первой линии и закончиваться на третьей (по вертикали)
+    }
+
+теперь внутри сетки, в однин из элементов назначу грид-контейнером и разобью в нем еще одну сетку:
+
+.about {
+    padding-top: 120px;
+    &__wrapper {
+        display: grid;
+        grid-template-columns: 400px 670px;
+        grid-template-rows: minmax(245px, auto) minmax(255px, auto);
+        grid-auto-rows: minmax(245px, auto);
+        column-gap: 70px;
+        row-gap: 40px;
+    }
+    &__skills {
+            display: grid;
+            grid-template: repeat(2, minmax(115px, auto)) / repeat(2, 260px);  --- тут 2 строки и две колонки
+            grid-auto-rows: 1fr;  --- это я указываю куда расти сетки в случае ее наполения новым кониентом
+            column-gap: 50px;  --- разрыв
+            row-gap: 20px;   -- разрыв
+            &-item {            ---- и еще при помощи сетки размещаю элементы
+                display: grid;
+                grid-template-columns: 40px 200px;  --- просто 2 колонки делаю
+                column-gap: 20px;  - -- и разрыв между ними
+            }

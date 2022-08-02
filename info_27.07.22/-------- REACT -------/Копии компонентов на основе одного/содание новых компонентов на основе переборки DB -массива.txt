@@ -1,0 +1,191 @@
+К примеру с сервера приходит 200 фамилий и нужно на основании этох данных сформировать отдельный компонент на каждую 
+фамилию.
+нужно перебрать каждый элемент масива ( базы данных data) И сформировать каждый новый компонент EmployeesListItem.
+Делаю это при помощи метода перебора .map - он подходит тк возвращает.
+
+создаю переменную elements в нее записываю базу данных и запускаю метод map. у нег внутри колбэк функция где item - это
+каждый отдельный элемент из массива data. И внутри я возвращаю те помещаю  компонент
+<EmployeesListItem /> и назначаю ему пропсы и вместо жестких значений что раньше прописывал руками, я беру каждое из этих значений
+ из item - ведь он и есть каждый последовательный элемент из массива:
+
+
+ function App() {
+
+  const data = [ ---------вот имею базу данных с двумя свойствами
+    {name: 'Ales K.', salary: 800},
+    {name: 'Ales M.', salary: 700},
+    {name: 'Ales S.', salary: 600},
+  ];
+
+ 
+
+
+const EmployeesList = ({data}) => {  --- вот в компонент передаю массив двнных
+
+    const elements = data.map(item => {   ---- в переменную записываю значения
+        return (
+            <EmployeesListItem name={item.name} salary={item.salary}/>   --- сокращенная запись == <EmployeesListItem {...item}/> - смотреть спред оператор
+        )
+    })
+
+
+и вместо рукотворных компонентов  я подставляю переменную со значениями после переборки :
+
+так было
+    return (
+        <ul className="app-list list-group">
+            <EmployeesListItem name="Alex" salary={3000}/>
+            <EmployeesListItem name="MAx" salary={4000}/>
+            <EmployeesListItem name="Aless" salary={5000}/>
+        </ul>
+    )
+}
+
+вот так стало
+
+    return (
+        <ul className="app-list list-group">
+            {elements}  ---------------------------вот переменная с масивом после переборки
+        </ul>
+    )
+}
+
+export default EmployeesList;
+
+
+
+
+
+
+
+
+2. Но запалнять каждого сотрудника вручною это не ризонно, нужно откуда то получать данные и автоматом прописывать их.
+В идеале эти данные должны приходить с сервера.Но на данном этапе я симитирую данные которые типо приходят с сервера.
+В файле app.js  в вункции App создам бузу данных, как буд то бы она пришла к нам с сервера:
+
+function App() {
+
+  const data = [
+    {name: 'Ales K.', salary: 800},
+    {name: 'Ales M.', salary: 700},
+    {name: 'Ales S.', salary: 600},
+  ];
+
+  данные пришли, теперь их нужно использовать:
+  я передаю их в компонент массив с данными :
+
+  function App() {
+
+  const data = [
+    {name: 'Ales K.', salary: 800},
+    {name: 'Ales M.', salary: 700},
+    {name: 'Ales S.', salary: 600},
+  ];
+
+  return (
+    <div className="app">
+        <AppInfo />
+
+        <div className="search-panel">
+            <SearchPanel/>
+            <AppFilter/>
+        </div>
+        
+        <EmployeesList data={data}/>   ------------ вот таким образом передал массив данных
+        <EmployeesAddForm/>
+    </div>
+  );
+}
+
+export default App;
+
+
+И вот теперь мне нужно принять его в employees-list.js:
+
+const EmployeesList = ({data}) => {  ----------------  пот передал в виде аргумента
+    return (
+        <ul className="app-list list-group">
+            <EmployeesListItem name="Vitia M." salary={300}/>
+            <EmployeesListItem name="Tolia N." salary={400}/>
+            <EmployeesListItem name="Valera S." salary={500}/>
+            <EmployeesListItem name="Vitalt L." salary={700}/>
+            <EmployeesListItem name="Alex V." salary={900}/>
+        </ul>
+    )
+}
+
+и далее нужно перебрать каждый элемент масив ( базы данных data) И сформировать каждый новый компонент EmployeesListItem.
+Делаю это при помощи метода перебора .map - он подходит тк возвращает.
+
+создаю переменную в нее записываю базу данных и запускаю метод map. у нег внутри колбэк функция где item - это
+каждый отдельный элемент из массива data. И внутри я возвращаю те помещаю  компонент
+<EmployeesListItem /> и на значаю ему пропсы и вместо жестких значений что раньше прописывал руками, я беру каждое из этих значений
+ из item - ведь он и есть каждый последовательный элемент из массива:
+  name={item.name} salary={item.salary}
+
+const EmployeesList = ({data}) => {
+
+    const elements = data.map(item => {
+        return (
+            <EmployeesListItem name={item.name} salary={item.salary}/>
+        )
+    })
+
+и вместо рукотворных компонентов  я подставляю переменную со значениями после переборки :
+
+    return (
+        <ul className="app-list list-group">
+            {elements}  ---------------------------вот
+        </ul>
+    )
+}
+
+export default EmployeesList;
+
+Ну и последный штрих дял оптимизации кода:
+
+    const elements = data.map(item => {
+        return (
+            <EmployeesListItem name={item.name} salary={item.salary}/>  --- вот такой синтаксис
+
+            можно заменить использую обджект спред оператор который разворачивает обЪект на отдельные элементы
+
+    const elements = data.map(item => {
+        return (
+            <EmployeesListItem {...item}/> ---- ВОТ НОВЫЙ СИНТАКСИС!!!!!!!!!!!!
+        )
+    })
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+     Но и с таким синтаксисом в консоли разработчика будет выдавать ошибку:
+    index.js:1 Warning: Each child in a list should have a unique "key" prop.
+
+    Для решения нужно поменять синтаксис, смотреть урок 129 -Работа со списками алгоритм согласования.
+
+    1. в базе данных четвертым свойством нужно добавить идентификатор id:
+    я добавил простой(1-2-3-4), но в реале с сервера будут приходить более сложные айдишки с уникальным ключём.
+
+    
+    function App() {
+
+  const data = [
+    {name: 'Ales K.', salary: 800, increase: false, id: 1},
+    {name: 'Ales M.', salary: 700, increase: false, id: 2},
+    {name: 'Ales S.', salary: 600, increase: false, id: 3},
+    {name: 'Ales S.', salary: 99999900, increase: true, id: 4},
+    
+  ];
+
+    2.
+    И самому компоненту нужно добавить атрибут key:
+
+    const {id, ...itemProps} = item;  ---ТУТ СЛОЖНО нужно смотреть урок 129 -Работа со списками алгоритм согласования.
+
+    <EmployeesListItem key={id} {...itemProps}
+
+
+
+ 
+    

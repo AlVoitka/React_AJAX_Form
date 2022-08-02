@@ -1,0 +1,93 @@
+
+1.
+По правилам JSX весь код компонента должен оборачиваться в div:
+
+
+import './app.css';
+
+class App extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            data: [
+                {name: 'John C.', salary: 800, increase: false, rise: true, id: 1},
+                {name: 'Alex M.', salary: 3000, increase: true, rise: false, id: 2},
+                {name: 'Carl W.', salary: 5000, increase: false, rise: false, id: 3}
+            ],
+            term: '', 
+            filter: 'all'
+        }
+        this.maxId = 4;
+    }
+render() {
+        const {data, term, filter} = this.state;
+        const employees = this.state.data.length;
+        const increased = this.state.data.filter(item => item.increase).length;
+        const visibleData = this.filterPost(this.searchEmp(data, term), filter);
+
+        return (
+            <div className="app"> ---------------------------------------------------------------вот он
+                <AppInfo employees={employees} increased={increased}/>
+    
+                <div className="search-panel">
+                    <SearchPanel onUpdateSearch={this.onUpdateSearch}/>
+                    <AppFilter filter={filter} onFilterSelect={this.onFilterSelect}/>
+                </div>
+                
+                <EmployeesList 
+                    data={visibleData}
+                    onDelete={this.deleteItem}
+                    onToggleProp={this.onToggleProp}/>
+                <EmployeesAddForm onAdd={this.addItem}/>
+                <MyLearn name="Alex" surename="Voitka"/>
+                <BootstrapTest/>
+            </div>
+        );
+    }
+}
+
+export default App;
+
+2. 
+Но это не всегда нужно, и в некоторых случаях этот див ламает верстку. ( там где гряди или флексы...)
+
+
+
+3.
+Для того чтобы применять фрагмент в компоненте его нужно вытащить из сборки что в node_modules:
+
+import { Component, Fragment } from 'react';   ------ как для классового компонета так для фрагмента имортирую
+
+import "./app-info.css";
+
+const AppInfo = ({increased, employees}) => {
+    return (
+        <Fragment>             -------- вот вместо дива обернул в фрагмент
+            <h1>Учет сотрудников в компании "Neman-Auto"</h1>
+            <h2>Общее число сотрудников: {employees}</h2>
+            <h2>Премию получат: {increased}</h2>
+        </Fragment>
+    )
+}
+
+export default AppInfo;
+
+
+4.
+Но лучше использовать сокращенную запись фрагмена, и в этом случае даже не нужно импортировать этот фрагмент из node_modules:
+
+import { Component } from 'react';   ------ и тут импортировать фрагмент не нужно
+
+import "./app-info.css";
+
+const AppInfo = ({increased, employees}) => {
+    return (
+        <>             -------- вот оставляю просто пустой тэг!
+            <h1>Учет сотрудников в компании "Neman-Auto"</h1>
+            <h2>Общее число сотрудников: {employees}</h2>
+            <h2>Премию получат: {increased}</h2>
+        </>
+    )
+}
+
+export default AppInfo;

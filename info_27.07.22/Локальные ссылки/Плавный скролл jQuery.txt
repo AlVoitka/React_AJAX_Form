@@ -1,0 +1,8 @@
+ Для того чтобы добавть плавный, а не реский скоролл по ссылке 
+просто добавляю этот скрипт ( их много разновидностей в интернене):
+
+$("a[href^='#']").click(function(){
+    const _href = $(this).attr("href");
+    $("html,body").animate({scrollTop:$(_href).offset().top+"px"});
+    return false;
+});

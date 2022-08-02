@@ -1,0 +1,215 @@
+В приложении  в данный момент я имею несколько разных и компонентов, какте то уже связаны между собой, а некоторые нет. Так вот теперь 
+у немя появляется необходимость динамечески изменять сосояния у компонента app-info( верхний блок с результатами). А для этого этот компонент должен 
+знать о всех изменениях и иметь связь с  другим компанентом  - который хранит нужные данные внутри себя.
+Мне нужен механизм который берет внутреннее состояние одного компонента и передает его те поднимит состояние выше по иерархии, 
+и этот механизм называется стэйт -лифтинг (srate-lifting).
+
+1. В главном файле app.js сождам метод onToggleIncrease
+он будет изменять парамер increase  на противоположный у определенного по id элемента.
+Для начало путь этот метод выдает код в консоль:
+
+    onToggleIncrease = (id) => {
+        console.log('Increase this ${id}')
+    }
+
+и еще один метод :
+это метод будет отвечать за переключение сосояния сотрудника который идет на повышение зп
+
+onToggleRise = (id) => {
+        console.log('Rise this ${id}');
+    }
+
+и теперь мне нужно передать ити методы вниз по иерархии от компонента App, компоненту EmployeesList:
+
+<EmployeesList 
+    data={this.state.data}
+    onDelete={this.deleteItem}
+    onToggleIncrease={this.onToggleIncrease}  --------вот
+    onToggleRise={this.onToggleRise}/> --- вот
+
+
+и теперь перходим в компонет EmployeesList чтобы как то использовать эти методы (они передаются как пропсы):
+
+const EmployeesList = ({data, onDelete, onToggleIncrease, onToggleRise}) => {  --------- вот пропсы получены
+
+    const elements = data.map(item => {
+        const {id, ...itemProps} = item;
+        return (
+            <EmployeesListItem 
+                key={id} 
+                {...itemProps}
+                onDelete={() => onDelete(id)}
+                onToggleIncrease={() => onToggleIncrease(id)}   ----
+                onToggleRise={() => onToggleRise(id)}/>  ----  И вот я передаю в компонент эти пропсы и 
+                внутри запускаю колбэк функцию внутри которой и запускаются  эти методы с Id.
+        )
+    })
+
+    и далее соответственно так как я передал эти методы в EmployeesListItem, то и там мне их нужно применить:
+в employees-list-item.js
+
+render() {
+        const {name, salary, onDelete, onToggleIncrease, onToggleRise} = this.props;    --------- вот я их вытаскиваю 
+        const {increase, rise} = this.state;
+
+        let classNames = "list-group-item d-flex justify-content-between";
+        if (increase) {
+            classNames += ' increase';
+        }
+        if (rise) {
+            classNames += ' like';
+        }
+
+
+и вот теперь я назначаю эти методы на обработчики события:   
+
+return (
+            <li className={classNames}>
+                <span className="list-group-item-label" onClick={onToggleRise}>{name}</span>  --------тут один
+                <input type="text" className="list-group-item-input" defaultValue={salary + '$'}/>
+                <div className='d-flex justify-content-center align-items-center'>
+                    <button type="button"
+                        className="btn-cookie btn-sm "
+                        onClick={onToggleIncrease}>  --------------тут второй
+                        <i className="fas fa-cookie"></i>
+                    </button>
+    
+                    <button type="button"
+                            className="btn-trash btn-sm "
+                            onClick={onDelete}>
+                        <i className="fas fa-trash"></i>
+                    </button>
+                    <i className="fas fa-star"></i>
+                </div>
+            </li>
+        )
+
+Тепеь все устроено так, что состояние компонента EmployeesListItem контролируется двумя методами onToggleIncrease, onToggleRise
+которые где то далеко по иерархии. Соответственно манипуляции ( печеньки или повышение) логично отслеживать на самом верхнем уровне.
+
+Также некоторые методы прописанные ранее для работы на локальном уровне компонента оказались не нужны тоже. А это два метода:
+onIncrease = () => {
+        this.setState(({increase}) => ({
+            increase: !increase
+        }))
+    }
+
+    onRise = () => {
+        this.setState(({rise}) => ({
+            rise: !rise
+        }))
+    }
+
+Удаляю их...   
+
+также теперь не используется конструктор и state в компоненте EmployeesListItem  - тоже удаляю.
+
+И соответственно нужно классовый компонент превести обратно в функциональный:
+а это делается так:
+
+так было:
+
+import { Component } from 'react';  ------ ------------ удаляю
+
+import './employees-list-item.css';
+
+class EmployeesListItem extends Component{   --------------------- переделываю в  функцию которая принемает пропсы
+    
+    render() {  --------------метод реднер не нужен тоже, так как нет класса
+        const {name, salary, onDelete, onToggleIncrease, onToggleRise} = this.props;    - дыз не нужен только пропс оставляю
+                                                                                      и тут добавляю пропсы
+        const {increase, rise} = this.state;  ---------- стэйт тоже не нужен
+
+        let classNames = "list-group-item d-flex justify-content-between";
+        if (increase) {
+            classNames += ' increase';
+        }
+        if (rise) {
+            classNames += ' like';
+        }
+    
+        return (
+            <li className={classNames}>
+                <span className="list-group-item-label" onClick={onToggleRise}>{name}</span>
+                <input type="text" className="list-group-item-input" defaultValue={salary + '$'}/>
+                <div className='d-flex justify-content-center align-items-center'>
+                    <button type="button"
+                        className="btn-cookie btn-sm "
+                        onClick={onToggleIncrease}>
+                        <i className="fas fa-cookie"></i>
+                    </button>
+    
+                    <button type="button"
+                            className="btn-trash btn-sm "
+                            onClick={onDelete}>
+                        <i className="fas fa-trash"></i>
+                    </button>
+                    <i className="fas fa-star"></i>
+                </div>
+            </li>
+        )
+    }
+}
+
+export default EmployeesListItem;
+
+так стало:
+
+import './employees-list-item.css';
+
+const EmployeesListItem = (props) => {
+    
+    
+        const {name, salary, onDelete, onToggleIncrease, onToggleRise, increase, rise} = props;
+       
+
+        let classNames = "list-group-item d-flex justify-content-between";
+        if (increase) {
+            classNames += ' increase';
+        }
+        if (rise) {
+            classNames += ' like';
+        }
+    
+        return (
+            <li className={classNames}>
+                <span className="list-group-item-label" onClick={onToggleRise}>{name}</span>
+                <input type="text" className="list-group-item-input" defaultValue={salary + '$'}/>
+                <div className='d-flex justify-content-center align-items-center'>
+                    <button type="button"
+                        className="btn-cookie btn-sm "
+                        onClick={onToggleIncrease}>
+                        <i className="fas fa-cookie"></i>
+                    </button>
+    
+                    <button type="button"
+                            className="btn-trash btn-sm "
+                            onClick={onDelete}>
+                        <i className="fas fa-trash"></i>
+                    </button>
+                    <i className="fas fa-star"></i>
+                </div>
+            </li>
+        )
+    
+}
+
+export default EmployeesListItem;
+
+
+и осталось толко добаыить свойство rise в стэйте у главного компонента App
+
+class App extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            data: [
+                {name: 'John C.', salary: 800, increase: false, rise: true, id: 1},
+                {name: 'Alex M.', salary: 3000, increase: true, rise: false, id: 2},
+                {name: 'Carl W.', salary: 5000, increase: false, rise: false, id: 3}
+            ]
+        }
+
+
+
+Дальше я не смог   разобраться        

@@ -1,0 +1,87 @@
+1 курс урок 67
+
+1. Копирую файл wow.min.js из старых проектов
+в паку JS
+
+2.и затем подключаю его в HTML:
+<script src="./js/wow.min.js"></script>
+
+но лучше через webpack в сборк уего а не HTML
+
+3. В основном файле script.js нужно инициализировать работу вова:
+
+new WOW().init();
+
+
+
+
+
+//////////////////////////////////////////////////
+1. Все анимации отрабатывают во время первых секунд на сайте, а чтобы они отработали в нужный момент использую
+
+        https://wowjs.uk/
+        так перехожу во вкладку Git hub
+        перехожу на аккаун Git hub  и скачиваю архив  ZIP во складке CODE
+        Далее в папке dist
+        
+        wow.min.js - этот файл мне и нужен
+
+        вставляю его в папку JS, что с модулями:
+
+        и затем подключаю его в HTML:
+
+        <script src="./js/wow.min.js"></script>
+
+    Эта библиотека работает в связке с бидлиотекой animate.css, без нее она межет не сработать.
+    если захочу связать еще с какойто библиотекой,  то это возможно- нужно читать документацию!!!
+
+
+
+2. Включение плагина.
+
+     на страице  https://wowjs.uk/docs.html   
+    
+    беру строчку - new WOW().init();
+
+    и в сборщике script.js  запускаю плагин:
+
+    window.addEventListener('DOMContentLoaded', function() {
+    const upslider = require('./modules/upslider'),
+          downslider =require('./modules/downslider'),
+          tabs =require('./modules/tabs'),
+          scrollUP =require('./modules/scrollUP')
+          
+
+    upslider();
+    downslider();
+    tabs();
+    scrollUP();
+    
+
+    new WOW().init();   ----- вот так
+});
+
+
+
+
+3.   Чтобы все заработало, нужно добавть клаcc wow в HTML к необходимому элементу. 
+    И анимация будет отрабатывать только в момент видимости пользователя
+
+    class="wow"
+
+    <h2 class="animate__animated wow animate__slideInLeft">Neman-Auto LLC</h2>
+
+    
+
+
+4.      Дополнительные настройки
+
+    data-wow-duration: -----длительность анимации
+    data-wow-delay:------- задержка перед воспроизведением
+    data-wow-offset: --------отступ снизу  ( тоже для время срабатывания анимации, чем больше значении- тем позжа сработает прогрывание)
+    data-wow-iteration: ----------кол во раз срабатывания анимации
+
+   Чтобы они работали, их нужно применитиь как дата-атрибуты. 
+    дата атрибуты прописываются так
+
+    <h2 class="animate__animated wow animate__slideInLeft" data-wow-duration="1s" data-wow-delay="3s">Neman-Auto LLC</h2>

@@ -1,0 +1,34 @@
+https://htmlacademy.ru/blog/useful/html/about-normalize-css
+
+Для того чтобы на разных браузерах проект отображался корректно.
+
+Normalize.css — это небольшой CSS-файл, который обеспечивает для HTML-элементов лучшую кроссбраузерность в стилях по умолчанию. 
+Это современная, готовая к HTML5 альтернатива традиционному reset.css.
+
+Normalize.css является альтернативой CSS Reset. Проект является продуктом сотен часов глубокого исследования 
+различий между изначальными стилями браузера. 
+
+
+Подключение:
+
+1. Вариан взять сам файл (в моих плагинах) разместить его в папке CSS что в Dist и подключить
+
+    <meta name="theme-color" content="#ffffff">
+
+    <link rel="stylesheet" href="/dist/css/normalize.css">  ---- всегда выше  основных стилей!!
+    <link rel="stylesheet" href="/dist/css/style.css">
+</head>
+
+
+2. Подключить с cdn сервера
+https://cdnjs.com/libraries/normalize
+и лучше всего минифицированную версию!!  ---- normalize.min.css
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">   --- вот
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+
+3.
+
+npm install normalize.css

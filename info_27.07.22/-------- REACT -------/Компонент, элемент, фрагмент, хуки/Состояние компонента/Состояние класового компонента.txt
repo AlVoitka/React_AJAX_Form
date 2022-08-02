@@ -1,0 +1,113 @@
+
+Изначально сосояния state были толко в классовых компонентах, со временем добавились хуки и сосотяние появилось и в функциональных 
+компанентах.
+Но для начала разберу  состояние в классовом компоненте.
+
+1.
+Создам классовый компонент:
+
+import { Component } from 'react'; - --------импортировал компонент это обязательно
+
+
+class AlexV extends Component {
+    render() {
+        return (
+            <div>
+                <h1> My name is Alex</h1>
+            </div>
+        )
+    }
+}
+
+
+
+
+
+2. Чтобы в классовый компонент передать пропсы, нужно использовать конструктор:
+.....................
+ function App () {
+        render() {
+            return (
+                <div className="app">
+                    <AlexV surname="Voitka" age="37"/>   ----- вот у меня компонент с пропсами surname="Voitka" age="37"
+                </div>
+            )
+        }
+    }
+
+    export dafault App; 
+..........................
+
+и уже в самом компоненте я принимаю пропсы через конструктор
+
+import { Component } from 'react'; 
+
+
+class AlexV extends Component {
+
+
+    constructor(props) { --- вот принял пропсы 
+        super(props);  --- просто такой синтаксис обязателен
+    }
+
+
+    render() {
+        const {surname, age} = this.props;  ---- вот деструртурирую пропсы в читаемый код!!!!!!!!!!!!!!!!!
+
+        return (
+            <div>
+                <h1> My name is Alex, my surname is{surname} my age is{age} </h1>
+            </div>
+        )
+    }
+}
+
+
+3.
+Динамически менять состояние комонента при помоще state.
+
+State - это обЪект который описывает динамическое поведение компонента
+
+Добавляю сосоотояние в конструкторе компонета.
+
+import { Component } from 'react'; 
+
+
+class AlexV extends Component {
+
+
+    constructor(props) {
+        super(props); 
+
+        this.state = {  ------ вот добавил состояние с свойством sex
+            sex: 'man'
+        } 
+    }
+
+
+    render() {
+        const {surname, age} = this.props; 
+        return (
+             
+
+            <div>
+                <h1> My name is Alex, my surname is{surname}, my age is{age}, im {this.state.sex} </h1>  --- так обратился к этому свойству
+            </div>
+        )
+    }
+}
+
+
+4.
+Напрямую нельзя изменять состояние state, для этого используется специальная команда:
+
+this.setState() - и этот метод принемает в себя обЪект с новым состоянием.
+
+this.setState({
+    sex: 'woman'
+})
+
+теперь в состоянии компонента запишутся изменеения:
+    this.state = 
+            sex: 'woman'
+        }

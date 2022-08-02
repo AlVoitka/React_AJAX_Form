@@ -1,0 +1,13 @@
+Emmet - быстрое написанеи тегов (.container)
+
+
+
+Для того чтобы настпроить emmet в реакте:
+
+ctrl + shift + p
+в поле поиска - open user settings
+далее слева extensions и выбираю emmet  - include languages - add item
+
+key = javascript
+value = javascriptreact
+

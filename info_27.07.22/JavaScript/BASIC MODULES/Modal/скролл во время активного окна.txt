@@ -1,0 +1,18 @@
+
+
+ При активном модальном окне существуе возможность скроллить страницу, это плохо и нужно решать:
+для этого задам в инлайн стилях, для свойства overflow , позицию hidden не позволяющий прокручивать страницу:
+
+    modalTrigger1.addEventListener('click', () => {
+       overlay.style.display="block";
+       modalFeedback.style.display="block";
+       document.body.style.overflow="hidden";   ------ вот отключил прокрутку
+   })
+
+ну и конечно нужно чтобы скорол начал работать после закрытия окна:
+
+    function closeModal() {
+        overlay.style.display="none";
+        modalFeedback.style.display="none";
+        modalSucces.style.display="none";
+        document.body.style.overflow="";  --- оставляю пустые кавычки и браузер сам решит чтго нужно ему по дефолту

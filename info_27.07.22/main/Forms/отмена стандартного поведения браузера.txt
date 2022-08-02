@@ -1,0 +1,17 @@
+
+И спользуя объект события "e" отменяю ст пов бр
+
+
+    addForm.addEventListener('submit', (e) => {
+        e.preventDefault();   ----- отменяет стандартное поведение браузера
+
+        const userValue = addInput.value;
+              userCheck = checkbox.checked;
+
+        typeDB.type.push(userValue);
+        typeDB.type.sort();
+        createNewUserList(vehicleList, typeDB.type);
+        addForm.reset();  --------------------- вот очищаю формцу после события 'submit
+
+
+    });

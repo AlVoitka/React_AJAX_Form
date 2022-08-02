@@ -1,0 +1,10 @@
+Метод Element.remove() удаляет элемент из DOM-дерева, в котором он находится.
+
+Использование remove()
+
+    <div id="div-01">Это div-01</div>
+    <div id="div-02">Это div-02</div>
+    <div id="div-03">Это div-03</div>
+
+var el = document.getElementById('div-02');
+el.remove(); // Удалит элемент div с идентификатором 'div-02'

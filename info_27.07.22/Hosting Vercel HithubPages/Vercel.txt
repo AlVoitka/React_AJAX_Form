@@ -1,0 +1,55 @@
+https://www.youtube.com/watch?v=3bN1TC_qI0E
+
+https://www.youtube.com/watch?v=E_n-jPGniCI
+
+
+1.
+https://vercel.com/
+
+2.
+Вхожу на vercel по профилую на github
+
+3.
+new progect
+Import Git Repository  
+Add git account - и выбираю либо все репозы либо одон который нужно
+
+4.
+Import
+
+5. Deploy
+
+6. проек билдится и по итоги имею линки
+
+
+/////  Чтобы удалить delpoy /////
+https://vercel.com/support/articles/how-do-i-delete-an-individual-deployment
+
+
+
+
+//////  Если ошибка из-за vercel на git hab /////////
+
+https://qna.habr.com/q/189233
+
+- Ошибка из-за того, что на сервере есть изменения, которых у Вас нет в локальном хранилище.
+Нужно сделать git pull перед git push.
+
+- Нужно сделать git pull перед git push. Это прям рабочий вариант!!!
+
+- ...еще вариант использовать опцию --force (-f) - игнорирует эту ошибку в частности...
+
+
+Как я решил:
+
+Vercel внес изменения  врепоз а на моей машине в проекте их небыло, отчюда пошла ошибка.
+
+- Я запулил с ветки мастер все изменения 
+- git pull origin master
+
+-Проверил что с коммитами, а были 4  неотправленных коммита.
+-git status    -  "Your branch is ahead of 'origin/master' by 4 commits."
+
+- создал новый коммит
+- запушил его
+- Ура все пофиксилось!

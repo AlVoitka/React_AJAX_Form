@@ -1,0 +1,344 @@
+ 2 курс урок 94
+1.
+Получаю элементы
+
+    const slides = document.querySelectorAll('.aboutAs__sliderJS-item');  --- все слайды
+    const prev = document.querySelector('.aboutAs__sliderJS-prev'); ----- блок (кнопка влево)
+    const next = document.querySelector('.aboutAs__sliderJS-next');  ----- блок (кнопка вправо)
+
+
+
+
+2. Нужен индек определяющее текущее положение слойда:
+
+ let slideIndex = 1;  -- она как лэт тк будет изменяться
+
+
+
+
+3.
+Прописываю функцию по показу слайда и отображению счетчика:
+
+function showSlides(n) {}     -  n - аргумент принемающий параметр. и Это будет slideIndex приходить с текущим положением 
+
+3.1
+теперь прописываю условие для приграничных слайдов те из 3 cлайда при нажатии стрелки вперед переход на первый,
+ и из 1 при нажатии назад  к 3.
+
+    function showSlides(n) {
+        if (n > slides.length) {
+            slideIndex = 1;
+        }
+если индекс n будет больше чем коллличество вообще доступных в верстке слайдов slides.length (у меня 3), то код берет и перемещвется 
+в самое начало (slideIndex = 1;)
+
+3.2
+Похожая операция в обратную строрну.
+
+        if (n < 1) {
+            slideIndex = slides.length;
+        }
+а тут наоборот, если n будет меньше 1, то  код перемещается в конец ( к последнему из слайдов верстки)
+
+3.3
+Теперь нужно скрыть все слайды на странице, и показать  только интересующий меня слайд.
+перебераю все слойдеры методом ForEach.
+
+item - каждый слайд внури.
+
+   slides.forEach((item) => item.style.display = 'none');
+   Обращаюсб к тилю каждого елемента и ставлю в позицию = 'none': -- скрываю все слайты
+
+
+Остается взять нужный слайд и показать его:   
+
+  slides[slideIndex - 1].style.display = 'block'; 
+
+  помним , [slideIndex - 1] для того чтобы вывести первый элемент ( а он под номером 0 в массиве).
+
+
+4.
+ Теперь нужно организовать функционал который будет изменять slideIndex, после перелистывания 
+те при нажатии вперед индех должен увеличиться на 1
+и когда назад то на -1:
+
+    function plusSlides (n) {
+        showSlides(slideIndex += n);
+    }
+
+тут я сказал коду что эта функция будет вызывать функцию showSlides  и помещаю конструкцию slideIndex += n которая изменяет индекс 
+
+
+
+5. 
+Вешаю обработчики событий на кнопки отслеживающие click:
+при нажатии они будут менять let slideIndex = 1;
+
+    prev.addEventListener('click', function(){
+        plusSlides(-1);  --- передаю функции значение -1 от текущеего
+    });
+
+    next.addEventListener('click', function(){
+        plusSlides(1);   ------ а тут +1
+    });
+
+6. 
+Теперь в функцию нужно передать наш индех чтобы запусть ее:
+и во внутрь помещаю начальное значение индекса:
+
+showSlides(slideIndex);  
+
+В функцию приходит 1 и пошли проверки и тд
+
+
+
+7.
+ Реализую функционал по отображению общего колличества слфйдов:
+
+дополнительно получаю элементы:
+
+        total = document.querySelector('#total'), -  общее колличество слайдов
+        current = document.querySelector('#current'); - текущий слайд
+
+теперь до запуска функции  showSlides  нужно определить и вывести общее колл-во слайдов в верстке.
+делаем это условием:
+
+если кол-во слайдов  будет меньше 10, то мы подставляем 0  к числу.
+
+    if (slides.length < 10) {
+        total.textContent = `0${slides.length}`; -- рендерю и подставляю нолик к общему колличеству слайдов
+    } else {
+        total.textContent = slides.length;   ---- иначе оставляем просто колличество слайдов
+    }
+
+
+
+
+8. Функцилнал по отображению текужего слайда уже нужно помещать в самц функцию showSlides:
+
+чтобы одномременно с нажатием кнопок прокрутки менялась инфа о намере текущего слайда (те текущий слайд и это current ):
+
+
+        if (slides.length < 10) {
+            current.textContent =  `0${slideIndex}`; - рендерю и подставляем нолик к текущему слайду (те к slideIndex)
+        } else {
+            current.textContent =  slideIndex; -- иначе просто рендерю текцщий слайд
+        }
+
+
+
+9. Реализую функционал с точками.
+
+создаю в css блок в котором будут размещены точки:
+
+<ol class="aboutAs__indicators"></ol>  --- сделаю как список
+
+    &__indicators {
+        display: flex;
+        justify-content: center;   --- так точки размещу по центру
+        position: absolute;  --- сам контейнер спозиционирую абсолютно
+        width: 200px;
+        height: 20px;
+        left: 50%;
+        transform: translateX(-50%);  -- строг по центру
+        bottom: 25px;
+        list-style: none;   --- уберы нумерацию
+    }
+
+9.2
+Создам сами точки  и помещу их в вышесозданный блок.
+Но нужно создать необходимое кол-во точек в зависимости от колличество слайдав,
+и сделаю это при помощи цикла:
+
+    for (let i = 0; i < slides.length; i++) {
+        const dot = document.createElement('li');
+        dot.setAttribute('data-slide-to', i + 1);
+        dot.style.cssText = `
+            box-sizing: content-box;
+            flex: 0 1 auto;
+            width: 30px;
+            height: 6px;
+            margin-right: 10px;
+            margin-left: 10px;
+            cursor: pointer;
+            background-color: #415aeb;
+            background-clip: padding-box;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            transition: opacity .6s ease;
+        `;
+        
+        indicators.append(dot);
+    }
+
+Разбор:
+(let i = 0; i < slides.length; i++) - создаю переменную-итератор let i = 0 и говорю, что цикл закончится в тот момент, 
+когда закончатся слайды. 
+i++   - итератор будет увеличиваться на 1 каждый раз 
+Тоесть создастся кол-во точек равное slides.length.
+
+const dot = document.createElement('li');  - создаю сами точки в виде элемента li.
+dot.setAttribute('data-slide-to', i + 1);  - тут я каждой точке устанавливаю дата-атрибут 'data-slide-to' 
+которая будет говорить, что первая точка к первому слайду.
+и второй атрибут - i + 1 - устанавливаю нумерацию начиная с еденицы
+
+Что в итоге мне дает такой результат: 
+перебирает и у меня три слайда в верстке и я получаю:
+<li data-slide-to="1">
+<li data-slide-to="2">
+<li data-slide-to="3">
+
+dot.style.cssText = `` - так я задаю инлайн стили для созданных элементов
+
+indicators.append(dot); - в блок indicators рендерю dot (созданные элементы после перебора)
+
+
+9.3 
+работа с активностью точки:
+в цикле задам условие
+
+    for (let i = 0; i < slides.length; i++) {
+        const dot = document.createElement('li');
+        dot.setAttribute('data-slide-to', i + 1);
+        dot.style.cssText = `
+            box-sizing: content-box;
+            flex: 0 1 auto;
+            width: 70px;
+            height: 10px;
+            margin-right: 10px;
+            margin-left: 10px;
+            cursor: pointer;
+            background-color: black;
+            border-radius: 50%;
+            background-clip: padding-box;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            opacity: .5;
+            transition: opacity .6s ease;
+        `;
+
+        if (i == 0) { ----------- вот первой точке задал свойства по перременной i
+            dot.style.backgroundColor = 'black';
+            dot.style.opacity = 1;
+        }
+        
+        indicators.append(dot);
+    }
+
+    но я статическт обозначил первую точку, а чтобы это было динамически в зависимости от активного слайда:
+
+    для начало создам массив dots.
+
+    const dots = [];
+
+    и после рендеринга запушу в этот массив:
+
+    for (let i = 0; i < slides.length; i++) {
+        const dot = document.createElement('li');
+        dot.setAttribute('data-slide-to', i + 1);
+        dot.style.cssText = `
+            box-sizing: content-box;
+            flex: 0 1 auto;
+            width: 70px;
+            height: 10px;
+            margin-right: 10px;
+            margin-left: 10px;
+            cursor: pointer;
+            background-color: black;
+            border-radius: 50%;
+            background-clip: padding-box;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            opacity: .5;
+            transition: opacity .6s ease;
+        `;
+
+        if (i == 0) {
+            dot.style.backgroundColor = 'black';
+            dot.style.opacity = 1;
+        }
+        
+        indicators.append(dot);
+        dots.push(dot); ----------------------------вот
+    }
+в итоге после отработки цикла у меня получится массив который я и буду использовать:
+в функции по переключению слайдов задаю инлайн стили для массива:
+
+    function plusSlides (n) {
+        showSlides(slideIndex += n);
+
+        dots.forEach(dot => dot.style.opacity = ".5"); ---беру массив и перебераю его и говорю что у каждой точки в массиве dot
+        устанавливаю позицию  dot.style.opacity = ".5"
+
+        dots[slideIndex-1].style.opacity = 1; ---  у тут у активного слайда, опасити = 1
+    }
+
+
+10.
+Функционал при нажатии на точку чтобы менялся слайд:
+
+    dots.forEach(dot => {
+        dot.addEventListener('click', (e) => {
+            const slideTo = e.target.getAttribute('data-slide-to');
+
+            showSlides();
+
+            slideIndex = slideTo;
+
+            showSlides();
+
+            if (slides.length < 10) {
+                current.textContent =  `0${slideIndex}`;
+            } else {
+                current.textContent =  slideIndex;
+            }
+
+            
+
+            dots.forEach(dot => dot.style.opacity = ".5");
+            dots[slideIndex-1].style.opacity = 1;
+        })
+    })
+
+Разбор:
+dots.forEach(dot => {} --  перебераю все элементы массива с точками
+dot.addEventListener('click', (e) => { -- на каждую точку навешиваю обработчик
+
+прина жатии на точку произойдет действие:
+
+const slideTo = e.target.getAttribute('data-slide-to');  -- получаю номер по порядку атрибута 
+                                                       ( по сути номер кнопку по которой кликнули)
+
+showSlides(); - запускаю функцию по показу слайдера                                                       
+
+slideIndex = slideTo; - к какую кнопку кликнули такой номер и присвоили slideIndex
+клик по 3 и запишет slideIndex = 3;
+
+
+
+тут отработает функцилнал с текущим слайдом:
+
+if (slides.length < 10) {
+    current.textContent =  `0${slideIndex}`;
+} else {
+    current.textContent =  slideIndex;
+}
+
+
+
+тут функционал с активностью точки:
+
+dots.forEach(dot => dot.style.opacity = ".5");
+dots[slideIndex-1].style.opacity = 1;
+
+
+
+
+
+
+
+
+
+
+
+

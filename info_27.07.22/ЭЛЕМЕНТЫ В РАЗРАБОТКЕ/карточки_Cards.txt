@@ -1,0 +1,231 @@
+Буду использовать классы для картачек.
+он будет брать аргументы которые в него придут и будет создавать динамически структуру (верстку).
+
+1. 
+Для начала я создам шаблон (класс) для того чтобы потом от него отпочковывать последующие карточки.
+
+    class ClientCard {   --------- название всегда с большой буквы
+        constructor() {    ----- в классе всегда присутствует конструктор
+        }
+    }
+
+2. 
+передаю свойства в качестве аргументов:
+
+    class ClientCard {
+        constructor(src, alt, title, descr, price) {
+            this.src = src;
+            this.alt = alt;
+            this.title = title;
+            this.descr = descr;
+            this.price = price;
+        }
+    }
+
+3. 
+так же создам метод по конвертации валюты  предварительно добавив свойство в конструктор:  
+        
+    class ClientCard {
+        constructor(src, alt, title, descr, price) {
+            this.src = src;
+            this.alt = alt;
+            this.title = title;
+            this.descr = descr;
+            this.price = price;
+            this.transfer = 1.1;  ---- вот добавил свойство с курсом
+            this.changeToEUR(); --- вызвал
+        }
+
+        changeToEUR() {
+            this.price = this.price * this.transfer;  --- создал метод по подсчету курса
+        }
+
+4.
+Мне нужно создать элемент, в него поместить определенную верстку с учетом приходящих аргументов, и поместить его на страницу:
+тут поможет метод рендер
+
+        render() {
+            const element = document.createElement('div'); --- вот заздал( он толко в js пока) но не вывел еще
+            element.innerHTML =`   ----- ренедрю при помощи иннер ( и тут бэктики)
+            <div class="menu__item">
+                <img src="./scss/blocks/main/clientCard/platinum.jpg" alt="platinum">
+                <h3 class="menu__item-subtitle">Card "Platinum"</h3>
+                <div class="menu__item-descr">Product of active and healthy people. This is a brand new 
+                product with the best price and high quality! </div>
+                <div class="menu__item-divider"></div>
+                <div class="menu__item-price">
+                    <div class="menu__item-cost">Price:</div>
+                    <div class="menu__item-total"><span>550</span> usd/year</div>
+                </div>
+            </div>
+            `;
+        }
+
+5.
+элемент создан, но теперь нужно сказать куда его конкретно помесить на странице, под какого радителя:
+и делать я это буду при момощи нового аргумента parentSelector:
+
+class ClientCard {
+    constructor(src, alt, title, descr, price, parentSelector) {  -- вот добавил аргумент
+        this.src = src;
+        this.alt = alt;
+        this.title = title;
+        this.descr = descr;
+        this.price = price;
+        this.parent = document.querySelector(parentSelector);  --вот так его использую ( получаю элемент по селектору который передам как аргумент)
+        this.transfer = 1.1;
+        this.changeToEUR();
+    }
+
+
+6. осталось толко разместить все это на странице при помощи метода append():
+
+class ClientCard {
+    constructor(src, alt, title, descr, price, parentSelector) {
+        this.src = src;
+        this.alt = alt;
+        this.title = title;
+        this.descr = descr;
+        this.price = price;
+        this.parent = document.querySelector(parentSelector);
+        this.transfer = 1.1;
+        this.changeToEUR();
+    }
+
+    changeToEUR() {
+        this.price = this.price * this.transfer;
+    }
+
+    render() {
+        const element = document.createElement('div');
+        element.innerHTML =`
+        <div class="menu__item">
+            <img src="./scss/blocks/main/clientCard/platinum.jpg" alt="platinum">
+            <h3 class="menu__item-subtitle">Card "Platinum"</h3>
+            <div class="menu__item-descr">Product of active and healthy people. This is a brand new product with the best price and high quality! </div>
+            <div class="menu__item-divider"></div>
+            <div class="menu__item-price">
+                <div class="menu__item-cost">Price:</div>
+                <div class="menu__item-total"><span>550</span> usd/year</div>
+            </div>
+        </div>
+        `;
+        this.parent.append(element); ---- и вот так размещаю на странице в блок по аргументу parentSelector который придет в настроеке класса
+    }
+}
+
+7.
+ Теперь чтобы все менялось динамически в зависимости от приходящего аргумента:
+вношу изменеия 
+
+render() {
+    const element = document.createElement('div');
+    element.innerHTML =`
+    <div class="menu__item">
+        <img src=${this.src} alt=${this.alt}>  --- тут придет src  и alt
+        <h3 class="menu__item-subtitle">${this.title}</h3>  --- тут тайтл
+        <div class="menu__item-descr">${this.descr}</div> ----тут описание и тд
+        <div class="menu__item-divider"></div>
+        <div class="menu__item-price">
+            <div class="menu__item-cost">Price:</div>
+            <div class="menu__item-total"><span>${this.price}</span> usd/year</div>
+        </div>
+    </div>
+    `;
+    this.parent.append(element);
+}
+
+
+8. 
+Класс готов теперь его нужно брать и использовать:
+new ClientCard().render();  --- вызываю класс и рендеорю его.
+
+
+    class ClientCard {
+        constructor(src, alt, title, descr, price, parentSelector) {
+            this.src = src;
+            this.alt = alt;
+            this.title = title;
+            this.descr = descr;
+            this.price = price;
+            this.parent = document.querySelector(parentSelector);
+            this.transfer = 1.1;
+            this.changeToEUR();
+        }
+
+
+        changeToEUR() {
+            this.price = this.price * this.transfer;
+        }
+
+
+        render() {
+            const element = document.createElement('div');
+            element.innerHTML =`
+            <div class="menu__item">
+                <img src=${this.src} alt=${this.alt}>
+                <h3 class="menu__item-subtitle">${this.title}</h3>
+                <div class="menu__item-descr">${this.descr}</div>
+                <div class="menu__item-divider"></div>
+                <div class="menu__item-price">
+                    <div class="menu__item-cost">Price:</div>
+                    <div class="menu__item-total"><span>${this.price}</span> usd/year</div>
+                </div>
+            </div>
+            `;
+            this.parent.append(element);
+        }
+    }
+
+    new ClientCard().render();   ---- вот таким образом
+
+
+
+9. Осталось только пердать аргументы:
+
+    new ClientCard(
+        "./scss/blocks/main/clientCard/silver.png",  --- вот как аргумент передал src на картинку
+        "silver",                                    --- передал описание картинки 
+        'Card "Silver"',                             --- тут использовать нужно 2 вида кавычек
+        'Product of active and healthy people. This is a brand new product with the best price and high quality!',
+        10,         --- тут передал 10 долларов, а блягодоря методу changeToEUR() на картачке 11
+        '.container_1'   ---- тут передаю селектор родителя( куда хочу зарендерить)
+    ).render(); 
+
+10. Теперь можно создать любое колличество карточек при помощи класса.
+
+в моем случае создам три картачки:
+
+    new ClientCard(
+        "./scss/blocks/main/clientCard/silver.png",
+        "silver",
+        'Card "Silver"',
+        'Product of active and healthy people. This is a brand new product with the best price and high quality!',
+        200,
+        '.container_1'
+    ).render();  
+
+    new ClientCard(
+        "./scss/blocks/main/clientCard/gold.png",
+        "gold",
+        'Card “Gold”',
+        'Product of active and healthy people. This is a brand new product with the best price and high quality!',
+        350,
+        '.container_1'
+    ).render();  
+
+    new ClientCard(
+        "./scss/blocks/main/clientCard/platinum.jpg",
+        "platinum",
+        'Card "Platinum"',
+        'Product of active and healthy people. This is a brand new product with the best price and high quality!',
+        500,
+        '.container_1'
+    ).render();
+
+
+11.
+Теперь карточки формируются динамически, нужно только удалить в html верстке статические карточки 
+и оставить пустой <div class="container_1"></div> куда и будут рендерится карточки из скрипта.
+
+

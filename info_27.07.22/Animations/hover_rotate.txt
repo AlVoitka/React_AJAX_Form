@@ -1,0 +1,3 @@
+&:hover {
+    transform: rotate(-270deg) scale(1.9);  --- увеличивает у крутит
+    }

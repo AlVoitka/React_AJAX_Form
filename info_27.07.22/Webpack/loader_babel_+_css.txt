@@ -1,0 +1,70 @@
+https://www.youtube.com/watch?v=GNEyY70Zl30
+
+Основные лодеры:
+
+https://webpack.js.org/loaders/#root
+
+1. Для скриптовых файлов - babel-loader  - один из основных инструментов! Компелирует код JS в понятный снтаксис для всех браузеров
+
+----    npm install -D babel-loader @babel/core @babel/preset-env webpack
+
+
+
+ в файле webpack.config.js  делаю доп настройку:
+
+
+module: {
+  rules: [  ------------- правила для лодера
+    {
+      test: /\.m?js$/,   ---- расширение файлов для обработки
+      exclude: /(node_modules)/,  ----- файлы изключенные для конвертации
+      use: {
+        loader: 'babel-loader',    ---- название лодера для использования
+        options: {
+          presets: ['@babel/preset-env']
+        }
+      }
+    }
+  ]
+}
+
+
+2. Лодер для стилей  
+https://www.youtube.com/watch?v=GNEyY70Zl30    ---19.40 прописывет прямо в dom индайн стили
+
+------  npm install --save-dev style-loader     - прописывает стили рямо
+
+в файле webpack.config.js  делаю доп настройку:
+
+    {
+        test: /\.css$/i,
+        use: ["style-loader", "css-loader"],  ----- вот объект правил для style-loader
+      },
+
+конечный результат:
+
+module: {
+  rules: [  ------------- правила для лодера
+    {
+      test: /\.m?js$/,   ---- расширение файлов для обработки
+      exclude: /(node_modules)/,  ----- файлы изключенные для конвертации
+      use: {
+        loader: 'babel-loader',    ---- название лодера для использования
+        options: {
+          presets: ['@babel/preset-env']
+        }
+      }
+    },
+    {
+        test: /\.css$/i,
+        use: ["style-loader", "css-loader"],  ----- вот объект правил для style-loader вставленный в module
+      },
+  ]
+}
+
+Обязательно !!! в файл- сборщик script.js импортирую файл со стилями:
+
+import tabs from './modules/tabs';  --- просто как пример чтобы вебпак с ним работал
+
+
+В папке dist ничего не будет тк скрипт запишет все прямо в dom дерево как инлайн стили!!!!!!!!!!!!

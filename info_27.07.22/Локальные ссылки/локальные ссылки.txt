@@ -1,0 +1,13 @@
+1. оборачиеваем нужный элемент в ссылку:
+
+<a href="#" class="scroll-up">
+    <img src="/src/scss/blocks/scrollUP/up-arrow.svg" alt="up">
+</a>
+
+2. присваиваю ссылке название идентификатора href="#" :
+
+<a href="#up"....>
+
+3. задаю  id="up" тому элементу к которому нужно перейти по ссылке:
+
+<section  id="up" class="promo">

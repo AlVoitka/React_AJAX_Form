@@ -1,0 +1,74 @@
+
+
+1.  https://seeklogo.com/  -ресурс для поиска иконок
+
+
+
+2. иконочные шрифты
+
+https://fontawesome.com/  - v.superalex@gmail.com  --- 500sel500
+
+---Захожу на сайт https://cdnjs.com/libraries/font-awesome
+---При необходимости ищу /font-awesome
+Первый саособ:
+---копирую линк-тэг <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+ integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" 
+ crossorigin="anonymous" referrerpolicy="no-referrer" />
+ Второй способ:
+ ---Копирую URL и подключаю таким способом в index.html:
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+---подключаю в index.html
+
+_--далее нахожу нужную иконку в разделе free  и копирую тег:
+
+<i class="fa-solid fa-business-time"></i>
+затем вставляю его в нужное место.
+
+
+3. Чтобы окрасить иконку :
+
+&__link {
+        position: relative;
+        margin-right: 45px;
+        font-weight: bold;
+        font-size: 18px;
+        color: $dark;
+
+        i {
+            color: red;   --- вот назначил цвет
+        }
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <title>Fonts_icons</title>
+</head>
+<body>
+    <h1>Minsk</h1>
+    <h2>world</h2>
+    <div class="box">
+
+        <div class="box_round">
+            <i class="fab fa-facebook-f"></i>   ---  <!--  копируем и вставляем html код на иконку с сайта -->
+        </div>
+
+        <div class="box_round">
+            <i class="fab fa-twitter"></i>
+        </div>
+
+        <div class="box_round">
+            <i class="fab fa-instagram"></i>
+        </div>
+
+        
+
+    </div>
+</body>
+</html>
+

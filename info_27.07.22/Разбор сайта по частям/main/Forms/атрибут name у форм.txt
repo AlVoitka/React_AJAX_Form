@@ -1,0 +1,12 @@
+
+какда ми подразумеваем что данные из формы будут идти на сервер, то абсолютно всегда на импутах
+должен присутствовать атрибут name:
+
+<form class="add">
+    <input class="interactive__box-item" name="check" type="checkbox"> Only trucking transportation<Br>
+    <input class="interactive__box-item interactive__box-input" name="choose" placeholder="Air, rail, ferry..." type="text" minlength="3" maxlength="9">
+    <button class="interactive__btn">Accept</button>
+</form>
+
+
+иначе formData , при работе с JS не сможет правильно сформировать объект для отправки данных

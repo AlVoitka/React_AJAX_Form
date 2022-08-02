@@ -1,0 +1,195 @@
+Буду работать с кнопкой удаления сотрудников.
+По клику на корзинку  чтобы исчезалю. И соответствено все данные о нем должны удалится из базы данных( или сервера).
+Для этого нужно прописать события которые будут чтобы кнопка удаления была связана с базой данных и стобытия которые будут 
+ослеживать эти действия.
+И после удаления из базы реакт должен это увидеть и перерисовать компонент по актуальным данным.
+
+в файле employees-list.js в компонент EmployeesList передам функцию onDelete в виде пропса
+
+const EmployeesList = ({data}) => {
+
+    const elements = data.map(item => {
+        return (
+            <EmployeesListItem {...item}
+            onDelete={() => console.log('Deleted')}/>  ------вот
+        )
+    })
+
+функция передана и нужно ее использовать:
+
+в файле employees-list-item.js
+
+нахожу пропсы и добавляю функцию в виде пропса:
+
+import { Component } from 'react';
+
+import './employees-list-item.css';
+
+class EmployeesListItem extends Component{
+    constructor(props) {
+        super(props);
+        this.state = {
+            increase: false,
+            rise: false
+        }
+    }
+
+    onIncrease = () => {
+        this.setState(({increase}) => ({
+            increase: !increase
+        }))
+    }
+
+    onRise = () => {
+        this.setState(({rise}) => ({
+            rise: !rise
+        }))
+    }
+
+    render() {
+        const {name, salary, onDelete} = this.props; ---------------------------------- вот!!!!!!
+        const {increase, rise} = this.state;
+
+        let classNames = "list-group-item d-flex justify-content-between";
+        if (increase) {
+            classNames += ' increase';
+        }
+        if (rise) {
+            classNames += ' like';
+        }
+    
+        return (
+            <li className={classNames}>
+                <span className="list-group-item-label" onClick={this.onRise}>{name}</span>
+                <input type="text" className="list-group-item-input" defaultValue={salary + '$'}/>
+                <div className='d-flex justify-content-center align-items-center'>
+                    <button type="button"
+                        className="btn-cookie btn-sm "
+                        onClick={this.onIncrease}>
+                        <i className="fas fa-cookie"></i>
+                    </button>
+    
+                    <button type="button"
+                            className="btn-trash btn-sm ">
+                        <i className="fas fa-trash"></i>
+                    </button>
+                    <i className="fas fa-star"></i>
+                </div>
+            </li>
+        )
+    }
+}
+
+export default EmployeesListItem;
+
+
+
+и теперь на кнопку с удалением навешиваю обработчик события onClick:
+
+<button type="button"
+        className="btn-trash btn-sm "
+        onClick={onDelete}>  ----------------вот
+    <i className="fas fa-trash"></i>
+</button>
+
+Теперь при нажатии на кнрпку мусорку -в консоль выводится сообщение 'Deleted'
+
+те я связал несколько компонентов на разных уровнях.
+
+2. Соответственно этим я и буду пользоваться, я в главном компоненте app.js передам действие:
+
+в компонент EmployeesList я передем функцию
+
+    <EmployeesList data={data}
+        onDelete={id => console(id)}/>  - вот такое
+
+
+а далее я передаю ее в EmployeesList:
+и использую ее в коде
+
+const EmployeesList = ({data, onDelete}) => {  ------------dвот
+
+    const elements = data.map(item => {
+        const {id, ...itemProps} = item;
+        return (
+            <EmployeesListItem 
+                key={id} 
+                {...itemProps}
+                onDelete={() => onDelete(id)}/>  -----------вот
+        )
+    })
+
+3. Как известно динамически с данными в реакте можно работать только  внутри state, поэтому главный компанент нужно переделать в обычный класс 
+для того чтобы использовать состояние внутрикласового компоненета.
+Поэтому как обычно импортирую  в  главный компанент App компонен из реакта:
+
+import { Component } from 'react';
+
+далее
+
+class App extends Component {   ---- вот переделываю в класс
+    
+и return  помещаю в метод render()
+
+render() {
+        return (
+            <div className="app">
+                <AppInfo />
+    
+                <div className="search-panel">
+                    <SearchPanel/>
+                    <AppFilter/>
+                </div>
+                
+                <EmployeesList 
+                    data={this.state.data}
+                    onDelete={this.deleteItem}/>
+                <EmployeesAddForm onAdd={this.addItem}/>
+            </div>
+        );
+    }
+}
+
+и данные базы данных помещею в конструктор и в state ( в состояние) в свойство data:
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            data: [
+                {name: 'John C.', salary: 800, increase: false, id: 1},
+                {name: 'Alex M.', salary: 3000, increase: true, id: 2},
+                {name: 'Carl W.', salary: 5000, increase: false, id: 3}
+            ]
+        }
+    }
+
+и передаю в компонент EmployeesList 
+
+<EmployeesList 
+    data={this.state.data} />   ----вот так
+   
+
+
+4. Теперь создам и передам метод deleteItem:
+он принемает id. Fа внутри вызывается this.setState, и из этого this.setState вытаскиваю data.
+
+А далее мне нужно методом фильтр профильтровать массив data и сформировать нофый.
+А метод фильтр какраз фильтруеит и создает новый массив с элементами прошедшими проверку
+
+запкскаю проверку (item => item.id !== id) тут я говорю, что нужно перебрать каждый объект
+и если item.id не равен id, те отфильтруются только те элементы id которого не совпадает с id  который пришел
+вот тут deleteItem = (id) => и как итог вернется новый массив без удаленного элемента.
+
+    deleteItem = (id) => {
+        this.setState(({data}) => {
+            return {
+                data: data.filter(item => item.id !== id)
+            }
+        })
+    }
+
+и передаю этот метод   компоненту  EmployeesList в главном файле app.js
+
+<EmployeesList 
+    data={this.state.data}
+    onDelete={this.deleteItem}/>

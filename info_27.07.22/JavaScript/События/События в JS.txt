@@ -1,0 +1,74 @@
+Событие - сигнал от браузера, что что то произошло.
+
+Больше событий тут
+https://oddler.ru/blog/i63
+
+1.
+События мыши
+
+click	    onClick	* 	Одинарный щелчок (нажата и отпущена кнопка мыши)
+dblclick	onDblClick	* 	Двойной щелчок
+contextmenu	onContextmenu	* 	Щелчок правой кнопкой мыши на элементе
+selectstart	onselectstart	* 	Начало выделения контента. Изменение выделения скриптом.
+mousewheel	onMousewheel	* Нажата кнопка мыши в пределах текущего элемента
+mousemove	onMouseMove	* Перемещение курсора мыши в пределах текущего элемента
+mouseout	onMouseOut	* Курсор мыши выведен за пределы текущего элемента
+mouseover	onMouseOver	* Курсор мыши наведен на текущий элемент
+mouseup	    onMouseUp	* Отпущена кнопка мыши в пределах текущего элемента
+mousedown	onMouseDown	* Нажата кнопка мыши в пределах текущего элемента
+
+События клавиатуры
+
+keydown	onKeyDown	* Практически все HTML-элементы	Нажата клавиша на клавиатуре
+keypress	onKeyPress	* Практически все HTML-элементы	Нажата и отпущена клавиша на клавиатуре
+keyup	onKeyUp	* Практически все HTML-элементы	Отпущена клавиша на клавиатуре
+
+События элементов форм
+
+focus	onFocus	A, AREA, BUTTON, INPUT, LABEL, SELECT, TEXTAREA	Получение элементом фокуса (щелчок мышью на элементе или очередное нажатие клавиши табуляции)
+blur	onBlur	A, AREA, BUTTON, INPUT, LABEL, SELECT, TEXTAREA	Потеря текущим элементом фокуса, т.е. переход к другому элементу. Возникает при щелчке мышью вне элемента либо нажатии клавиши табуляции
+change	onChange	INPUT, SELECT, TEXTAREA	Изменение значений элементов формы. Возникает после потерей элементом фокуса, т.е. после события blur
+reset	onReset	FORM	Сброс данных формы ( щелчок по кнопке
+<input type="reset"> )
+select	onSelect	INPUT, TEXTAREA	Выделение текста в текущем элементе
+submit	onSubmit	FORM	Отправка данных формы ( щелчок по кнопке
+<input type="submit"> )
+abort	onAbort	IMG, input type="img"	Прерывание загрузки изображения
+
+События окна браузера
+
+load	onLoad	BODY, FRAMESET	Закончена загрузка документа
+unload	onUnload	BODY, FRAMESET	Попытка закрытия окна браузера и выгрузки документа
+error	onError	IMG, WINDOW	Возникновение ошибки выполнения сценария
+move	onMove	WINDOW	Перемещение окна
+resize	onResize	WINDOW	Изменение размеров окна
+scroll	onScroll	* Практически все HTML-элементы	Прокрутка окна или облас
+
+
+
+
+2.
+События focus/blur
+Событие focus вызывается в момент фокусировки, а blur – когда элемент теряет фокус.
+
+<script>
+input.onblur = function() {
+  if (!input.value.includes('@')) { // не email
+    input.classList.add('invalid');
+    error.innerHTML = 'Пожалуйста, введите правильный email.'
+  }
+};
+
+input.onfocus = function() {
+  if (this.classList.contains('invalid')) {
+    // удаляем индикатор ошибки, т.к. пользователь хочет ввести данные заново
+    this.classList.remove('invalid');
+    error.innerHTML = "";
+  }
+};
+</script>
+
+3.
+События keydown и keyup показывают то, что клавиша была нажата, в то время как keypress показывает то, 
+какой символ был введён. Например, прописную "a" keydown и keyup сообщат как 65, а keypress сообщит как 97. 
+Заглавную же "A" все события сообщают как 65.

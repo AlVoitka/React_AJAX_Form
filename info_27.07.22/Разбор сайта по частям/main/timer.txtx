@@ -1,0 +1,292 @@
+1. содаю переменную которая будет определять конец акции:
+
+const deadLine = '2022-07-01';  -- дата в виде строки
+
+
+2. 
+Создам функцию которая будет определять разницу в м.с между deadLine и текущим временем:
+в качестве аргумента (endtime) она и будет принимать deadLine:
+
+function getTimeRemaining(endtime) {
+
+        const t = Date.parse(endtime) - Date.parse(new Date()),
+    1        days = Math.floor( (t/(1000*60*60*24)) ),
+    2       seconds = Math.floor( (t/1000) % 60 ),
+    3        minutes = Math.floor( (t/1000/60) % 60 ),
+    4        hours = Math.floor( (t/(1000*60*60) % 24));
+
+выше я имею значения толко внутри функции, а чтобы их отдать наружу использую return в виде объекта
+        return {
+            'total': t,  -- общее кол-во мс
+            'days': days,
+            'hours': hours,
+            'minutes': minutes,
+            'seconds': seconds
+        };
+    }
+
+--- const t = Date.parse(endtime) - Date.parse(new Date()),
+в техническую переменную t будет приходить строка '2022-07-01', а со строкой невозможно выпольнить матем операцию, и поэтому 
+применяется метод Date.parse - он переведет строковое значение в кол-во м.с. И далее однимаем текущую дату new Date() 
+тоже переведенную в м.с
+
+--- days = Math.floor( (t/(1000*60*60*24)) ),  - считаю количество дней для отображения в таймере
+при помощи метода Math.floor округляю до целого числа .
+(1000*60*60*24) 1000 х 60 - в минуте
+                1000 х 60 х 60 - в часе
+                1000 х 60 х 60 х24 - кол-во мс в сутках
+
+--- hours = Math.floor( (t/(1000*60*60) % 24) );     -- тут мне нужен остаток от целых суток   
+% 24 - опреатор прощент делит на 24 и возвращает остаток от деления
+те мс поделятся на сутки и получи остаток - это у будут часы часы
+
+
+3.
+Теперь создам функцию которая будет выводить эти значения на страницу (рендерить):
+понядабятся 2 аргумента (selector, endtime):
+
+    function setClock(selector, endtime) {
+
+        const   timer = document.querySelector(selector),  -- получаю сам таймер по селектору который передам как аргумент
+                days = timer.querySelector("#days"),   -- получаю блок с часами по id
+                hours = timer.querySelector('#hours'),
+                minutes = timer.querySelector('#minutes'),
+                seconds = timer.querySelector('#seconds');
+
+    }
+
+4.
+Прямо внутри функции function setClock я создаю еще одну функцию, котороя будет обновлять все значения таймера 
+каждую cекунду:
+
+        function updateClock() {
+            const t = getTimeRemaining(endtime); -  в t записываю объект со всеми данными что return из getTimeRemaining
+                                                    аргумент endtime = deadLine('2022-07-01')  
+                                                
+
+            days.innerHTML = t.days;   --- рендерю элементы на страниц
+            hours.innerHTML = t.hours;
+            minutes.innerHTML = t.minutes;
+            seconds.innerHTML = t.seconds;
+            
+        }
+
+Когда функция запустится, она рааситает время и на основании рассчетов выведет на страница результаты.        
+А для того чтобы функция updateClock()  запускалась каждую секунду, имитирую работу таймера, использую timeInterval:
+
+       function setClock(selector, endtime) {
+
+        const timer = document.querySelector(selector),
+            days = timer.querySelector("#days"),
+            hours = timer.querySelector('#hours'),
+            minutes = timer.querySelector('#minutes'),
+            seconds = timer.querySelector('#seconds'),
+            timeInterval = setInterval(updateClock, 1000);  ----- вот запустил через каждую секунду
+
+Интервал запущен, но ведь его когдато нужно будет остановить, и сделаю это условием в function setClock:
+
+        function updateClock() {
+            const t = getTimeRemaining(endtime);
+
+            days.innerHTML = getZero(t.days);
+            hours.innerHTML = getZero(t.hours);
+            minutes.innerHTML = getZero(t.minutes);
+            seconds.innerHTML = getZero(t.seconds);
+
+            if (t.total <= 0) {  --- вот
+                clearInterval(timeInterval);  --- прекращаю интервал
+            }
+        }
+
+5.
+Осталось только запустить функции вызовом, и передать аргументы:
+
+
+    const deadline = '2022-07-01';
+
+    function getTimeRemaining(endtime) {
+        const t = Date.parse(endtime) - Date.parse(new Date()),
+            days = Math.floor( (t/(1000*60*60*24)) ),
+            seconds = Math.floor( (t/1000) % 60 ),
+            minutes = Math.floor( (t/1000/60) % 60 ),
+            hours = Math.floor( (t/(1000*60*60) % 24) );
+
+        return {
+            'total': t,
+            'days': days,
+            'hours': hours,
+            'minutes': minutes,
+            'seconds': seconds
+        };
+    }
+
+
+    function setClock(selector, endtime) {
+
+        const timer = document.querySelector(selector),
+            days = timer.querySelector("#days"),
+            hours = timer.querySelector('#hours'),
+            minutes = timer.querySelector('#minutes'),
+            seconds = timer.querySelector('#seconds'),
+            timeInterval = setInterval(updateClock, 1000);
+
+       
+
+        function updateClock() {
+            const t = getTimeRemaining(endtime);
+
+            days.innerHTML = getZero(t.days);
+            hours.innerHTML = getZero(t.hours);
+            minutes.innerHTML = getZero(t.minutes);
+            seconds.innerHTML = getZero(t.seconds);
+
+            if (t.total <= 0) {
+                clearInterval(timeInterval);
+            }
+        }
+    }
+
+    setClock('.timer', deadline);  ----------------  передаю аргументы : селектор таймера, '2022-07-01'
+
+
+6.
+Если таймер выведе в самом верху сайта ( всмысле сразу в зоне видимости юзера), то юзер заметитмигание значение таймера,
+тоесть сразу появится значение по имолчанию, а через секунду сработает код и актуализирует данные.
+
+решается так/ нужно функцию updateClock() вызвать до самой себя: так она быстрее отработает
+
+
+const deadline = '2022-07-01';
+
+    function getTimeRemaining(endtime) {
+        const t = Date.parse(endtime) - Date.parse(new Date()),
+            days = Math.floor( (t/(1000*60*60*24)) ),
+            seconds = Math.floor( (t/1000) % 60 ),
+            minutes = Math.floor( (t/1000/60) % 60 ),
+            hours = Math.floor( (t/(1000*60*60) % 24) );
+
+        return {
+            'total': t,
+            'days': days,
+            'hours': hours,
+            'minutes': minutes,
+            'seconds': seconds
+        };
+    }
+
+
+    function setClock(selector, endtime) {
+
+        const timer = document.querySelector(selector),
+            days = timer.querySelector("#days"),
+            hours = timer.querySelector('#hours'),
+            minutes = timer.querySelector('#minutes'),
+            seconds = timer.querySelector('#seconds'),
+            timeInterval = setInterval(updateClock, 1000);
+
+        updateClock();  ---------------------------------------вот
+
+        function updateClock() {
+            const t = getTimeRemaining(endtime);
+
+            days.innerHTML = getZero(t.days);
+            hours.innerHTML = getZero(t.hours);
+            minutes.innerHTML = getZero(t.minutes);
+            seconds.innerHTML = getZero(t.seconds);
+
+            if (t.total <= 0) {
+                clearInterval(timeInterval);
+            }
+        }
+    }
+
+7. Когда осается к примеру 4 часа, то код так и пишет.Но часто заказчик просит выводить это в формате 04:06
+Тоесть если число меньше чем 10, то нужно подставить нолик.
+
+Для этого сощдам функцию которая будет этим заниматься:
+Функция будет принемать в себя число, и с ним работать
+
+    function getZero(num){
+        if (num >= 0 && num < 10) {  -- если число больше нуля и число меньше 10, то
+            return '0' + num;  --- возвращаем модифицированное значение 0+число
+        } else {
+            return num;
+        }
+    }
+
+и теперь модифицированное значение  передаю в updateClock()
+
+        function updateClock() {
+            const t = getTimeRemaining(endtime);
+
+            days.innerHTML = getZero(t.days);  ----- вот таким образом
+            hours.innerHTML = getZero(t.hours);
+            minutes.innerHTML = getZero(t.minutes);
+            seconds.innerHTML = getZero(t.seconds);
+
+            if (t.total <= 0) {
+                clearInterval(timeInterval);
+            }
+        }
+
+8. Когда время истекае, таймер начинает показывать отрицательное значение.
+Решение условием:
+
+так было:
+
+    const deadline = '2022-12-31';
+
+    function getTimeRemaining(endtime) {
+        const t = Date.parse(endtime) - Date.parse(new Date()),
+
+            days = Math.floor( (t/(1000*60*60*24)) ),
+            seconds = Math.floor( (t/1000) % 60 ),
+            minutes = Math.floor( (t/1000/60) % 60 ),
+            hours = Math.floor( (t/(1000*60*60) % 24) );
+
+        return {
+            'total': t,
+            'days': days,
+            'hours': hours,
+            'minutes': minutes,
+            'seconds': seconds
+        };
+    }
+
+так делаю:
+
+    function getTimeRemaining(endtime) {
+        let days, hours, minutes, seconds;  -------------------- объявил эти переменные
+        const t = Date.parse(endtime) - Date.parse(new Date());
+
+
+        if (t <= 0) {  --- если значение меньше 0, то они есть 0
+            days = 0;
+            hours = 0;
+            minutes = 0;
+            seconds = 0;
+
+        } else {  -------------- иначе стандартный код как был
+            days = Math.floor( (t/(1000*60*60*24)) ),
+            seconds = Math.floor( (t/1000) % 60 ),
+            minutes = Math.floor( (t/1000/60) % 60 ),
+            hours = Math.floor( (t/(1000*60*60) % 24) );
+        }
+         
+        return {
+            'total': t,
+            'days': days,
+            'hours': hours,
+            'minutes': minutes,
+            'seconds': seconds
+        };
+    }
+
+
+Но вместо нулей в можно прописат и зарендерить к примеру сообщени о окончании акции и еще кучу всего:
+
+        if (t <= 0) { 
+            days = 0;
+            hours = 0; ----- вот вместо этого
+            minutes = 0;
+            seconds = 0;

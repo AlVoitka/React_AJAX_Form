@@ -1,0 +1,35 @@
+1. разделитель как тэг
+
+hr {
+    border: none; /* Убираем границу для браузера Firefox */
+    color: red; /* Цвет линии для остальных браузеров */
+    background-color: red; /* Цвет линии для браузера Firefox и Opera */
+    height: 2px; /* Толщина линии */
+   }
+
+hr {
+        margin: 0 25% 0 35%;   --- выравнивание по горизонтали или --- margin: 0 auto;
+        width: 30%;  ---- ширина элемента
+        margin-top: 20px;  ---- отстуи сверху
+        height: 5px; ----- высота линии
+        border: none;  ---- убирает границу если она появляется в некоторых браузерах
+        background-color: aqua;    ------- цвет линии
+    }
+
+
+2. Разделитель как div
+
+   .divider {
+    height: 150px;
+    color: white;
+    padding:  50px 0px 50px 0px;
+    
+    
+    &__stripe {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 50px;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+}

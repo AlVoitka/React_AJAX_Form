@@ -1,0 +1,221 @@
+Логика следущая:
+При запуске страницы идет запрос на API, приходит ответ с данными, они рендерятся в нужном блоке. И вторая чась, это пок клику на триггер
+происходит новый запрос и смена контента.
+
+
+Естественно этот компонент долженбыть классовым, тк у него должно быть состояние куда будут записываться данные пришедшие с сервера.
+
+
+import { Component } from 'react';    ------------------  1.  импортировал компонент
+import MarvelService from '../../services/MarvelService';
+
+import './randomChar.scss';
+import mjolnir from '../../resources/img/mjolnir.png';
+
+
+
+class RandomChar extends Component {   -----------------   2.  переделал в класс
+        
+    state = {     -------------------------  4. создал состояние без конструктора по синтаксису полей классов
+        name: null,                           
+        description: null,
+        thumbnail: null,   --- так называется маленькая картинка (превьюшка)
+        homepage: null,
+        wiki: null
+    } 
+
+    render() { }   ------------------    3.  весь return поместил в метод рендер
+
+        const {name, description, thumbnail, homepage, wiki} = this.state;  -------- 6. вытаскиваю значения из стэйта
+                                                                подставляю  эти переменные подставить в нужные места чтобы 
+                                                                данные динамически изменялись
+        return (
+            <div className="randomchar">
+                <div className="randomchar__block">
+                    <img src={thumbnail} alt="Random character" className="randomchar__img"/>   -------- 
+                                                                        вместо src={thor}  и уже картинка тора не нужна, 
+                                                                        удаляю import thor from '../../resources/img/thor.jpeg';
+                    <div className="randomchar__info">
+                        <p className="randomchar__name">{name}</p>   ----- вместо Thor
+                        <p className="randomchar__descr">
+                            {description}      -----------------------------------------------тут вместо опписания
+                        </p>
+                        <div className="randomchar__btns">
+                            <a href={homepage} className="button button__main">  -------- -- суда подставляю
+                                <div className="inner">homepage</div>
+                            </a>
+                            <a href={wiki} className="button button__secondary">    ---- тут ссылка на вики
+                                <div className="inner">Wiki</div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div className="randomchar__static">
+                    <p className="randomchar__title">
+                        Random character for today!<br/>
+                        Do you want to get to know him better?
+                    </p>
+                    <p className="randomchar__title">
+                        Or choose another one
+                    </p>
+                    <button className="button button__main">
+                        <div className="inner">try it</div>
+                    </button>
+                    <img src={mjolnir} alt="mjolnir" className="randomchar__decoration"/>
+                </div>
+            </div>
+        )
+    }
+}
+
+export default RandomChar;
+
+
+
+
+
+2. Теперь нужно получить Эти даные {name, description, thumbnail, homepage, wiki} от сервера,
+записать их в state и отрендерить:
+Для этого понадобится MarvelService.
+
+
+Для того чтобы работоть в этом компоненте с серрвером ( в частности с компонентом MarvelService) нужно его в этот компонент передать:
+
+
+импорирую import MarvelService from '../../services/MarvelService';  в  классе randomChar
+
+
+ marvelService = new MarvelService(); -- это значит что я создал новое свойство внутри класс RandomChar 
+                                        тоесть посути импортировал компонен и зависал его в свойство marvelService
+                                        это синтаксис полей класса
+
+
+
+
+
+Теперь создам здесь создам метод updateChar который будет обращаться к серверу, получать данные и 
+записывать их в стейт (state) изменяя его методом setState:
+
+updateChar = () => {
+    const id = 1011198;
+    this.marvelService.
+    getCharacter(id)
+    .then(res => {
+        this.setState({
+            name: res.data.results[0].name,
+            description: res.data.results[0].description,
+            thumbnail: res.data.results[0].thumbnail.pach + '.' + res.data.results[0].thumbnail.extension,
+            homepage: res.data.results[0].urls[0].url,
+            wiki: res.data.results[0].urls[1].url
+        })
+    }); 
+}
+
+разбор:
+
+    updateChar = () => {
+        
+        this.marvelService  -----обращаюсь к серверу
+            .getCharacter(id)   ------ вызываю метод по которому получу данные на одного персонажа по id
+
+        далее результат работы этого метода буду обрабатывать:
+
+            .then(res => {   ----говорю что ко мне придет результат и из него нужно записать нужные данные
+                                 и сформирорвать объект с новыми значениями свойст
+                и говорю как их получить ( в идеале нужно видеть что приходит  в виде объектаи из него тащить нужные данные)
+                this.setState({
+                    name: res.data.results[0].name,  -  тут я беру результат  который получил как объект
+                    у этого объекта есть свойство data  и у этой дейти есть поле results - там массив сданными И
+                    я обращаюсь к первому персонажк [0] и записываю name  
+                    теперь в состоянии name будет записано имя персонажа                
+                    description: res.data.results[0].description,   ---- по аналогии
+                    thumbnail: res.data.results[0].thumbnail + '.' + res.data.results[0].extenseonal, --хз как то так 
+                    получаю данные из двух частей
+                    homepage: res.data.results[0].urls[0].url,
+                    wiki: res.data.results[0].urls[1].url
+                })
+            }) 
+    }
+
+
+    5. Метод создан и теперь его нужно запустить в самом начале, при первом запуске страницы
+и далее когда юзер будет нажимать кнопку. 
+
+Одним из способов вызвать метод в компоненте это по средствам конструктора.
+
+class RandomChar extends Component {
+    constructor(props) {
+        super(props);
+        this.updateChar();   --- вот запускаю метод при формированиии компонента
+    }
+
+НО!!!!! Это очень плохая практика (вызов метода в конструкторе),В консоли будет ошибка что нельзя вызывать setState на компоненте который еще не появился.
+Проблема тут в том что конструктор вызывается до того как была построена верстка    
+
+
+
+6. 
+Теперь про загрузке страницы вызывается один и тот же контент, тк id жестко назначен в переменной
+
+updateChar = () => {
+    const id = 1011198;  ---- вот 
+    this.marvelService.
+    getCharacter(id)
+    .then(res => {
+        this.setState({
+            name: res.data.results[0].name,
+            description: res.data.results[0].description,
+            thumbnail: res.data.results[0].thumbnail.pach + '.' + res.data.results[0].thumbnail.extension,
+            homepage: res.data.results[0].urls[0].url,
+            wiki: res.data.results[0].urls[1].url
+        })
+    }); 
+}
+
+
+Для достижения рандомности изменяю это:
+
+У каждой API свой метод обращения к id, но в моем случае:
+
+const id = Math.floor(Math.random() * (1011400 - 1011000) + 1011000);
+
+Math.floor - метод округления полученного результата.
+Math.random()  - возвращает случайное чило
+
+
+
+7.
+Мне нужно постоянно работать с рандомными данными, точнее с получением их отсервера,в методе updateChar 
+у меня есть код вытаскивающий эти данные из ответе сервера.
+
+this.setState({
+        name: res.data.results[0].name,
+        description: res.data.results[0].description,
+        thumbnail: res.data.results[0].thumbnail.pach + '.' + res.data.results[0].thumbnail.extension,
+        homepage: res.data.results[0].urls[0].url,
+        wiki: res.data.results[0].urls[1].url
+    }) 
+
+И мне это часто нужно использовать, и поэтому я создам метод который будет это делать, а сам метод буду передавать туда где это нужно.
+Это будет кдобнее всего делать централизованно в компоненте по получения дагнных от сервера -  marvelService.
+
+От сервера приходит огромный объект с кучей ненужных свойст, а в этом методе я оставлю (трансформирую приходящий объект) 
+только те, что мне нужны.
+
+
+_transformCharacter = (char) => {
+        return {
+            name: res.data.results[0].name,
+            description: res.data.results[0].description,
+            thumbnail: res.data.results[0].thumbnail.pach + '.' + res.data.results[0].thumbnail.extension,
+            homepage: res.data.results[0].urls[0].url,
+            wiki: res.data.results[0].urls[1].url
+        }
+    }
+
+    Дальше сложно для описания, там опитмазация коди  нужно смотреть - Трансформация данных ур149
+
+
+
+
+

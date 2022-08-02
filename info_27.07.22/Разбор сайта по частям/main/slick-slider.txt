@@ -1,0 +1,313 @@
+https://swiperjs.com/demos  -- тоже жороший слайдер
+
+Слик слайдер работаен на библиотеке jquery и соответсвенно к проекту нужно ее подключать, а это немного замедляет работу страницы.
+В идеале нужно делать или подключатьслайдеры на нативном JS такие как tiny-slider.
+
+- https://github.com/ganlanyuan/tiny-slider/blob/0fcb2e643489802da28eb1a84b15fec6c7ed54b6/README.md
+- https://owlcarousel2.github.io/OwlCarousel2/
+- https://galleriajs.github.io/
+- https://fotorama.io/
+- https://hammerjs.github.io/
+
+
+https://kenwheeler.github.io/slick/
+
+https://kenwheeler.github.io/slick/
+
+1. На сайте во вкладке usage копирую структуру для HTML
+
+<div class="your-class">
+  <div>your content</div>
+  <div>your content</div>
+  <div>your content</div>
+</div>
+
+2. Во вкладке get it now жмем dowland now, скачиваем архив ( на 08.04.2022 - версия 1.8.1)
+3. в распакованном файле  входим в папку slick  и 
+файл - slick.css копируем в папку проекта CSS.
+А файл - slick.min.js  копируем в папку проекта JS
+
+3. Далее подключаем эти файлы к проекту
+
+CSS правила
+
+---- <link rel="stylesheet" href="css/slick.css"> - CSS файл
+
+затем до подключения JS файла - копирую на сайте в разделе usage  два файла (они подключают библиотеку Jquery)
+
+<script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+
+
+
+
+
+4. Подключаю  сам Slick 
+
+<script src="js/slick.min.js"></script>
+
+Очень важно сохраниять эту последовательность подключения скриптовых файлов!!!!!!!
+
+    <script src="https://kit.fontawesome.com/ef1062ba9e.js" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <script src="./js/slick.min.js"></script>    ------------ вот смотреть за подключением слика
+    <script src="../js/bundle.js"></script>
+</body>
+</html>
+
+
+
+5. В структуру HTML прописываем картинки и путь к ним.
+
+<section class="slider">
+    <div class="container">
+        <div class="slider__slick">
+            <div>
+                <img src="img/1.jpg" alt="1">
+            </div>
+            <div>
+                <img src="img/2.jpg" alt="2">
+            </div>
+            <div>
+                <img src="img/3.jpg" alt="3">
+            </div>
+        </div>
+    </div>
+</section>
+
+
+6. В попке JS создаю модуль (файл myslider.js)  а в ней функцию sl и подключаю этот модуль к сборщику-файлу script.js.
+Копирую на странице во вкладке usage скрипт для работы файла:
+
+$(document).ready(function(){
+  $('.your-class').slick({
+    setting-name: setting-value
+  });
+});
+
+тут необходимо немного поменять под себя: подставляю свой класс и удаляю ненужные свойства:
+
+$(document).ready(function(){
+        $('.myslider__ss').slick();
+});
+
+
+
+
+/////////////////////////// ------ НАСТРОЙКИ слайдера ----///////////////////////////
+
+1. на сайте https://kenwheeler.github.io/slick/ во вкладке demos выбираем тот который нравится
+
+далее и копируем только объект ( то что внутри фигурных скобок {} вместе со скобками)
+
+https://www.youtube.com/watch?v=rXNfDfqtM3M&t=957s
+
+arrows:true; - стрелки переключения слайдов
+dots: false; - точки под слайдами
+adaptiveHeight: false;  - автоподстраивание под высоту картинки слайда
+easing: 'linear'; - тип анимации при смене слайда бывают разные типы https://habr.com/ru/company/skillbox/blog/579044/
+
+
+
+{
+  infinite: true,
+  slidesToShow: 3,
+  slidesToScroll: 3
+}
+
+и передаю этот объект в .slick
+получаем
+
+$(document).ready(function(){
+    $('.carousel__inner').slick({
+        infinite: true,             - карусель двигвется бесконечно, если false - то с ограничением 
+        slidesToShow: 3,            - кол-во слайдов одновременно
+        slidesToScroll: 3           - сколько слайдов перелистается за одно нажатие
+      });
+});
+
+
+{
+  dots: true,                       - точки под фото
+  speed: 300,                       - скорость пролистывания слайдов
+  adaptiveHeight: true              - адаптиция под разную высоту картинок
+
+  autoplay: true,                   - автопереключение слайдов
+  autoplaySpeed: 2000,              - скорость их переключения
+
+  speed: 1000,                      - скорость эффекта
+  fade: true,                       - еффект проявления картинки
+  cssEase: 'linear'                 - xарактер этого эффекта
+
+  arrows: false                     - выключает кнопки для прокрутки
+
+}
+
+2. во вкладке setting все настройки с объяснениями
+
+для стилизации стрелок во вкладке setting
+
+prevArrow: <button type="button" class="slick-prev">Previous</button>  --------вот
+nextArrow: <button type="button" class="slick-next">Next</button>
+
+Тужно только обязательно обернуть их в ковычки:
+
+prevArrow: '<button type="button" class="slick-prev"></button>',
+nextArrow: '<button type="button" class="slick-next"></button>',
+
+
+
+
+
+//////////////////---Стилизация стрелок----/////////////////////////
+
+3. Добавляю рисунки или иконки для кнопки:
+
+prevArrow: '<button type="button" class="slick-prev"><img src="./img/left-arrow.svg"></button>',
+nextArrow: '<button type="button" class="slick-next"><img src="./img/right-arrow.svg"></button>',
+
+Не забываем брать  в кавычки ( те задавать элемент- строка) и вставляем их в скрипт .
+
+Если картинка svg то цвет меняю  добавляя свойство fill="red" в файле картинки.
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="306px" -------fill="red"------ height="306px" viewBox="0 0 306 306" style="enable-background:new 0 0 306 306;" xml:space="preserve">
+<g>
+	<g id="chevron-left">
+		<polygon points="247.35,35.7 211.65,0 58.65,153 211.65,306 247.35,270.3 130.05,153 		"/>
+	</g>
+
+4.  стилизуем  кнопки в CSS
+
+.slick-prev {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: -65px;
+    border: none;
+    background-color: #fff;
+    cursor: pointer;
+    img {
+        width: 25px;
+        height: 25px;
+    }
+        
+}
+.slick-next  {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: -65px;
+    border: none;
+    background-color: #fff;
+    cursor: pointer;
+    img {
+        width: 25px;
+        height: 25px;
+    }   
+
+
+
+    ///////////////////------ Стиоизация точек ------///////////////////
+
+
+1. dots: true; - точки под слайдами
+В панеле разраба появляются элеементы Ul с классом slick-dots и в нем элементы,: li, button, slick-active. 
+ вот для стилизауии и буду использовать эти классы:
+
+.myslider__downslider {
+    display: block;
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+
+    .slick-dots {   --- стилизую блок с точками
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 5px;
+
+        li { ---------------- стилизую списки
+            list-style: none;
+            margin: 0px 10px;
+
+            button { ----------- стилизую кнопки (точки)
+                font-size: 0;
+                height: 10px;
+                width: 10px;
+                border: none;
+                border-radius: 50%;
+                background-color: red;
+            }
+        }
+
+        li.slick-active button {  --------- делаю активную кнопку прозрачной (li.slick-active - тут слитно и это важно!)
+            background-color:transparent;
+            border: 1px solid red;
+        }
+    }
+}
+
+
+5.////////////////////////// z-index  //////////////////////////////
+
+Если слайдер перекрывает другой контент, то нужно задать z-index ему , а тккже тому элементу что перекрывается:
+в слик слайдере есть класс .slick-slide, с ним и нужно работать:
+
+.myslider__downslider {
+    display: block;
+    height: 200px;
+    z-index: 0;
+    .slick-slide {
+        z-index: 0;  -----  вот  
+        img {
+            border-radius: 10%;
+            margin-left: 50px;
+        }
+
+у меня перекрывал слайдер липкое меню, и вот я назначил индех ему:
+
+.sticky {
+    position: sticky;
+    top: 0;
+    background: linear-gradient(to right, rgb(176, 184, 230), rgb(113, 119, 155));
+    z-index: 1;  ---- вот
+}
+
+            
+            
+5.  ///////////////////////   Мобильная адаптация  ///////////////////////////
+
+responsive: [
+
+                {
+                    breakpoint: 1200,
+                    settings: {
+                        slidesToShow: 3,
+                        slidesToScroll: 2,
+                        arrows: false
+                    }
+                },
+
+                {
+                    breakpoint: 992,
+                    settings: {
+                        slidesToShow: 2,
+                        slidesToScroll: 1,
+                        arrows: false
+                    }
+                },
+
+                {
+                    breakpoint: 768,
+                    settings: {
+                        slidesToShow: 1,
+                        slidesToScroll: 1,
+                        arrows: false
+                    }
+                },
+
+            ]
+

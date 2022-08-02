@@ -1,0 +1,197 @@
+1 курс урок 59
+
+У меня в проекте 2 вида модалок, одни на jQuerry/ дригие на нативном JS
+
+Существуют готовые плагины для модальных окон:
+
+https://dimsemenov.com/plugins/magnific-popup/documentation.html
+в основном применяется для открытия картинок.
+
+1. Верстаю модальное окно:
+
+Мне нужен затемненный фон, а на нем див с инфой ( это иесть модальное окно).
+- Создаю оверлей и два блока (с титлом и описанием), форму и такой элемент как крестик для закрытия  окна.
+ Форму тупо можно скопировать из ранее созданного элемента.
+
+<div class="overlay"> <!--  большая темная обертка с полупрозрачным фоном на которой и будет появляться м-окно -->
+
+    <div class="modal" id="consultation"> -------------- <!--  модальное окно -->
+        <div class="modal__close">&times;</div>----------------- <!--   &times; - спецсимвол крестик , созданный средствами HTML -->
+        <div class="modal__subtitle">Вы хотите купить</div>
+        <div class="modal__descr">Вы выбрали:</div>
+        <form class="feed-form feed-form_mt25" action="#">----------------- <!--  вот сама форма для ввода -->
+            <input name="name" required placeholder="Ваше имя" type="text">
+            <input name="phone" required placeholder="Ваш телефон" type="number">
+            <input name="email" required placeholder="Ваш E-mail" type="email">
+
+            <button class="button button_submit catalog-item__button">ну шо, берём?</button>
+        </form>
+    </div>
+
+</div>
+
+2. Стилизую элементы модального окна.
+
+---подложка ----
+
+.overlay {    --- затемненный задний фон
+    display: none;
+    position: fixed;  --- тоесть поверх всего в любом месте на экране перед пользователем
+    width: 100%;   -- мне нужен этот блок на весь экран
+    height: 100%;
+    top: 0;  ---- - обязательное свойство позиционироваяния для position: fixed;  - без него ничего не будет
+    background-color: rgba(0,0,0,.56) ;  .56 = 0.56 это 56% прозрачности по альфаканалу 
+}
+
+!!!!!!!!!!!!!!!! свойство opacity не применять, тк начнет затемняться и сам  нужный контент, для этого импользую
+background-color: rgba(0,0,0,.56) с альфаканалом.!!!!!!!!!!!!!!!!
+
+
+---- сам блок с модальным окном----
+
+.modal {
+    position: absolute;
+    top: 50%; ----------------- установил по центру экрана
+    left: 50%;----------------- установил по центру экрана
+    transform: translate(-50%, -50%); ------решает проблему с шириной самого м-окна по оси x и y 
+    width: 350px;   ---- задаю ширину ии высоту окна
+    min-height: 300px;   --- mid для того если будет появлятся от validate сообщения и ошибке чтобы окно увеличилось а не ламалось.
+    background-color: #f2f2f2;
+    padding: 38px 40px 38px 40px;
+    border-radius: 10px;
+}
+
+------ крестик ----
+тк это смецсимвол то задаю ему свойства как тексту
+
+ &__close {
+        position: absolute;
+        top: 0;
+        right: -45px;
+        font-size: 65px;
+        line-height: 23px;
+        font-weight: normal;
+        color: red;
+        cursor: pointer;
+    }
+
+----------- субтайтл и описание ----------
+
+    &__subtitle {
+        color: white;
+        font-size: 19px;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    &__descr {
+        color: white;
+        font-size:15px;
+        font-weight: 500;
+        text-align: center;
+        margin: 10px 0 10px 0;
+    }
+
+    ------ сами формы были стилизованы раньше по классу "feed-form"
+
+
+
+Таким же образом я создаю второе модальное окно:
+
+<div class="modal" id="success"> 
+    <div class="modal__close">&times;</div>
+    <div class="modal__subtitle">Success</div>
+    <div class="modal__descr">you are booked for a consultation</div>
+</div>
+
+
+окна готовы, теперь нужно его скрыть (поставить в первостепенное его положение)
+
+.overlay 
+    display: none
+
+
+
+
+
+
+3. ----------------Scripts------------------------
+
+в HTML задаю модальным окнам идентификаторы id="consult" и id="success":
+чтобы в скрипте обрацаться к нужному окну.
+
+<div class="modal" id="consult"> 
+<div class="modal" id="success">
+
+1. Первое что нужно сделать, это отключить эти окна по id в стилях:
+и при поможи скрипта буду активировать нужное окно.
+
+#consult, #success {
+    display: none;
+}
+
+2. Получение элемента при помощи свойств от jQuerry
+
+Поскольку все мои кнопки имеют разные классы (bnn / btn_modal и тд) а в зависимости от кнопки должны происходить разные действия,
+то лучше я буду получать эти элементы по дата- атрибуту, но сначала их назначу:
+
+тоесть кнопкам по нажатию на которые будет выводится модальное окно  consult , я назначу дата атрибут data-madal="consult":
+
+<button data-madal="consult" class="btn">consult</button>
+
+и по этому атрибуту буду получать элемент в скрипте:
+получаю элемент и вешаю обработчик на клик:
+
+$('[data-madal=consult]').on('click', function() {
+    }); 
+
+далее в функции я говорю что быдет происходить при клике на кнопку:
+
+$('.overlay, #consult').fadeIn('0.5s');
+тут я получаю элементы ( подложку и модальное окно) и  говорю что они быдут показаны( при помощи .fadeIn('0.5s'));
+
+
+Для того чтобы скрыть подложку и окно:
+получаю элемент крестик, вешаю обработчик на клик:
+
+$('.modal__close').on('click', function(){
+    
+    });
+
+и внутри функции говорю что делать:
+
+$('.modal__close').on('click', function(){
+    $('.overlay, #consult, #success').fadeOut('1s');  ---- получаю нужные элементы и скрываю их.
+    });                                                       
+
+3. И после того как юзер заполнит форму и нажмет кнопку в модальном окне:
+
+<button class="btn_modal">book a consultation</button>
+
+должно проявится еще одно окно с успехом:
+
+<div class="modal" id="success"> 
+    <div class="modal__close">&times;</div>
+    <div class="modal__subtitle">Success</div>
+    <div class="modal__descr">you are booked for a consultation</div>
+</div>
+
+4. По итогу для этого сайтя я переделал немного, убрал дата атрибуты и каждой кнопке 
+назначил отдельный класс и потом получал эти кнопки по классу:
+
+$('.btn_header').on('click', function() {
+    $('.overlay, #consult').fadeIn('0.5s');  --- тут я рендерю подложку и окно #consult
+}); 
+
+$('.modal__close').on('click', function(){
+    $('.overlay, #consult, #success').fadeOut('1s');  --- тут при нажатии на крестик все закрывается
+    });
+
+$('.btn_modal').on('click', function() {
+    $('#consult').fadeOut('1s');  --- тут при нажатии на кнопку в модальном окне зскрывается окно с консулт и открывается успех
+    $('#success').fadeIn('1s');
+});  
+
+$('.btn').on('click', function() {   
+    $('.overlay, #success').fadeIn('1s');  --- тут рендерится подложка и окно успех
+});  

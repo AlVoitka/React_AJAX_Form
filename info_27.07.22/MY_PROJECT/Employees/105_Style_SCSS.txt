@@ -1,0 +1,103 @@
+
+Один из вариантов это импортировать файл css  внуть компонента:
+
+import './employees-list-item.css'; 
+
+и webpack - будет их соеденять в один большой файл
+
+
+Но для удобства работы нужно применять компеляторы SASS или SCSS так как там можно использовать вложенность и 
+тем самым сокращать код.
+
+И для этого я создам файл  для компонента employees-add-form:
+
+employees-add-form.scss
+
+топер сравним, в css файле у меня был такой код:
+
+.app-add-form {
+    margin-top: 30px;
+    padding: 25px;
+    background-color: #3d5a80;
+    border-radius: 4px;
+    box-shadow: 15px 15px 30px rgba(0,0,0, .15);
+    color: #fff;
+}
+
+.add-form {
+    margin-top: 20px;
+}
+
+.add-form input {
+    width: 350px;
+    margin-right: 20px;
+}
+
+а в SCSS исползуя его синтаксис я его сократил:
+
+инпут вложил в селектор .add-form
+
+.add-form {
+    margin-top: 20px;
+    input {
+        width: 350px;
+        margin-right: 20px;
+    }
+}
+
+.app-add-form {
+    margin-top: 30px;
+    padding: 25px;
+    background-color: #3d5a80;
+    border-radius: 4px;
+    box-shadow: 15px 15px 30px rgba(0,0,0, .15);
+    color: #fff;
+}
+
+
+И остается толко импортировать SCSS стили в нужный компонент:
+
+// import './employees-add-form.css';  --- этот закаментил
+import './employees-add-form.scss'; - --вот импортировал
+
+class EmployeesAddForm extends Component {
+
+
+Когда запущу проект mpm start  скорее всего будет ошибка компиляции. Для ее решения нужно установить
+npm пакет sass:
+
+npm i sass --save       (--save   обязательно чтобы сохранить зависимости)
+
+Так проблема решилась и в консоли разработчика f12 видно что стили идут из  cscc.
+
+
+
+Работа с переменными!!!!!!!!!
+
+Для начала нужно создать глобальный файл с переменными variables.scss  в папке src 
+и в нее помещу переменную:
+
+$main-color: #FF5F13;
+
+теперь нужно файл variables.scss импортировать в тот файл в котором буду применять переменные :
+
+@import '/src/variables.scss';  --- вот импортировал
+
+.add-form {
+    margin-top: 20px;
+    input {
+        width: 350px;
+        margin-right: 20px;
+    }
+}
+
+.app-add-form {
+    margin-top: 30px;
+    padding: 25px;
+    background-color: #3d5a80;
+    border-radius: 4px;
+    box-shadow: 15px 15px 30px rgba(0,0,0, .15);
+    color: #fff;
+    background-color: $main-color;  ---- вот применил переменную
+}
+

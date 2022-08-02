@@ -1,0 +1,59 @@
+2 курс урок 64
+
+В написании скрипта для табов есть 3 глвавные задачи:
+
+1. Функция скрывающая ненужные ( неактивные) табы.
+2. Функция для показа активного таба.
+3. Назначение обработчика событий на клик по триггеру.
+
+Решение
+Получение элементов:
+1. триггер
+2. Контент
+3. класс активности
+
+
+функции
+
+function hideTabContent() {
+        
+    tabsContent.forEach(item => { ----------------- перебрал
+        item.classList.add('hide');  ---------------- скрыл
+        item.classList.remove('show', 'fade'); -------
+    });
+
+    tabs.forEach(item => {
+        item.classList.remove(activeClass);
+    });
+}
+
+function showTabContent(i = 0) {
+        tabsContent[i].classList.add('show', 'fade');
+        tabsContent[i].classList.remove('hide');
+        tabs[i].classList.add(activeClass);
+    }
+    
+    hideTabContent();
+    showTabContent();
+
+
+////////////////  заготавливаю классы для анимациии и работы с ними  .////////////////
+.show {
+    display: block;
+}
+.hide {
+    display: none;
+}
+.fade {
+    animation-name: fade;
+    animation-duration: 1.5s;
+}
+
+@keyframes fade {
+    from {
+        opacity: 0.1;
+    }
+    to {
+        opacity: 1;
+    }
+}

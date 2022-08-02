@@ -1,0 +1,271 @@
+ Ресурсы с готовыми спинерами.
+ https://loading.io/
+ https://icons8.com/preloaders
+
+ 1. Для начала создам компонент spinner, ведь в дальнейшем его можно импортировать  куда угодно в разные части приложения.
+
+ const Spinner = () => {
+    return (
+        <svg xmlns="http://www.w3.org/2000/svg" style={{margin: '0 auto', background: 'none', display: 'block'}} width="200px" height="200px" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
+            <g transform="translate(80,50)">
+            <g transform="rotate(0)">
+            <circle cx="0" cy="0" r="7" fill="#1c4595" fillOpacity="1">
+            <animateTransform attributeName="transform" type="scale" begin="-0.875s" values="1.5 1.5;1 1" keyTimes="0;1" dur="1s" repeatCount="indefinite"></animateTransform>
+            <animate attributeName="fillOpacity" keyTimes="0;1" dur="1s" repeatCount="indefinite" values="1;0" begin="-0.875s"></animate>
+            </circle>
+            </g>
+            </g><g transform="translate(71.21320343559643,71.21320343559643)">
+            <g transform="rotate(45)">
+            <circle cx="0" cy="0" r="7" fill="#1c4595" fillOpacity="0.875">
+            <animateTransform attributeName="transform" type="scale" begin="-0.75s" values="1.5 1.5;1 1" keyTimes="0;1" dur="1s" repeatCount="indefinite"></animateTransform>
+            <animate attributeName="fillOpacity" keyTimes="0;1" dur="1s" repeatCount="indefinite" values="1;0" begin="-0.75s"></animate>
+            </circle>
+            </g>
+            </g><g transform="translate(50,80)">
+            <g transform="rotate(90)">
+            <circle cx="0" cy="0" r="7" fill="#1c4595" fillOpacity="0.75">
+            <animateTransform attributeName="transform" type="scale" begin="-0.625s" values="1.5 1.5;1 1" keyTimes="0;1" dur="1s" repeatCount="indefinite"></animateTransform>
+            <animate attributeName="fillOpacity" keyTimes="0;1" dur="1s" repeatCount="indefinite" values="1;0" begin="-0.625s"></animate>
+            </circle>
+            </g>
+            </g><g transform="translate(28.786796564403577,71.21320343559643)">
+            <g transform="rotate(135)">
+            <circle cx="0" cy="0" r="7" fill="#1c4595" fillOpacity="0.625">
+            <animateTransform attributeName="transform" type="scale" begin="-0.5s" values="1.5 1.5;1 1" keyTimes="0;1" dur="1s" repeatCount="indefinite"></animateTransform>
+            <animate attributeName="fillOpacity" keyTimes="0;1" dur="1s" repeatCount="indefinite" values="1;0" begin="-0.5s"></animate>
+            </circle>
+            </g>
+            </g><g transform="translate(20,50.00000000000001)">
+            <g transform="rotate(180)">
+            <circle cx="0" cy="0" r="7" fill="#1c4595" fillOpacity="0.5">
+            <animateTransform attributeName="transform" type="scale" begin="-0.375s" values="1.5 1.5;1 1" keyTimes="0;1" dur="1s" repeatCount="indefinite"></animateTransform>
+            <animate attributeName="fillOpacity" keyTimes="0;1" dur="1s" repeatCount="indefinite" values="1;0" begin="-0.375s"></animate>
+            </circle>
+            </g>
+            </g><g transform="translate(28.78679656440357,28.786796564403577)">
+            <g transform="rotate(225)">
+            <circle cx="0" cy="0" r="7" fill="#1c4595" fillOpacity="0.375">
+            <animateTransform attributeName="transform" type="scale" begin="-0.25s" values="1.5 1.5;1 1" keyTimes="0;1" dur="1s" repeatCount="indefinite"></animateTransform>
+            <animate attributeName="fillOpacity" keyTimes="0;1" dur="1s" repeatCount="indefinite" values="1;0" begin="-0.25s"></animate>
+            </circle>
+            </g>
+            </g><g transform="translate(49.99999999999999,20)">
+            <g transform="rotate(270)">
+            <circle cx="0" cy="0" r="7" fill="#1c4595" fillOpacity="0.25">
+            <animateTransform attributeName="transform" type="scale" begin="-0.125s" values="1.5 1.5;1 1" keyTimes="0;1" dur="1s" repeatCount="indefinite"></animateTransform>
+            <animate attributeName="fillOpacity" keyTimes="0;1" dur="1s" repeatCount="indefinite" values="1;0" begin="-0.125s"></animate>
+            </circle>
+            </g>
+            </g><g transform="translate(71.21320343559643,28.78679656440357)">
+            <g transform="rotate(315)">
+            <circle cx="0" cy="0" r="7" fill="#1c4595" fillOpacity="0.125">
+            <animateTransform attributeName="transform" type="scale" begin="0s" values="1.5 1.5;1 1" keyTimes="0;1" dur="1s" repeatCount="indefinite"></animateTransform>
+            <animate attributeName="fillOpacity" keyTimes="0;1" dur="1s" repeatCount="indefinite" values="1;0" begin="0s"></animate>
+            </circle>
+            </g>
+            </g>
+        </svg>
+    )
+}
+
+export default Spinner;
+ 
+ 2. 2. Перехожу в компонент randomChar и задаю его состоянию дополнителоьное свойство loading:
+ которое будет отвечать за параметр активной зкгрузки
+
+ class RandomChar extends Component {
+    constructor(props) {
+        super(props);
+        this.updateChar();
+    }
+
+    state = {
+        char: {},
+        loading: true  --------вот
+    }
+
+    и вытаскиваю это свойство :
+
+    
+    render() {
+        const {char: {name, description, thumbnail, homepage, wiki}, loading} = this.state;  ----- вот
+        return (
+            <div className="randomchar">
+                <div className="randomchar__block">
+                    <img src={thumbnail} alt="Random character" className="randomchar__img"/>
+                    <div className="randomchar__info">
+
+и говорю, что если у нас loading ( те в позиции true), то возвращяю компонент spinner:
+
+        if(loading) {
+            return <Spinner/>
+        }
+
+
+И соответственно его нужно импортировать:
+
+import { Component } from 'react';
+import Spinner from '../spinner/Spinner';  ----- вот импортирую
+import MarvelService from '../../services/MarvelService';
+
+import './randomChar.scss';
+import mjolnir from '../../resources/img/mjolnir.png';
+
+class RandomChar extends Component {
+
+3. Теперь для того чтобы менять спиннер на данные, нужно менять состояние state после прогрузки данных:
+это я сдедаю в методе по загрузке onCharLoaded:
+
+    onCharLoaded = (char) => {
+        this.setState({char, loading: false})  --- вот добавил
+    }
+те как только прогрузятся данные, то loading: false
+
+
+
+
+4. Если вмесо загрузки ( к примеру) сервер дает ошибку, то с этим тоже нужно работать.
+И логика примерно такая же, если приходить ошибка, то   меняем state и отображаем другой компонент. 
+
+Добавляю состояние для компонента:
+
+   state = {
+        char: {},
+        loading: false,
+        error: false  --- вот, изначально в фолс тк оштбки пока нету
+    }
+ 
+ а вот когда произайдет ошибка от сервера, то мне нужен будет метод который будет с ней работать.
+ И это будет onError:
+
+    onError =() => {
+        
+    }
+
+эта ошибка может происходить тольк по методу запроса updateChar, поэтому я испоьзую метод catch, который и выдаст эту ошибку:
+
+    updateChar = () => {
+        const id = Math.floor(Math.random() * (1011400 - 1011000) + 1011000);
+        this.marvelService
+            .getCharacter(id)
+            .then(this.onCharLoaded)
+            .catch(this.onError)  ----  вот так
+    }
+
+и далее в методе onError:
+
+    onError =() => {
+        this.setState({ 
+            loading: false,  --- ведь произошла ошибка, а значит нет загрузки 
+            error: true  ---- и вот она ошибка
+        })
+    }
+
+5. Для того чтобы отображать ошибку, нужен отдельный компонент с ошибкой который можно использовать в любой части приложения.
+Создаю папку errorMessage и в ней компонент который будет возвращать к примеру картинку( можно что угодно...тескт).
+Я буду использовать gif-картинку которую помещаю в папку с компонентом.
+
+Сначала импортирую ее:
+
+import img from './error.gif'
+
+и потом пропишу:
+
+const ErrorMessage =() => {
+    return (
+        <img src={img}/>
+    )
+}
+и экспортирую компонент:
+
+export default ErrorMessage;
+
+6. Далее работаю уже в самом компоненты где все это будет рендериться RandomChar:
+
+сперва импортирую компонент:
+
+import { Component } from 'react';
+import Spinner from '../spinner/Spinner';
+import MarvelService from '../../services/MarvelService';
+import ErrorMessage from '../errorMessage/ErrorMessage';  ----- вот
+
+import './randomChar.scss';
+import mjolnir from '../../resources/img/mjolnir.png';
+
+На данный момент у меня в компоненте RandomChar три состояния:
+
+    state = {
+        char: {},   ---- рендерит контент
+        loading: false,  ----- рендерит спинер загрузки
+        error: false  ----- рендерит ошибку загрузки
+    }
+
+и стоит задача все проавильно разместить в методе render.
+Для этого я создам переменную errorMassage и буду помещать в неё либо компонент с ошибкой либо null:
+
+const errorMessage = error ? <ErrorMessage/> : null;  ---ели ошибка, то выведит компонеент  
+
+тоже делаю для спиннера:
+
+const spinner = loading ? <Spinner/> : null;
+
+И последнне это контент основной, он должен размещаться на странище в тот момент когда уже нет загрузки и при этом нет ошибки
+
+const content = !(loading || error) ? <RandomChar/> : null;
+
+тут дословно: если сейчас нет загрузки или ошибки, то в таком случае возвращаем компонент RandomChar, иначе null.
+
+
+Осталось только добавить эти переменные в return и вытащить состояние error:
+
+render() {
+        const {char: {name, description, thumbnail, homepage, wiki}, loading, error} = this.state;  ---------вот
+        const errorMessage = error ? <ErrorMessage/> : null;
+        const spinner = loading ? <Spinner/> : null;
+        const content = !(loading || error) ? <RandomChar/> : null;
+
+        if(loading) {
+            return <Spinner/>
+        }
+
+        return (
+            <div className="randomchar">
+                {errorMessage}---
+                {spinner}------вот
+                {content}--------
+                <div className="randomchar__block">
+                    <img src={thumbnail} alt="Random character" className="randomchar__img"/>
+                    <div className="randomchar__info">
+                        <p className="randomchar__name">{name}</p>
+                        <p className="randomchar__descr">
+                            {description}
+                        </p>
+                        <div className="randomchar__btns">
+                            <a href={homepage} className="button button__main">
+                                <div className="inner">homepage</div>
+                            </a>
+                            <a href={wiki} className="button button__secondary">
+                                <div className="inner">Wiki</div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div className="randomchar__static">
+                    <p className="randomchar__title">
+                        Random character for today!<br/>
+                        Do you want to get to know him better?
+                    </p>
+                    <p className="randomchar__title">
+                        Or choose another one
+                    </p>
+                    <button className="button button__main">
+                        <div className="inner">try it</div>
+                    </button>
+                    <img src={mjolnir} alt="mjolnir" className="randomchar__decoration"/>
+                </div>
+            </div>
+        )
+    }
+}
+
+

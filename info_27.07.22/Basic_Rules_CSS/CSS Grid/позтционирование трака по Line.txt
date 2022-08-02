@@ -1,0 +1,29 @@
+позиционирование трека
+
+Трек позиционируется по линиям сетки, смотреть изображения grid_line
+
+#paris {
+    grid-column-start: 1;  -- начинается с первой линии
+    grid-column-end: 3;  --- заканчивается на третьей
+}
+
+#prague {
+    grid-row-start: 2;  -- начоло вторая линия строки 
+    grid-row-end: 4;   
+    grid-column-start: 2;   --- и 2 линия колонок
+    grid-column-end: 4;
+}
+
+
+
+Сокращенный синтаксис:
+
+было
+    grid-row-start: 2;  
+    grid-row-end: 4;   
+    grid-column-start: 2;   
+    grid-column-end: 4;
+
+стало
+    grid-row: 2 / 4;  -- использую комбинированное свойство
+    grid-column: 2 / 4;

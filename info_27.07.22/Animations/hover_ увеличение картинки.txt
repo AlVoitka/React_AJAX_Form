@@ -1,0 +1,13 @@
+1.
+Евеличение картинки не ламая верстку
+
+&__item {
+        img {
+            width: 100%;
+            height: 100%;
+            transition: 0.5s all;
+        }
+        :hover {
+            transform: scale(1.15);  ---- именно через scale!!!!!
+        }
+    }

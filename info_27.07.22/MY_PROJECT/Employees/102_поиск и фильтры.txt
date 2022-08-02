@@ -1,0 +1,515 @@
+Буду реализовывать поиск и фильтры.
+Логика следующая:
+когда польсзователь в строке поиска будет воодить значение, мне его нужно будет сохранить в компаненте поиска 
+и конечно же это будет состояние state, и это состояние мне нужно будет передать наверх компоненту App где и будет использоваться это состояние.
+Далее примени фильтрацию и отправвлю полученное на отрисовку.
+
+1. В главном файле App.js
+добавлю новое состояние tern:
+
+class App extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            data: [
+                {name: 'John C.', salary: 800, increase: false, rise: true, id: 1},
+                {name: 'Alex M.', salary: 3000, increase: true, rise: false, id: 2},
+                {name: 'Carl W.', salary: 5000, increase: false, rise: false, id: 3}
+            ],
+            term: '',  -------вот
+        }
+
+тк далее я буду его использовать , то вытаскиваю эти состояния
+
+render() {
+        const {data, tern} = this.state;  -------------------вот вытащил их из this.state
+        const employees = this.state.data.length;
+        const increased = this.state.data.filter(item => item.increase).length;
+        return (
+            <div className="app">
+                <AppInfo employees={employees} increased={increased}/>
+    
+                <div className="search-panel">
+                    <SearchPanel/>
+                    <AppFilter/>
+                </div>
+                
+                <EmployeesList 
+                    data={data}   --------------и тут соответсвенно чтобы правильно передавалось ( было так  data={this.state.data})
+                    onDelete={this.deleteItem}
+                    onToggleProp={this.onToggleProp}/>
+                <EmployeesAddForm onAdd={this.addItem}/>
+            </div>
+        );
+    }
+
+    Вот теперь есть куда сохранять введенное пользователем значение, и теперь нужно написать метод для поиска:
+    это будет функция с двумя аргументами:
+    первый term - строчка по которой буду искать
+    второй items - массив данных который нужно будет фильтовать
+
+    
+
+     searchEmp = (items, term) => {
+        if (term.length === 0) {
+            return items;
+        }----- тут сказано что если сторчка в поиске ничего не будет содержать, то мы ничего не делаем, а просто возвращаем тот массив который 
+        придет.
+        Ну а если условие не сроботало, то будем фильтровать массив:
+        использую метод .filter
+        и говорю что тут будет каждый отдельный елемент массива item => и раскрываю колбэк функцию:
+
+        return items.filter(item => {
+            И далее я буду возвращать свойство name что в объекте data в состоянии State и буду искать совпадение со строчкой term
+            при помощи метода .indexOf - это метод для строк который если ничего не находит то 
+            возвращает '-1'
+
+            return item.name.indexOf(term) > -1
+        })
+    }
+
+
+    Если после фильтрации что то найдено, те было совпадение то нужно их отобразить на странице,
+    для этого создам переменную visibleData куда запишится отфильтрованный по строчке term массив данных:
+
+    const visibleData = this.searchEmp(data, term);
+
+    и далее для вывода на странице буду передавть эту переменную как данные:
+
+    render() {
+        const {data, term} = this.state;
+        const employees = this.state.data.length;
+        const increased = this.state.data.filter(item => item.increase).length;
+        const visibleData = this.searchEmp(data, term); --------------------------вот
+
+        return (
+            <div className="app">
+                <AppInfo employees={employees} increased={increased}/>
+    
+                <div className="search-panel">
+                    <SearchPanel/>
+                    <AppFilter/>
+                </div>
+                
+                <EmployeesList 
+                    data={visibleData}  -----------------------вот передаю
+                    onDelete={this.deleteItem}
+                    onToggleProp={this.onToggleProp}/>
+                <EmployeesAddForm onAdd={this.addItem}/>
+            </div>
+        );
+    }
+}
+
+export default App;
+
+
+
+Теперь буду получать значение введенное пользователем в форму из компонента SearchPanel.
+
+Так как здесь мне понадобится состояние (State) то буду делать этот компонент классовым:
+
+так было:
+
+import './search-panel.css';
+
+const SearchPanel = () => {
+    return (
+        <input type="text"
+                className="form-control search-input"
+                placeholder="Найти сотрудника"/>
+    )
+}
+
+export default SearchPanel;
+
+
+так стало:
+
+
+import { Component } from 'react';  ----- импортирую компонент
+
+import './search-panel.css';
+
+class SearchPanel extends Component {   ------- переделываю на класс который наследуется от Компонента что я выше заимпортировал из библиотеки реакт
+    constructor(props) {  ------------------- создаю конструктор и новое состояние
+        super(props);
+        this.state = {   ----- вот состояние (это объект со строкой term)
+            term: ''
+        }
+    }
+
+    render() {         ------ все что было в return  обернул методом render
+        return (
+            <input type="text"
+                    className="form-control search-input"
+                    placeholder="Найти сотрудника"/>
+        )
+    }
+    }
+
+export default SearchPanel;
+
+
+теперь это состояние нужно поднимать вверх до компонента App чтобы там уже фильтровать данные, но сперва нужно создать 
+новый метод дял обновления поиска -  onUpdateSearch в главном файле:
+этот метод принемает строчку term  и вее что он будет делать, это устанавливать состояние
+
+    onUpdateSearch = (term) => {
+        this.setState({term});    ------------this.setState({term: turm}); - так было до сокращения синтаксиса - сделал 
+                                                                              сокращенную запись объектов
+    }
+
+
+и теперь этот метод onUpdateSearch (который отвечает за установление состояния внутри главного компонента)
+передаю в компонент SearchPanel:
+
+ return (
+            <div className="app">
+                <AppInfo employees={employees} increased={increased}/>
+    
+                <div className="search-panel">
+                    <SearchPanel onUpdateSearch={this.onUpdateSearch}/>  --- вот таким образом
+                    <AppFilter/>
+                </div>
+                
+                <EmployeesList 
+                    data={visibleData}
+                    onDelete={this.deleteItem}
+                    onToggleProp={this.onToggleProp}/>
+                <EmployeesAddForm onAdd={this.addItem}/>
+            </div>
+        );
+    }
+}
+
+и начинаю этот метод использовать в самом компоненте SearchPanel:
+и для того чтобы инпут нормально синхронизировался с локальным стэйтом ( те не только на верх передавать буду состояние, но и тут буду 
+его держать чтобы нормально работал интерфейс) создам прямо тут локальный метод c таким же названием onUpdateSearch:
+
+ в него будет приходить объект события, и далее будет создаваться переменная const term в которую запишется 
+ значение по событию введенное пользователем -e.target.value;
+
+
+    onUpdateSearch = (e) => {
+        const term = e.target.value;
+        this.setState({term});  ---   устанавлтваю локальное состояние и это состояние передаю.....
+        
+    }
+
+
+ render() {
+        return (
+            <input type="text"
+                    className="form-control search-input"
+                    placeholder="Найти сотрудника"
+                    value={this.state.term}/>  ----------------- вот сюда !!!!!!
+        )
+    }
+    }
+
+export default SearchPanel;
+
+
+и теперь, когда локальное состояние установлено, его нужно передать наверх при помощи пропса
+
+ и передаю туда строчку turn ( то что ввел пользователь):
+
+
+
+import { Component } from 'react';
+
+import './search-panel.css';
+
+class SearchPanel extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            term: ''
+        }
+    }
+
+    onUpdateSearch = (e) => {
+        const term = e.target.value;
+        this.setState({term});
+        this.props.onUpdateSearch(term)  ----- вот передаю в методе и передаю туда строчку turn (то что ввел пользователь)
+    }
+
+    все что остается это отследить событие:
+
+    render() {
+        return (
+            <input type="text"
+                    className="form-control search-input"
+                    placeholder="Найти сотрудника"
+                    value={this.state.term}
+                    onChange={this.onUpdateSearch}/>  -----------------  вот ослеживаю
+        )
+    }
+    }
+
+export default SearchPanel;
+
+
+
+2. Теперь реализую фильры:
+
+Фильтр можно представитьв виде обычной строки:
+
+class App extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            data: [
+                {name: 'John C.', salary: 800, increase: false, rise: true, id: 1},
+                {name: 'Alex M.', salary: 3000, increase: true, rise: false, id: 2},
+                {name: 'Carl W.', salary: 5000, increase: false, rise: false, id: 3}
+            ],
+            term: '',
+            filter: ''  --------- вот он, сюда буду записывать выбранный фильтр( по одной из кнопок)
+        }
+        this.maxId = 4;
+    }
+
+    далее вытаскиваю его значение из стэйта:
+
+    render() {
+        const {data, term, filter} = this.state;   ---------вот добавил его
+        const employees = this.state.data.length;
+        const increased = this.state.data.filter(item => item.increase).length;
+        const visibleData = this.filterPost(this.searchEmp(data, term), filter);
+
+
+и пропишу метод FilterPost для фильтрации:
+
+он принемает в себя два аргумента:
+item - мой масив
+filtr - фильтр по которому буду фильтровать
+
+использую конструкцию switch  :
+
+filterPost = (items, filter) => {
+        switch (filter) {   
+
+   тк у меня всего 3 фильтра я прописываю два кейса  и обин по дефолному значению       
+            case 'rise':   ---- названия рандомные
+                return items.filter(item => item.rise);  - возвращаю отфильтрованный массив. Беру каждый элемент массива и верну только те элементы у которых
+                будет стоять rise - в логическом контексте true
+                тоесть он будет переберать этот массив:
+               
+            data: [
+                {name: 'John C.', salary: 800, increase: false, rise: true, id: 1},   -- и этот будет включен в массив возвращаемый после фильтрации
+                {name: 'Alex M.', salary: 3000, increase: true, rise: false, id: 2},
+                {name: 'Carl W.', salary: 5000, increase: false, rise: false, id: 3}
+            ],
+
+
+            case 'moreThen1000':  --- снова рандомное название
+                return items.filter(item => item.salary > 1000);  --- снова фильтрую каждыйцый элемент внутри массива и возвращаю только те,
+                                                                     у которых salary > 1000
+                                   
+            default:
+                return items   - в этом случая я никак не фильтрую а просто возвращаю
+        }
+    }
+
+Метод создан, нужно его применить:   
+Для того чтобы применить фильтры одновременно с поиском по вводцу фамилии я навешу этот метод на уже существующую переменную const visibleData:
+
+метод filterPost = (items, filter) принемает 2 аргумена массив(items) и фильтр (filter) и как массив я помещаю  'this.searchEmp(data, term)' - это отфильтрованный массив
+из поиска. А  как фильтр я передаю стэйт-фильтр "filter" и получается так:
+
+const visibleData = this.filterPost(this.searchEmp(data, term), filter);
+
+тоесть конечные данные проходят двойную фильтрацию. Сначала фильтрация по поиску и потом по кнопке( по фильтрам).
+
+
+
+Далее перехожу к самому компоненту AppFilter  чтобы реализавать метод фильтрации:
+
+здесь не будет никакого внутреннего состояния,а значит не нужен классовый компонент.
+
+Для начала создам переменную const buttonsData, это будет массив данных и внутри сформирую набор из 3х объектов так как имею три кнопки :
+
+    const buttonsData = [
+        {name: 'all', label: 'Все сотрудники'},
+        {name: 'rise', label: 'На повышение'},
+        {name: 'moreThen1000', label: 'З/П больше 1000$'}
+    ];
+
+и теперь на базе эти данных формирую массив элементов:
+
+const buttons = buttonsData.map(({name, label}) => {
+перебераю массив при помощи .map и вытаскиваю данные name и lable
+
+и буду возвращать вот такую структуру с кнопкой:
+   return(
+       <button type="button"
+                    className="btn btn-light"
+                    key={name}>  ------ назначаю атрибут key - он выступит алгоритмом сравнения
+                    {label}  
+        </button>
+   )
+
+   и далее переменню buttons подставляю в структуру:
+
+   так было:
+
+   return (
+        <div className="btn-group">
+            <button type="button"
+                    className="btn btn-light">
+                    Все сотрудники
+            </button>
+            <button type="button"
+                    className="btn btn-outline-light">
+                    На повышение
+            </button>
+            <button type="button"
+                    className="btn btn-outline-light">
+                    З/П больше 1000$
+            </button>
+        </div>
+    )
+
+так стало
+
+   return (
+        <div className="btn-group">
+            {buttons}      
+        </div>
+    )
+
+Тут есть нюанс с кнопками, тк и них есть разные классы активности подсветки:
+className="btn btn-light"
+className="btn btn-outline-light"  - подставляется когда кнопка неактивна
+
+а я создал только с одним классом
+
+    return(
+       <button type="button"
+                    className="btn btn-light"  =-----вот
+                    key={name}>  ------ назначаю атрибут key - он выступит алгоритмом сравнения
+                    {label}  
+        </button>
+   )
+
+Для того чтобы решить это вопрос, я привяжусь к фильтру из главных данных и оттуда буду получать данные о текущем  состоянии:
+
+В фалй App :
+
+class App extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            data: [
+                {name: 'John C.', salary: 800, increase: false, rise: true, id: 1},
+                {name: 'Alex M.', salary: 3000, increase: true, rise: false, id: 2},
+                {name: 'Carl W.', salary: 5000, increase: false, rise: false, id: 3}
+            ],
+
+            term: '',
+            filter: 'all'   -- ставлю в такую позицию чтобы изначально все данные проходили в список
+        }
+
+И теперь это базовый фильтр нужно передать в компонент AppFilter и там использовать:
+
+render() {
+        const {data, term, filter} = this.state;
+        const employees = this.state.data.length;
+        const increased = this.state.data.filter(item => item.increase).length;
+        const visibleData = this.filterPost(this.searchEmp(data, term), filter);
+
+        return (
+            <div className="app">
+                <AppInfo employees={employees} increased={increased}/>
+    
+                <div className="search-panel">
+                    <SearchPanel onUpdateSearch={this.onUpdateSearch}/>
+                    <AppFilter filter={filter}/>    ------вот передаю пропс filter с текущим состоянием (state) ={filter} 
+                </div>
+
+Данные передал, теперь нужно с ними работать в файле app-filter
+
+Для начала принемаю переданный пропс:
+
+const AppFilter = (props) => {   ------ вот
+    const buttonsData = [
+        {name: 'all', label: 'Все сотрудники'},
+        {name: 'rise', label: 'На повышение'},
+        {name: 'moreThen1000', label: 'З/П больше 1000$'}
+    ];
+
+и для этого создам переменную в которой буду определять активен этот элемент или нет:
+метод .map переберает массив и проходит по каждомк объекту в массиве и бкдет искать совпадение по name:
+
+const active = props.filter === name;
+тут говорится что, если props.filter равен name который приходит, то в таком случае возвращает true в переменную active
+и в итоге в этой переменной либо true либо false. И значение из переменной буду использовать чтобы сформировать класс:
+
+создаю переменную которая буде содержать в себе стросчку с классом:
+
+const clazz = active ? 'btn-light' : 'btn-outline-light';
+тут я беру active и проверяю его с помощью тернарного оператора, и если active будет true - то 
+передаю класс 'btn-light',  а если active будет false то назначим класс 'btn-outline-light'
+
+и в итоге получу такой синтаксис:
+return (
+            <button type="button"
+                    className={`btn ${clazz}`}  --- раньше было так className="btn btn-light" 
+                    key={name}
+            </button>
+
+
+Осталось только реализовать действие по клику
+создам метод:
+
+И хорошая практика кстати все динамические действия который выполняет пользователь называть в методах начиная с 'on',
+а статические действия без участия пользователя без on
+
+    onFilterSelect = (filter) => {
+        this.setState({filter});
+    }
+тут я говорю что в него будет приходить какая то строка- filter
+и далее возвращаю объект в фильтром this.setState({filter}
+те узменяю состоянии текущий фильтр
+
+Далеее передаю этот фильтр вниз по иерархии:
+
+render() {
+        const {data, term, filter} = this.state;
+        const employees = this.state.data.length;
+        const increased = this.state.data.filter(item => item.increase).length;
+        const visibleData = this.filterPost(this.searchEmp(data, term), filter);
+
+        return (
+            <div className="app">
+                <AppInfo employees={employees} increased={increased}/>
+    
+                <div className="search-panel">
+                    <SearchPanel onUpdateSearch={this.onUpdateSearch}/>
+                    <AppFilter filter={filter} onFilterSelect={this.onFilterSelect}/>   ----вот было так <AppFilter filter={filter}/>
+                </div>
+
+Данные передал, таперь их нужно использовать :
+навешиваю обработчик событий onClick
+
+const AppFilter = (props) => {
+    const buttonsData = [
+        {name: 'all', label: 'Все сотрудники'},
+        {name: 'rise', label: 'На повышение'},
+        {name: 'moreThen1000', label: 'З/П больше 1000$'}
+    ];
+
+    const buttons = buttonsData.map(({name, label}) => {
+        const active = props.filter === name;
+        const clazz = active ? 'btn-light' : 'btn-outline-light';
+        return (
+            <button type="button"
+                    className={`btn ${clazz}`}
+                    key={name}
+                    onClick={() => props.onFilterSelect(name)}>   - вот навесил и передал аргуиент
+                    {label}
+            </button>
+
+

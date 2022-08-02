@@ -1,0 +1,45 @@
+
+Метод querySelectorAll() Document возвращает статический (не динамический) NodeList, 
+содержащий все найденные элементы документа, которые соответствуют указанному селектору.
+
+
+Основных видов селекторов всего несколько:
+
+* – любые элементы.
+div – элементы с таким тегом.
+#id – элемент с данным id.
+.class – элементы с таким классом.
+[name="value"] – селекторы на атрибут (см. далее).
+:visited – «псевдоклассы», остальные разные условия на элемент (см. далее).
+
+синтаксис:
+
+let elem = document.querySelectorAll('.heart');  --- тут точка обязательна тк работа не с классами а с селекторами
+const next = document.querySelector('.aboutAs__sliderJS-next');  -- получение по селектору
+const total = document.querySelector('#total');                   --- по ID
+let elem = document.querySelector('button');                      --- по тэгу
+
+
+NodeList(3) [div.heart, div.heart, div.heart]
+0: div.heart
+1: div.heart
+2: div.heart
+length: 3
+[[Prototype]]: NodeList
+
+
+В отличаи от остальных методов получения, querySelectorAll содержит метод forEach, и при помощи него можно получить 
+все элементы по очереди в коллекции:
+
+let elem = document.querySelectorAll('.heart');
+
+elem.forEach(item => {
+    console.log(item);
+})
+Тут во внутрь forEach я передаю адин аргумент item в виде стрелочной функции . item - это каждый элемент который есть в псевдомассиве.
+
+после перебора форичем получаю три элемента
+
+div.heart
+div.heart
+div.heart

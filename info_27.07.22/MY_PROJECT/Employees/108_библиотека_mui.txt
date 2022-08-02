@@ -1,0 +1,10 @@
+
+Установите MUI, самый популярный в мире фреймворк React UI -  https://mui.com/
+
+Добавление в проект как mpm ( https://mui.com/getting-started/installation/ ):
+
+Чтобы установить и сохранить в своих package.json зависимостях, запустите:
+
+npm install @mui/material @emotion/react @emotion/styled
+
+

@@ -1,0 +1,5 @@
+когда нужно сделать множество похожих компонентов отличающихвя только, к примеру заголовком.
+
+ур 156 вставка элементов reactchildren
+
+https://ru.reactjs.org/docs/react-api.html#reactchildren

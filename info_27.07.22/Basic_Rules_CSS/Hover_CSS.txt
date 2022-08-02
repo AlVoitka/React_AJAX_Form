@@ -1,0 +1,107 @@
+примеры https://dsgnmania.com/web-design/html-css/hover-effects/
+
+
+Eсли хочу использовать hover для появления и исчесновения элемента, и чтообы был еффект плавности
+при помощи transition, то display:none/block не подходит!!!!!!!!!!
+Переключение display не даст возможность применять transition. Используйте, например, opacity.
+Если хотите плавное изменение свойств при наведении (или другом состоянии) — не цепляйте transition к этому состоянию 
+(например, к :hover в вашем случае), потому что как только состояние пропадёт (увели курсор с элемента), то произойдёт 
+резкая смена значений.
+Однако, если вам нужно плавное появление и резкое исчезновение, то вешать нужно как раз на :hover 
+(или другое выбранное для появления состояние).
+
+
+!!!!!!если задний фон не как цвет а как картинка или градиент, то просто так ховер не изменит цвет.
+Ховер не перекроет background-image.
+Нужно делать так:
+
+background-image: linear-gradient(to right, rgb(176, 184, 230), rgb(113, 119, 155));
+    &:hover {
+        background-image: none; --- ибрал картинку
+        background-color: red;  --- задал просто цвет
+
+    }
+
+1.
+Есть два элемента которые я скрыл.
+
+.calculating__trackLessAnimate {
+    position: absolute;
+    opacity: 100;  ----- display: none; не подходит тек не будет свойства transition
+    left: 0px;
+    width: 50px;
+    height: 50px;
+    img {
+        width: 100%;
+    }
+}
+
+.calculating__trackOverAnimate {
+    position: absolute;
+    opacity: 100;  --- ----- display: none; не подходит тек не будет свойства transition
+    right: 0px;
+    width: 50px;
+    height: 50px;
+    img {
+        width: 100%;
+    }
+}
+
+2. Хочу сделать чтобы при наведении на кнопку они появлялить - display: block;
+
+Оба триггера и оба элемента в одном блоке div
+
+                <div class="calculating__choose" id="gender">
+триггер ---          <div id="less_5" class="age calculating__choose-item calculating__choose-item_active">less 5 years</div>
+скрытый элемент ---  <div id="track_less" class="calculating__trackLessAnimate"><img src="/src/scss/blocks/main/calculating/less_track.svg" alt="track"></div>
+                     <div id="over_5" class="age calculating__choose-item">over 5 years</div>
+                     <div id="trackTwo_over" class="calculating__trackOverAnimate"><img src="/src/scss/blocks/main/calculating/over_track.svg" alt=""></div>
+                </div>
+
+3.
+
+.calculating__choose-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 170px;
+    height: 50px;
+    padding: 0 10px;
+    background: #fff;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, .2);
+    border: none;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 14px;
+    cursor: pointer;
+    outline: 0;
+    transition: .3s all;
+    &:hover +.calculating__trackLessAnimate {  --- вот ставлю на триггер ховер, и важно чтобы элемент по иерархии HTMl был ниже и находился в одном диве
+        opacity: 100;     -- display:block - не подходит!                         
+    }
+    &:hover +.calculating__trackOverAnimate {  --- вот ставлю на триггер ховер
+        opacity: 100;   -- display:block - не подходит!  
+    }
+    
+}    
+
+триггер выше в блоке --           <div id="less_5" class="age calculating__choose-item calculating__choose-item_active">less 5 years</div>
+элемент под аоздействием ниже --- <div id="track_less" class="calculating__trackLessAnimate"><img src="/src/scss/blocks/main/calculating/less_track.svg" alt="track"></div>
+                                 <div id="over_5" class="age calculating__choose-item">over 5 years</div>
+                                 <div id="trackTwo_over" class="calculating__trackOverAnimate"><img src="/src/scss/b           
+
+
+
+4.
+Евеличение картинки не ламая верстку
+
+&__item {
+        img {
+            width: 100%;
+            height: 100%;
+            transition: 0.5s all;
+        }
+        :hover {
+            transform: scale(1.15);  ---- именно через scale!!!!!
+        }
+    }

@@ -1,0 +1,39 @@
+
+
+<div class="skills__ratings-item">
+    <div class="title title_fz14 skills__ratings-title">Создание сайтов</div>
+    <div class="skills__ratings-counter">50%</div>
+    <div class="skills__ratings-line">   ----- это шкала-линия как подкладка серенькая
+        <span></span>   --- спан
+    </div>
+</div>
+
+&-line {
+    width: 350px;
+    height: 14px;
+    background-color: #E8E4DE;
+    border-radius: 4px;
+    grid-column: 1 / 3;  ---- размер линии по сетке grid
+    span {
+        display: block;
+        height: 100%;
+        background-color: $main-color;
+        border-radius: 4px;
+    }
+}
+
+
+JS
+
+const counters = document.querySelectorAll('.skills__ratings-counter'),  --- так получил все блоки со значениями в процентах
+      lines = document.querySelectorAll('.skills__ratings-line span');  -- так получил все спэны что внутри селокторов .skills__ratings-line
+
+      counters.forEach( (item, i) => {
+        lines[i].style.width = item.innerHTML;
+      }); 
+      Перебераю массив по каждому отдельному элементу и использую i, чтобы обратиться к конкретному элементу по номнру пп.
+      Те к первму элементу массива counters подвяжется i=1, у второго будет i=2 и тд по каждому элементу. 
+
+      lines[i].style.width = item.innerHTML;  -- у выбранного конкретного элементва меняю инлайн стили в частности ширину
+      и присваиваю ему значение = item.innerHTML ( то значение что прописано у 
+      каждого из элементов в блоках <div class="skills__ratings-counter">85%</div>)

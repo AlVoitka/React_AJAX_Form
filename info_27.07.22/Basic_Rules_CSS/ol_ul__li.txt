@@ -1,0 +1,67 @@
+http://htmlbook.ru/content/svoystva-spiskov
+
+list-style-type: none; - убирает точки
+
+С помощью CSS можно создать маркированные и нумерованные списки, а также использовать в качестве маркера подходящее изображение.
+
+1.
+<ol>: The Ordered List = упорядоченный список
+HTML-элемент <ol> используется для упорядоченного списка — в частности для пронумерованного списка.
+
+<ol>
+  <li>Mix flour, baking powder, sugar, and salt.</li>
+  <li>In another bowl, mix eggs, milk, and oil.</li>
+  
+</ol>
+
+Результат:
+1. Mix flour, baking powder, sugar, and salt.
+2. In another bowl, mix eggs, milk, and oil.
+
+
+2.
+<ul>: The Unordered List = неупорядоченный список
+HTML-элемент <ul> используется для неупорядоченного списка - в частности для маркированного списка.
+
+<ul>
+    <li>Milk</li>
+    <li>Cheese</li>
+</ul>
+
+резудьтат:
+* Milk
+* Cheese
+
+
+3.
+<li>: The List Item =  элемент в списке
+HTML-элемент <li> используется для создания элементов списка. Он также должен находиться в родительском элементе: 
+упорядоченном списке (<ol>), неупорядоченном списке (<ul>), или меню (<menu>).
+
+
+
+CSS правила к ним:
+
+list-style-type: disc
+                circle
+                square
+                decimal
+                lower-roman    Первые три используются для создания маркированного списка, а остальные — для нумерованного.  
+                upper-roman
+                lower-alpha
+                upper-alpha
+                none        -- ибирает маркеры
+
+
+
+ist-style-image:none
+                URL	 - Устанавливает символом маркера любую картинку.
+
+
+
+
+list-style-position:outside
+                    inside	Выбор положения маркера относительно блока строк текста.   
+
+
+list-style:	 	Универсальное свойство, включает одновременно все вышеперечисленные свойства.

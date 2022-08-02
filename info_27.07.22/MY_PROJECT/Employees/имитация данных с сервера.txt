@@ -1,0 +1,55 @@
+2. Но запалнять каждого сотрудника вручною это не ризонно, нужно откуда то получать данные и автоматом прописывать их.
+В идеале эти данные должны приходить с сервера.Но на данном этапе я симитирую данные которые типо приходят с сервера.
+В файле app.js  в вункции App создам бузу данных, как буд то бы она пришла к нам с сервера:
+
+function App() {
+
+  const data = [
+    {name: 'Ales K.', salary: 800},
+    {name: 'Ales M.', salary: 700},
+    {name: 'Ales S.', salary: 600},
+  ];
+
+  данные пришли, теперь их нужно использовать:
+  я передаю их в компонент массив с данными :
+
+  function App() {
+
+  const data = [
+    {name: 'Ales K.', salary: 800},
+    {name: 'Ales M.', salary: 700},
+    {name: 'Ales S.', salary: 600},
+  ];
+
+  return (
+    <div className="app">
+        <AppInfo />
+
+        <div className="search-panel">
+            <SearchPanel/>
+            <AppFilter/>
+        </div>
+        
+        <EmployeesList data={data}/>   ------------ в виде атрибута data передал массив данных  как пропс
+        <EmployeesAddForm/>
+    </div>
+  );
+}
+
+export default App;
+
+
+И вот теперь мне нужно принять его в employees-list.js:
+
+const EmployeesList = ({data}) => {  ----------------  пот передал в виде аргумента
+    return (
+        <ul className="app-list list-group">
+            <EmployeesListItem name="Vitia M." salary={300}/>
+            <EmployeesListItem name="Tolia N." salary={400}/>
+            <EmployeesListItem name="Valera S." salary={500}/>
+            <EmployeesListItem name="Vitalt L." salary={700}/>
+            <EmployeesListItem name="Alex V." salary={900}/>
+        </ul>
+    )
+}
+

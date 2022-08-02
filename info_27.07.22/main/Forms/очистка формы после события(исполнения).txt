@@ -1,0 +1,22 @@
+
+HTMLFormElement.reset()
+Метод HTMLFormElement.reset() восстанавливает стандартные значения всем элементам формы. 
+Данный метод выполняет действие идентичное нажатию кнопки имеющей тип reset.
+
+Если элемент управления формы (такой как кнопка типа reset) имеет имя или идентификатор reset, 
+это маскирует метод HTMLFormElement.reset(). Это не сбрасывает другие атрибуты, такие как disabled.
+
+
+addForm.addEventListener('submit', (e) => {
+        e.preventDefault();   ----- отменяет стандартное поведение браузера
+
+        const userValue = addInput.value;
+              userCheck = checkbox.checked;
+
+        typeDB.type.push(userValue);
+        typeDB.type.sort();
+        createNewUserList(vehicleList, typeDB.type);
+        addForm.reset();  --------------------- вот очищаю формцу после события 'submit
+
+
+    });

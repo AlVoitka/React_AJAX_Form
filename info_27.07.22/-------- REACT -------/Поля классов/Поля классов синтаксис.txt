@@ -1,0 +1,37 @@
+Основная фича полей классов - это использование состояния в компоненте без конструктора:
+
+----------------------------------------------
+Ниже стандартный синтаксис:
+
+class RandomChar extends Component {  --- классовый компонент 
+
+    constructor(props) {  ---- конструктор и принимает пропсы
+
+        super(props);  ---- такой синтаксис
+
+        this.state = {      ---- вот состояние
+            name: null,                           
+            description: null,
+            thumbnail: null,
+            homepage: null,
+            wiki: null
+        } 
+
+    } 
+=----------------------------------------
+теперь синтаксис полей класса:
+Свойства экземпляра создаются без конструктора
+
+class RandomChar extends Component {
+
+    state = {     -----  контекс вызов this. уже не нужен
+        name: null,                           
+        description: null,
+        thumbnail: null,
+        homepage: null,
+        wiki: null
+    } 
+
+} 
+
+    

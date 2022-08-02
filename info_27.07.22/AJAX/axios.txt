@@ -1,0 +1,106 @@
+Пакет axios 
+https://www.youtube.com/watch?v=fDVhl3DGkD0
+
+https://dash.fortnite-api.com/endpoints/map  --- бесплатный сервер работающий без api_key  - Только GET -запросы
+
+https://jsonplaceholder.typicode.com/  --- тут и GET и POST запросы
+
+
+
+Для правильной работы нужно создать файлик в корне проекта server.php,
+
+в нем:
+
+<?php
+echo var_dump($_POST);
+
+1.
+npm i axios --save 
+
+
+2.
+импорирую в компонент
+
+import axios from "axios";    -----1. Импортировал пакет
+
+onPostData = (e) => { --------------- 3. Этот метод принемает как аргумент объект события по отправке формы
+        e.preventDefault();   ----- 4. отменяю стандартное поведение браузера
+        console.log("Ушел")
+
+        axios.get('https://fortnite-api.com/v1/map')
+            .then(respons => {                   ------- пример на GET запрос
+            console.log(respons.data.status)
+        })
+        
+        axios.post('https://jsonplaceholder.typicode.com/posts', { userId: 'Sai', title: 'privet', body: 'my body'})
+            .then(respons => {
+            // console.log(respons.status)
+            if (respons.status === 201 ) {
+                this.setState({
+                    post: true
+                })
+            }
+        })
+
+return (
+    <form className="form"
+        onSubmit={this.onPostData}>  ----2. на форму повесил обработчик на событие submit, при сробатывании вызовет функцию onPostData
+        <h2>Форма обратной связи</h2>        
+
+
+Разбор:
+
+GET:
+
+axios.get('https://fortnite-api.com/v1/map')------- пример на GET запрос на получение данных и как аргумент передаю URL на сервер
+        .then(respons => {                           вторым аргуметом можно передать конфиг как объект {} и в него передать
+        console.log(respons.data.status)              headers: к примеру - так же как в fech()
+    })
+
+axios возвращает промис c данными, который обрабатывается методом .then()- если все объект
+                                                                  .catch()- если какая то ошибка
+
+.then(respons => - так я получил ответ и в консоль вывожу console.log(respons.data.status) статус из полученного ответа
+
+POST:
+
+axios.post('https://jsonplaceholder.typicode.com/posts', { userId: 'Sai', title: 'privet', body: 'my body'})
+    .then(respons => {
+    // console.log(respons.status)
+    if (respons.status === 201 ) {
+        this.setState({
+            post: true
+        })
+    }
+})
+
+тут в метод .post я передаю уже два аргумента, но можно и трейтим передать конфиг как одъект{}:
+- URL
+- объект с именем пользователя, названием, и телом - то что нужно отправить
+
+
+В документации есть описание что конкретно можно передавать в конфиг - https://github.com/axios/axios#request-config
+тамм много свего по обработке и трансформации запросов. К прмерру данные можно отправлять как объект или как строку
+
+
+
+
+---------------------------
+Такж же пакет axios дает возможность использовать синтаксис похожий на fetch()
+
+
+axios({
+    method:'POST',
+    url: 'https://jsonplaceholder.typicode.com/posts',
+    data: {
+        userId: 'Sai',
+        title: 'privet',
+        body: 'my body'
+    }
+})
+.then(respons => {
+if (respons.status === 201 ) {
+    this.setState({
+        post: true
+    })
+}

@@ -1,0 +1,25 @@
+
+Element.getElementsByTagName() метод возвращает живую коллекцию элементов HTMLCollection , учитывая имя тэга.
+
+var elem = document.getElementsByTagName("button");
+
+ получею HTML коллекцию, это маcсивоподобный элемент, который в себе содержит элементы если их несколько либо один 
+ но все равно внутри коллекции, и обращаться всегда нужно именно не к массиву а к элементу внутри него:
+
+HTMLCollection(5) [button, button, button, button, button]
+0: button
+1: button
+2: button
+3: button
+4: button
+length: 5
+
+чтобы получить конкреьный элемент:
+просто в квадратных скобках добавляю номер по порядку необходимого элемента:
+
+let elem = document.getElementsByTagName('button')[2]; // получаю  теретью по счету кнопку 
+
+либо уже там где буду использовать кнопку:
+
+let elem = document.getElementsByTagName('button');
+console.log(elem[2]);

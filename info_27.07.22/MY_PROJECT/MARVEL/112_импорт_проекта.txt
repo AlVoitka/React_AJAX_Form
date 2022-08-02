@@ -1,0 +1,154 @@
+git init 
+git add .
+git commit -m ''
+git remote add origin https://github.com/AlVoitka/MARVEL_starter.git   - привязка к удаленному репозу
+git push -u origin master
+
+
+1. Инициализирую установку npm пакетов:
+
+npm i
+
+должна сформироваться папка node_modules
+
+2. Внутри папки src создаю новую папку services
+тут будут те части моего приложения или вебсайта которые будут общаться с сторонними ресурсами, например с API
+
+В этой папке я создаю файл MarvelService.js ( с большой буквы, так как это будет отдельный компонент)
+
+
+3.И уже в этом файле MarvelService.js создаю функцию по которой я буду запрашивать данные и если все ок, то будет возвращаться ответ
+который будет преобразован в формат json.
+
+3.1 Создаю класс MarvelService при это синтаксит немного отличен от обычного, тк я не импортирую Component как обычно это делается
+и нечего не наследую (extence)  потомучто этот класс будет на чистом джава-скрипте и ему от реакта ничего не нужно:
+ни JSX, ни props:
+
+class MarvelService {}
+
+и во внутрь помещаю функцию getResource:
+
+class MarvelService {
+
+    getResource = async (url) => {
+        let res = await fetch(url);
+    
+        if (!res.ok) {
+            throw new Error(`Could not fetch ${url}, status: ${res.status}`);
+        }
+    
+        return await res.json();
+    }
+}
+
+4. Для того чтобы делать запросы к API добавляю компоненту MarvelService методы которые будут этим заниматься:
+
+4.1 метод называется getAllCharacters : получить все персонажи
+
+внутри я уже буду использовать метод getResource:
+
+getAllCharacters = () => {
+        return this.getResource();
+    }
+
+возвращаю функцию getResource которая отдаст данные в формате json
+
+и далее нужно сделать запрос, но для начала его  необходимо сформировать:
+
+ для этого преходжу на https://developer.marvel.com/docs , вкладка Interactive Documentation
+
+ далее жму GET /v1/public/characters ---к примеру 
+ опускаюсь ниже и нажимаю кнопку Try it one
+ Далее копирую ссылку:
+
+ Request URL
+https://gateway.marvel.com:443/v1/public/characters?apikey=e6c1cc43ea00c95d07fd7c241e3d012e
+
+и помещаю ее в компонент  в виде строки '':
+
+    getAllCharacters = () => {
+        return this.getResource('https://gateway.marvel.com:443/v1/public/characters?apikey=e6c1cc43ea00c95d07fd7c241e3d012e');
+    }
+
+остается только экспортировать класс:
+
+    getAllCharacters = () => {
+        return this.getResource('https://gateway.marvel.com:443/v1/public/characters?apikey=e6c1cc43ea00c95d07fd7c241e3d012e');
+    }
+
+export default MarvelService;  -----вот
+
+
+и теперь принять его в главном файле index.js:
+
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './components/app/App';
+import MarvelService from './services/MarvelService';  ---  вот
+import './style/style.scss';
+
+ReactDOM.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+  document.getElementById('root')
+);
+
+Туперь тут же я должен составить новый экземпляр класса:
+для того чтобы работать с классами нужно создать его экземпляр по средствам переменной
+с использованием ключевого оператора new:
+
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './components/app/App';
+import MarvelService from './services/MarvelService';
+
+import './style/style.scss';
+
+const marvelService = new MarvelService();   - ----- вот создал и в этой переменной будет хранится
+потомок класса MarvelService
+а далее я обращаюсь к пременной, запускаю метод getAllCharacters()
+и запускаю колбек функцию которая принемает метод res  и в консоль выводит этот результат
+
+marvelService.getAllCharacters().then(res => console.log(res));
+
+ReactDOM.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+  document.getElementById('root')
+);
+
+5. Создам метод getCharacter для получения толко одного персонажа, он будет принемать один аргумент - Id
+которой будет приходить из запроса из API
+Нужно модифицировать запрос--- 'https://gateway.marvel.com:443/v1/public/characters?apikey=e6c1cc43ea00c95d07fd7c241e3d012e'
+
+перед ?apikey нужно вставить id, для этого использую интерполяцию (тоесть стаблю бэктики):
+`https://gateway.marvel.com:443/v1/public/characters/${id}?apikey=e6c1cc43ea00c95d07fd7c241e3d012e`
+как это делать указано на странице https://developer.marvel.com/docs
+
+getCharacter = (id) => {
+        return this.getResource(`https://gateway.marvel.com:443/v1/public/characters/${id}?apikey=e6c1cc43ea00c95d07fd7c241e3d012e`);
+    }
+
+
+6. Теперь оптимизирую свой код
+Поскольку в обоих методах я получаю данные по длинному запросу:
+ https://gateway.marvel.com:443/v1/public/characters?apikey=e6c1cc43ea00c95d07fd7c241e3d012e  
+ я куски этого запроса запишу в переменные и буди уже работать с переменными:
+
+ _apiBase = 'https://gateway.marvel.com:443/v1/public/';  --- это базис для IPA запроса
+    
+ _apiKey = 'apikey=c5d6fc8b83116d92ed468ce36bac6c62';    --- тут должен быть строго мой ключ из https://developer.marvel.com/account
+ мой ключ - e6c1cc43ea00c95d07fd7c241e3d012e
+
+ и уже применяю эти переменные в методах:
+ обязаьельно ставим бэктики, тк строка буде с переменной и будет формироваться динамически
+
+    getAllCharacters = () => {
+        return this.getResource(`${this._apiBase}characters?limit=9&offset=210&${this._apiKey}`);
+    }
+
+    getCharacter = (id) => {
+        return this.getResource(`${this._apiBase}characters/${id}?${this._apiKey}`);
+    }

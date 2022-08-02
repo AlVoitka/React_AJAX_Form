@@ -1,0 +1,45 @@
+FormData
+В этой главе речь пойдёт об отправке HTML-форм: с файлами и без, с дополнительными полями и так далее. Объекты FormData помогут нам с этим. Как вы, наверняка, догадались по его названию, это объект, представляющий данные HTML формы.
+
+Конструктор:
+
+let formData = new FormData([form]);
+
+Если передать в конструктор элемент HTML-формы form, то создаваемый объект автоматически прочитает из неё поля.
+
+Его особенность заключается в том, что методы для работы с сетью, например fetch, позволяют указать объект FormData в свойстве 
+тела запроса body.
+
+Он будет соответствующим образом закодирован и отправлен с заголовком Content-Type: form/multipart.
+
+То есть, для сервера это выглядит как обычная отправка формы.
+
+
+
+
+
+Отправка простой формы
+Давайте сначала отправим простую форму.
+
+Как вы видите, код очень компактный:
+
+<form id="formElem">
+  <input type="text" name="name" value="John">
+  <input type="text" name="surname" value="Smith">
+  <input type="submit">
+</form>
+
+<script>
+  formElem.onsubmit = async (e) => {
+    e.preventDefault();
+
+    let response = await fetch('/article/formdata/post/user', {
+      method: 'POST',
+      body: new FormData(formElem)
+    });
+
+    let result = await response.json();
+
+    alert(result.message);
+  };
+</script>

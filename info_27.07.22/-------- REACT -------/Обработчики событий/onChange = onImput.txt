@@ -1,0 +1,41 @@
+Этот обработчик вешается на импут:
+
+
+class MyLearn extends Component {
+
+
+    constructor(props) {
+        super(props); 
+
+        this.state = {  
+            sex: '---',
+            amount: 33,
+            position: '' ----5. Сюда запишется данные из форму 
+        } 
+    }
+
+    commitInput = (e) => {  ---- 2. как оргумент объект события
+            this.setState ({   ---- 3. меняю состояние компонента
+                position: e.target.value  --- 4. в свойство позиция записываю значение введенное в импут
+            })
+        }
+
+
+    render() {
+            const {name, surename} = this.props;
+            const {sex, position} = this.state;
+            return (
+                <div className="my-learn">
+                    <h1> My name is {name}, my surname is {surename}, my sex - {sex}, position- {position} </h1>  --- 6. Тут отрендерится новое состояние
+                    <button onClick={this.changeSexM} className="learn-btn">Man</button>
+                    <button onClick={this.changeSexW} className="learn-btn">Woman</button>
+                    <button onClick={this.nextPush} className="learn-btn">Push</button>
+                    <span className="learn-span"> {this.state.amount}</span>
+                    <form>
+                        <span>Введите должность </span>
+                        <input type="text" onChange={this.commitInput}></input>  ---- 1. ВОТ обработчик с методом this.commitInput
+                    </form>
+                    
+                </div>
+            )
+}

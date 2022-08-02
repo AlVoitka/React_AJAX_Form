@@ -1,0 +1,16 @@
+
+
+
+2.
+а вот так попадою в папку resources из components
+import spinner from '../../resources/img/spinner_2.gif';
+
+
+3.
+Если картинка лежит в самой папке компонента рядом в .js файлом:
+import err from './error.gif'
+
+4.
+Я работою в файле компонента RandomChar  что в папке components, а вытаскиваю файл  error в папке errorMessage
+
+import Error from '../errorMassage/Error';

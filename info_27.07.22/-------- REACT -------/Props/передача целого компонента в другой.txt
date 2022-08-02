@@ -1,0 +1,83 @@
+1. вот имею компонент:
+
+class MarvelService {
+    _apiBase = 'https://gateway.marvel.com:443/v1/public/';
+    _apiKey = 'apikey=e6c1cc43ea00c95d07fd7c241e3d012e'; 
+    // https://gateway.marvel.com:443/v1/public/characters?limit=9&offset=210&apikey=e6c1cc43ea00c95d07fd7c241e3d012e  --это полны URL к серверу
+
+    getResource = async (url) => {
+        let res = await fetch(url);
+    
+        if (!res.ok) {
+            throw new Error(`Could not fetch ${url}, status: ${res.status}`);
+        }
+    
+        return await res.json();
+    }
+
+    getAllCharacters = () => {
+        return this.getResource(`${this._apiBase}characters?limit=9&offset=210&${this._apiKey}`);
+    }
+
+    getCharacter = (id) => {
+        return this.getResource(`${this._apiBase}characters/${id}?${this._apiKey}`);
+    }
+}
+
+export default MarvelService;
+
+2.
+
+import { Component } from 'react';
+import MarvelService from '../../services/MarvelService';   - ----1.Импортирую его
+import mjolnir from '../../resources/img/mjolnir.png';
+
+import './randomChar.scss';
+
+
+class RandomChar extends Component {
+
+    
+
+        state = {    
+            name: null,                           
+            description: null,
+            thumbnail: null,
+            homepage: null,
+            wiki: null
+        } 
+
+    
+        marvelService = new MarvelService();   ---- и вот таким синтаксисом принимаю. И получаю новаое свойства marvelService внутри 
+                                                    компонента RandomChar. это синтаксис полей класса
+
+
+        updateChar = () => {
+            this.marvelService.getCharacter().then(res => console.log(res));  ---- вот работаю с ним в методе
+        }                                
+
+    render() {
+
+        const {name, description, thumbnail, homepage, wiki} = this.state;
+
+        return (
+            <div className="randomchar">
+                <div className="randomchar__static">
+                    <p className="randomchar__title">
+                        Random character for today!<br/>
+                        Do you want to get to know him better?
+                    </p>
+                    <p className="randomchar__title">
+                        Or choose another one
+                    </p>
+                    <button className="button button__main">
+                        <div className="inner">try it</div>
+                    </button>
+                    <img src={mjolnir} alt="mjolnir" className="randomchar__decoration"/>
+                </div>
+            </div>
+        )
+    }
+}
+
+export default RandomChar;

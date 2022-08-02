@@ -1,0 +1,48 @@
+
+LIVE SASS COMPILER - плагин внутри самого vscode
+
+1. Устанавливаю плагин в vscode
+2. В окне установки жму колесико настройки
+3. Вкладка Enstension Settings 
+
+
+Там мнесколько вкладок:
+
+1. Live Sass Compile › Settings: Formats
+это настройка формата компеляции
+
+
+Моя настройка:
+
+"liveSassCompile.settings.formats": [
+
+
+        {
+            "format": "compressed",  --- сжатый формат для продакшена ("expanded",  --- Читаемый формат)
+            "extensionName": ".min.css",
+            "savePath":  "~/../../dist/css/"    ---- сожраняю в папку dist
+        }
+    ]
+        
+
+Нужно запускать компелятор и смотреть watcing куда и как он компелирует!!!!!!!!
+
+
+расшифровка 
+
+"expanded"- будет компелироваться в легкочиттоемый нормальный формат
+
+"format": "compressed",   ----  будет сжимать код компрессит - его нужно на финальной стадии использовать - продакшн версия
+
+
+
+
+
+2. liveSassCompile.settings.excludeList: Исключить определенные папки. Все файлы Sass/Scss внутри папок будут игнорироваться.
+
+значение по умолчанию :
+
+    «liveSassCompile.settings.excludeList» : [ 
+         « **/node_modules/** » ,
+         « .vscode/** »  
+    ]

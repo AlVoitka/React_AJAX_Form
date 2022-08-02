@@ -1,0 +1,390 @@
+2 курс 44 и 48 урок
+
+1. имею базу данных:
+
+const typeDB = {
+    type: [
+        "Trucking transportation",
+        "Air transportation",
+        "Rail transportation",
+        "Ferry transportation"
+    ]
+};
+
+Для начала резмещу эти элементы на странице статически:
+
+    <ul class="interactive__interactive-list">
+
+        <li class="interactive__interactive-item">Trucking transportation
+            <div class="delete"></div>
+        </li>
+        <li class="interactive__interactive-item">Air transportation
+            <div class="delete"></div>
+        </li>
+        <li class="interactive__interactive-item">Rail transportation
+            <div class="delete"></div>
+        </li>
+        <li class="interactive__interactive-item">Ferry transportation
+            <div class="delete"></div>
+        </li>
+
+    </ul>
+
+
+2. Получи ух и скрою.
+Для этого получаю родителя, который оборачивает , это class="interactive__interactive-list"
+
+const   vehicleList = document.querySelector('.interactive__interactive-list'),
+
+и методом .innerHTML добавляю пустую строку, а фактически очищаю все.
+
+vehicleList.innerHTML = "";
+
+
+
+3. Отсортирую базу данных по алфавиту:
+
+typeDB.type.sort();
+
+
+
+4. теперь нужно сформировать динамически верстку при помощи JS и поместить ее в родительский элемент.
+Для этого нужно сперва перебрать базу данных по каждому элементу и затем сформировать структуру для рендеринга:
+
+typeDB.type.forEach((vehicle,i) => {
+    vehicleList.innerHTML += `
+    <li class="interactive__interactive-item">Trucking transportation
+        <div class="delete"></div>
+    </li>
+    `
+});
+тут я перебераю базу данных, код идет по каждому элементу и рендерит одну и туже верстку 4 раза, 
+все благодоря +=( своеобразный цикл). Но это не совсем то что нужно.
+Нужно чтобы верстались элементы с разными значениями и нумерацией:
+для этого применяю аргументы:
+i- номер по порядку в базе данных и начинается с нуля, а вывести нужно с одного, поэтому i + 1
+vehicle - это каждый элемент, который лежит внуьри массива. 
+код переберает каждый элемент масива, и подставляет в верстку номер пп и каждый элемент
+
+typeDB.type.forEach((vehicle,i) => {
+    vehicleList.innerHTML += `
+    <li class="interactive__interactive-item">${i + 1} ${vehicle}
+        <div class="delete"></div>
+    </li>
+    `
+});
+
+
+
+
+
+5. Теперь сделаю так, чтобы при отправке формы ( клик по кнопке accept), данные добавлялись в бвзу данных, и соответственно 
+рендерились динамически в левом столбце.
+
+
+
+5.1 Сначала получаю нужные элементы. Форму отправки:
+
+addForm = document.querySelector('.add');  -- получил форму по классу
+
+и элементы внутри форму:
+
+addInput = addForm.querySelector('.interactive__box-input'); -- тут я обратился не к document, а к уже полученной самой форме и 
+получил по дата-атрибуту
+
+checkbox = addForm.querySelector('[type="checkbox"]');  -- получил  чекбокс по атрибуту
+
+
+
+
+5.2 Навешиваю обработчие событий на форму:
+Чтобы отследить отправку формы использую событие 'submit', и также мне нужен объект события (е) - чтобы отменить стандартное поведение
+браузера ( чтобы он форму не отправлял)
+
+addForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+})
+
+
+5.3 Теперь мне нужно узнать значение введенное пользователем в инпут и отмеченный чекбокс:
+сначал создам новую переменные, куда все это запишу:
+
+const userValue = addInput.value; -- в value лежит значение введенное пользователем в инпут
+      userCheck = checkbox.checked;  --- тут обратился к чекбоксу чтобы получить булиновое значение true/false ( отмечено галочкой или нет)
+
+
+
+5.4 Данные получены и теперь их нужно зарендерить в левом блоке:
+
+Но для начала нужно поместьть полученные от пользователя значения в базу данных при помощи
+метода для массива push:
+
+typeDB.type.push(userValue);  -- в объект typeDB + в его свойство type пушу userValue
+
+И действительно получаю:
+
+{type: Array(5)}
+type: (5) ['Trucking transportation', 'Air transportation', 'Rail transportation', 'Ferry transportation', --------'aero' ---------]
+[[Prototype]]: Object
+
+Для того чтобы левый блок с видом траспорта очистился и сформировал все заново используя уже запушенное значение от пользователя,
+нужно использоват уже готовый функционал:
+
+    vehicleList.innerHTML = "";  ----- вот очистил блок
+
+    typeDB.type.forEach((vehicle,i) => {   ----- тут вывел каждый элемент с номером
+        vehicleList.innerHTML += `
+        <li class="interactive__interactive-item">${i + 1} ${vehicle}
+            <div class="delete"></div>
+        </li>
+        `
+    });
+
+И для того чтобы его переиспользовать повторно нужно этот функционал обернуть в функцию, и далее использовать ее где это будет нужно:
+
+    function createNewUserList () {
+
+        vehicleList.innerHTML = "";
+
+        typeDB.type.forEach((vehicle,i) => {
+            vehicleList.innerHTML += `
+            <li class="interactive__interactive-item">${i + 1} ${vehicle}
+                <div class="delete"></div>
+            </li>
+            `
+        });
+        
+    }
+    createNewUserList();
+
+И теперь просто использую эту функцию , чтобы когда юзер засабмитил форму , введенное им значение записалось в базу данных
+и затем сформировался новый список с новыми данными:
+
+    addForm.addEventListener('submit', (e) => { ----обработчик событий на отправку формы
+            e.preventDefault();          ---- отключил стандартное поведение браузера
+
+            const userValue = addInput.value;   --- записал в переменную введенное пользователем значение
+                userCheck = checkbox.checked;   ---- тут получил true/false на чекбоксе
+
+            typeDB.type.push(userValue);       ---- запушил его в базу данных
+            createNewUserList();    --- и запустил функцию с рендингом по элементам бызы данных с новым значением
+
+    });
+
+
+Но для того чтобы функция стала не жестко фиксированной к элементам, а универсальной ( тоесть работала со значениями которые 
+передаются как аргументы), и на момент вызова узнавала с чем она будет работать.
+ добавлю эти аргументы:
+
+ было:         /////////////////////////////////////////////////////////////
+
+                        function createNewUserList () {
+
+                            vehicleList.innerHTML = "";
+
+                            typeDB.type.forEach((vehicle,i) => {
+                                vehicleList.innerHTML += `
+                                <li class="interactive__interactive-item">${i + 1} ${vehicle}
+                                    <div class="delete"></div>
+                                </li>
+                                `
+                            });
+                            
+                        }
+                        createNewUserList();
+
+  стало:        ///////////////////////////////////////////////////////////              
+
+                        function createNewUserList (list, DB) {
+
+                            list.innerHTML = "";
+
+                            DB.forEach((vehicle,i) => {
+                                list.innerHTML += `
+                                <li class="interactive__interactive-item">${i + 1} ${vehicle}
+                                    <div class="delete"></div>
+                                </li>
+                                `
+                            });
+                            
+                        }
+                        createNewUserList(vehicleList, typeDB.type);
+
+
+аргумент list принимает в себя vehicleList
+аргумент DB принимает в себя typeDB.type
+
+
+Ну и конечно в обработчик нужно передать теперь не пустую функцию, а с аргументами:
+
+    addForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const userValue = addInput.value;
+                userCheck = checkbox.checked;
+
+            typeDB.type.push(userValue);
+            typeDB.type.sort();
+            createNewUserList(vehicleList, typeDB.type);  ------ вот так
+
+
+    });
+
+И чтобы форма очистилась после отправки метод reset();:
+
+addForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const userValue = addInput.value;
+              userCheck = checkbox.checked;
+
+        typeDB.type.push(userValue);
+        typeDB.type.sort();
+        createNewUserList(vehicleList, typeDB.type);
+        addForm.reset();
+    });
+
+
+
+
+
+
+
+
+6. Теперь моя форма работает, но у нее есть проблемки:
+-при отправке пустой формы рендерится постоя строка с номером    
+- когда отмечаю чекбокс ничего не редерится
+- толко заполненный инпут отрабатывает верно ( рендерится в левом диве)
+
+
+
+все решается условиями:
+
+if (userCheck)  {   ----- если userCheck = true - тоесть если он отмечен, то код в логическом контексте выдает true, то быполняется действие
+    vehicleList.innerHTML = "";  --- очищается див
+    vehicleList.innerHTML = `  ---- и рендерится следующий код
+    <li class="interactive__interactive-item">I only use trucks
+        <div class="delete"></div>
+    </li>
+    `;
+} else { -------- иначе (если false - не отмечен) выполгяется действие
+    typeDB.type.push(userValue);  ---- в базу записываю значение от юзера
+    typeDB.type.sort(); ----
+    createNewUserList(vehicleList, typeDB.type); ---запускаю функцию по созданию верстки и рендеренгу
+    addForm.reset();  -- очищаю форму
+} 
+
+
+А для того чтобы не отправлялась пустая форма, нужно обернуть еще в одно условие if(userValue || userCheck):
+
+if(userValue || userCheck) - если userValue = true (тоесть там что то введено иначе пустая строка дает false)
+            или  userCheck = true - тоесть если он отмечен, то код в логическом контексте выдает true,
+            то вфполняется последующее условие               
+
+addForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const userValue = addInput.value;
+            userCheck = checkbox.checked;
+
+    if(userValue || userCheck) {  ---- вот на пустую форму услоие
+
+        if (userCheck)  {
+            vehicleList.innerHTML = "";
+            vehicleList.innerHTML = `
+            <li class="interactive__interactive-item">I only use trucks
+                <div class="delete"></div>
+            </li>
+            `;
+        } else {
+            typeDB.type.push(userValue);
+            typeDB.type.sort();
+            createNewUserList(vehicleList, typeDB.type);
+            addForm.reset();
+        } 
+    }   
+});
+
+
+
+7. Удаление элемента из списка при клике на "-":
+
+Буду вешать обработчики событий на кожддый всплывающий минус, и если пользователь кликает на ничего
+код будет удалять родителя этого минуса, и соответсвенно этот родитель должен быть удален из база данных
+
+Прямо в функции по созданию нового элемента function createNewUserList:
+
+document.querySelectorAll('.delete').forEach((btn, i) =>{
+    btn.addEventListener('click', () =>{
+        btn.parentElement.remove();
+        typeDB.type.splice(i, 1);
+    })
+})
+1. document.querySelectorAll('.delete') - получаю псевдомассив из <div class="delete"> ( это минусики) 
+2. Срузу их перебираю document.querySelectorAll('.delete').forEach
+3. .forEach((btn, i) далее идет колбек функция с двумя аргументами ( каждая кнопка и нумерация)
+4. btn.addEventListener('click', () =>{}; - я обращаюсь к кождому по очереди минусику btn и навашиваю на кажый минус обработчик на клик
+                                            и завпуская колбэк функцию
+5. btn.parentElement.remove(); - и в ней обращаюсь к минусикам и к его родительскому элементу .parentElement  и удаляю его                                       
+6. typeDB.type.splice(i, 1); - и сразу удаляю его из базы данных
+
+
+вот так выглядит целеком:
+
+    function createNewUserList (list, DB) {
+
+        list.innerHTML = "";
+
+        DB.forEach((vehicle,i) => {
+            list.innerHTML += `
+            <li class="interactive__interactive-item">${i + 1} ${vehicle}
+                <div class="delete"></div>
+            </li>
+            `
+        });
+
+        document.querySelectorAll('.delete').forEach((btn, i) =>{   ----- вот удаление
+            btn.addEventListener('click', () =>{
+                btn.parentElement.remove();
+                typeDB.type.splice(i, 1);
+            })
+        })
+        
+    }
+    createNewUserList(vehicleList, typeDB.type);
+
+    Тут снова возникае косячок, если добавлено к примеру 5 элементов, и я удаляю один из них, то он удаляется, но нумерация 
+    в списке сбивается(элемент удаляется в месе с номером ) тк список не перезаписываетс (не перерендывается).
+    А решается это путем рекурсии - по простому, это когда функция вызывает сама себя внутри.
+    Тоесть после удаления элемента, снова вызывается сама функция внутри себя и рендерит заново спичок без удаленного элемента.
+
+    function createNewUserList (list, DB) {
+
+        list.innerHTML = "";
+
+        DB.forEach((vehicle,i) => {
+            list.innerHTML += `
+            <li class="interactive__interactive-item">${i + 1} ${vehicle}
+                <div class="delete"></div>
+            </li>
+            `
+        });
+
+        document.querySelectorAll('.delete').forEach((btn, i) =>{
+            btn.addEventListener('click', () =>{
+                btn.parentElement.remove();
+                typeDB.type.splice(i, 1);
+
+                createNewUserList(vehicleList, typeDB.type);  ----- вот сама функция вызывается внутри себя повторно
+            })
+        })
+        
+    }
+    createNewUserList(vehicleList, typeDB.type);
+
+
+
+
+
+
+

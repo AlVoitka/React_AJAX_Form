@@ -1,0 +1,46 @@
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="/src/img/icon.png" type="image/x-icon">
+    <link rel="stylesheet" href="css/slick.css"> -------------------------
+    <link rel="stylesheet" href="css/animate.css"> --------------------------  вот так
+    <link rel="stylesheet" href="css/style.css"> ---------------------------
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <title>Neman-Auto</title>
+</head>
+
+Подключенные таким образом шрифты и библиотеки замедляют скорость загрузки сайта,
+по правильному должено быть только одно подключение главного файла стиле style.scc а в иделае 
+минифицированная (сжатая версия после компеляции) - style.min.css
+
+1. Делается это так:
+создаю папку libs (библиотеки) в папке scss, и в нее перемещаю из папки css сторонние библиотеки,
+такие как:
+- animate.css
+- slick.css
+- font.css
+
+2. CSS и SCSS обратно совместим, поэтому просто переименовываю файлы (изменяю их расширение):
+( а вообще можно при установке этих библиотек сразу скачивать scss файлы а не css)
+
+- _animate.scss
+- _slick.scss
+- _font.scss
+
+3. Импортирую эти файлы в главный  сборщик style.scss :
+подключею с сомого верха!!!!
+
+@import './libs/animate';   --- вот к примеру
+
+@import './variables';
+@import './base';
+@import './animations';
+@import './buttons';
+
+4. Из HTML идаляю файл подключение:
+
+<link rel="stylesheet" href="css/animate.css">
+
+
+

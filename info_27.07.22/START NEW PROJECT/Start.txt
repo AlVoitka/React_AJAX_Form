@@ -1,0 +1,354 @@
+git init
+git add .
+git commit -m ""
+git remote add origin https://github.com/AlVoitka/Logist_Webpack.git
+git push -u origin master
+
+
+
+
+
+/////////////////--- Структура проекта  и NPM- пакеты --- /////////////////
+
+1. Cоздаю попку проекта, и внутри создаю папки src и public:
+
+2. прописываю файл gitignore
+
+3. Можно скопировать готовый  файл package.json  из других проектов и командой   npm i   в проект загрузятся все необходимые зависимости, 
+а можно с нуля инициализировать проект npm ( npm init )
+и добавлять необходимые для проекта зависимости.
+
+Копирую файл package.json из ранее созданных проектов в корень этого. Файл хранит список пакетов (необходимые плагины (зависимости))
+которые нужны для проекта, и для того чтобы их установить в терминале команда: npm install
+после выполнения создаётся папка node_modules в корне проекта с большим кол-вом пакетов.(Для того чтобы начать проект и подключить к нему
+NPM-пакеты нужно установить Node.js версию не ниже 14 для работы с реактом.)
+Поскольку проект будет на сборщике модулей, то в файле package.json смотрим чтобы были пакеты  "webpack": "^5.69.1", и "webpack-cli": "^4.9.2".
+Если  их нет, то нужно в пакет npm добавить это плагин командой:
+
+npm install webpack webpack-cli --save-dev
+
+Установить можно как локально так и глобально. Лучше локально
+
+
+
+
+
+
+///////////////////---- Работа со сборщиком webpack -----//////////////////
+
+Сперва сборщик нужно установить в проект :
+https://webpack.js.org/guides/getting-started/ 
+
+нужно в пакет npm добавить это плагин командой:
+
+npm install webpack webpack-cli --save-dev
+
+Установить можно как локально так и глобально.
+
+
+Файл webpack.config.js - это файл в котором прописона как должен работать сборщик модулей webpack, этот файл нужно размещать в каждом проекте 
+и подстраивать при необходимости . В нем я расписал что и как, но нужно следить за этим:
+
+module.exports = {
+  mode: 'development',
+  entry: './src/js/script.js',  ------ путь к файлу- сборщику
+  output: {
+    filename: 'bundle.js',  --- так назавется вновьсозданный файл
+    path: __dirname + './dist/js/'   ---- место куда создастся файл bundle.js нужно собирать в папку dist!!!
+  },
+
+В нем я сказал что весь проект соберется будет в файле bundle.js
+тоесть при запуске в терменале  --- npx webpack сформируется  файл bundle.js в папке dist
+
+И уже в конце следим за путем к этому файлу в inndex.html
+
+<script src="./dist/js/script.js"></script>   ----- проверяю правильность пути!!!!!!!!!!!!
+
+
+5. Cоздам папку modules в папке js. И уже внутри него я буду размещать части проекта - скрипты по кускам.
+
+К примеру создаю первый модуль, файл modal.js
+
+в нем создаю функцию  и в нее помещаю весь тот код:
+
+function modal() {
+    x
+}
+
+ну и чтобы она отработала, ниже этой функции  прописываю:
+
+module.exports = tabs;
+
+те я экспортирую эту функцию.
+
+6. В файле script.js теперь нужно все модули заимпортировать,
+    а делается это при помощи обработчика событий:
+
+window.addEventListener('DOMContentLoaded', function() {
+    const tabs = require('./modules/tabs'),
+          modal = require('./modules/modal'),
+          timer = require('./modules/timer'),
+          Функуии из модулей импортированы и нужно ух просто вызвать:
+    tabs();
+    modal();
+    timer();
+});
+
+!!!! Сборщик часто пытается в этом файле самостоятельно добавить вне обработчика импортируемый файл,
+а потом консоль бьет ошибку. Нужно перемещать его (modal = require('./modules/modal');) в обработчик.!!!!
+Это тз-за того что по правильному нужно использовать синтаксис ES6. ниже будет инфа.
+
+
+7. 4.  Теерь нужно в терменале (в корне проекта) запустить webpack:
+
+npx webpack
+
+если все ок, то будет так:
+./js/modules/modal.js 1.38 KiB [built] [code generated]
+./js/modules/timer.js 1.53 KiB [built] [code generated]
+./js/modules/cards.js 2.03 KiB [built] [code generated]
+./js/modules/calc.js 3.45 KiB [built] [code generated]
+./js/modules/forms.js 2.36 KiB [built] [code generated]
+./js/modules/slider.js 4.48 KiB [built] [code generated]
+webpack 5.69.1 compiled successfully in 179 ms
+
+и в папке js  появится файл bundle.js , так он назван потому что я так в конфиге webpack прописал:
+
+output: {
+    filename: 'bundle.js',
+
+Теперь вебпэк следит за нашими модулями  и если я внесу изменения, то сборщик занаво пересоберет проект.
+Но если я применю терминал для другой задачи, то сборщик остановит свою работу. И для этого предусмотрен + в терменале,
+ добавляю новую вкладку и там делаю другие задачи.
+
+8. Ну и в конце в index.html  пропишу что  нужно скрипты подсасывать не из script.js  а из bundle.js
+это делается в самом низу <body>
+
+ <script src="js/bundle.js"></script>
+ 
+
+9.Для того чтобы работу webpack привести к стандорту ES6:
+
+И для того чтобы придерживаться более нового формата ES6 нужно внести изменения.
+
+Первая часть настройка экспортов:
+
+каждый отдельный модуль имел синтаксис:
+
+                function timer() {
+
+                    тут код 
+
+                }
+
+                module.exports = timer;  -- и так экспортирю модуль
+
+По синтаксису ES6 нужно сделать так:
+
+                function timer() {
+
+                    тут код 
+
+                }
+
+                export default timer;  -- вот само изменение
+
+Таккую манипуляцию нужно проделать с каждым модулем!!!!!!!!!      
+
+
+
+
+И вторая часть это работа с файлом script.js - где все собирается.
+Настраиваю импорты:
+
+Вот так выглядит файл в старом формате, все получения были внутри глобального обработчика:
+
+window.addEventListener('DOMContentLoaded', function() {
+    
+    const upslider = require('./modules/upslider'),
+          header = require('./modules/header'),
+          downslider =require('./modules/downslider'),
+          sliderJS = require('./modules/sliderNativeJS'),
+          tabs =require('./modules/tabs'),
+          scrollUP =require('./modules/scrollUP')
+          prompts = require('./modules/prompts'),
+          modal_jQ = require('./modules/modal_jQ'),
+          modal_JS = require('./modules/modal_JS'),
+          mailer = require('./modules/mailer'),
+          interactive = require('./modules/interactive'),
+          timer = require('./modules/timer'),
+          clientCard = require('./modules/clientCard'),
+          form = require('./modules/form'),
+          calculating = require('./modules/calculating');
+          
+
+    header();      
+    upslider();
+    downslider();
+    sliderJS();
+    tabs();
+    scrollUP();
+    modal_jQ();
+    modal_JS();
+    mailer();
+    prompts();
+    interactive();
+    timer();
+    clientCard();
+    form();
+    calculating();
+    
+    
+
+    new WOW().init();
+});
+
+
+По синтакчичу ES6 вношу следующие изменения:
+
+
+import  upslider from './modules/upslider';   ------- вот как было  const upslider = require('./modules/upslider'),
+import  header from './modules/header';
+import  downslider from './modules/downslider';
+import  sliderJS from './modules/sliderNativeJS';
+import  tabs from './modules/tabs';
+import  scrollUP from './modules/scrollUP';
+import  prompts from './modules/prompts';
+import  modal_jQ from './modules/modal_jQ';
+import  modal_JS from './modules/modal_JS';
+import  mailer from './modules/mailer';
+import  interactive from './modules/interactive';
+import  timer from './modules/timer';
+import  clientCard from './modules/clientCard';
+import  form from './modules/form';
+import  calculating from './modules/calculating';
+
+
+window.addEventListener('DOMContentLoaded', function() {  ---- внутри оставляю толко вызовы
+
+    header();      
+    upslider();
+    downslider();
+    sliderJS();
+    tabs();
+    scrollUP();
+    modal_jQ();
+    modal_JS();
+    mailer();
+    prompts();
+    interactive();
+    timer();
+    clientCard();
+    form();
+    calculating();
+    
+    
+
+    new WOW().init();
+    
+});
+
+
+
+
+
+
+
+
+ /////////////////// --- Базовые элементы страницы и основная разметка ---//////////////////////
+
+  <body> – тело документа, включающее теги, атрибуты, текст и изображения. Отображается в браузере.
+    <header> – Шапка страницы оформляется в тег header. Заголовок страницы обязательно пишем тегом h1.
+    <nav> – навигация по ресурсу непосредственно в шапке. Может быть также использован как в aside, так и в footer.
+    <main> – основной контент документа.
+    <section> – секция для одного типа содержания. Допустимо наличие несколько одноименных тегов. Тег section — используется 
+    для представления
+     группы или секции тематически связанного контента.
+    <h1> – заголовок страницы.
+    <aside> – боковая колонка, также именуемая как «сайдбар» - sidebar. Для каждого отдельного элемента сайдбара используем блок aside.
+     Внутри него заголовок оформляем тегом h1.
+    <footer> – подвал сайта. Подвал сайта оформляется тегом <footer>
+
+    divider - делитель, декоративный элемент
+
+
+
+///////////////////--- Работа со стилями---//////////////////////
+
+
+Создаю папку  scss и в ней главный файл стилей style.scss
+
+1. В папке src создаю попку css и в нее помещаю основной (самый главный) файл стилей - style.scss. Именно  его подсасывает
+браузер.
+
+
+2.  в index.html его подключаю:
+<link rel="stylesheet" href="css/style.css">  --- папка css и файл index.html должны лежать в одной папке src!!!!
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">  ----------------------------вот
+    <title>Document</title>
+</head>
+
+
+3. В проекте буду работать в компелятором SCSS и поэтому нужно поставить плагин LIVE SASS COMPILER.
+вот для него настройка если что:
+
+"liveSassCompile.settings.formats": [
+
+        {
+            "format": "expanded",  --- Читаемый формат
+            "extensionName": ".css",   --- 
+            "savePath":  "~/../css/"   ---- путь сохраненеия
+
+
+Браузер подсасывает исключительно главный файл стиле style.css
+Файлы scss или sass - в них удобный синтаксис и код из них по средствам компилятора (koala) перезаписывается в style.css
+При правильной работе компилятора в около файла style.css  формируется файл style.css.map   
+
+ Создаю в src 
+ 
+3.1. папку SCSS  в нее помещаю главный файл-сборщик style.scss - в него будут импортироваться все части, образовываю сборку
+
+3.2. папку block - в ней папки каждого по отдельности елемента страницы и в этих папках сами файлы .scss для каждого
+элемента
+
+3.2. Создаю файл _base.scss - в нем буду базовые стили для общих элементом. Нужнее подчеркивание в начале -это для компелятора,
+чтобы он не компелировал эти файлы -элементы, а толко главный style.scss
+
+3.3. Создаю файл _variables.scss - тут будут переменные для всего проекта
+
+
+
+4. В сборщик -файл style.scss импортирую шрифт для проекта, базовые стили и переменные:
+
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,700&display=swap&subset=cyrillic-ext');
+@import './variables';
+@import './base.scss';
+
+5. Далее импортирую в неговсе элементы:
+
+@import './blocks/header/header';
+@import './blocks/offer/offer';
+@import './blocks/calculating/calculating';
+@import './blocks/menu/menu';
+@import './blocks/order/order';
+@import './blocks/promotion/promotion';
+@import './blocks/footer/footer';
+@import './blocks/modal/modal';
+
+
+6. Адаптация сайта.
+
+Адаптацию лучше делать сразу на одном едлементе или секции. Потом сложно снова вникать во все нюансы.
+
+Сразу создаю файл-правила @media, в нем назначаю контрольные точки и по  мере верстания каждой секции
+сразу адаптирию ее под эти точки.
+
+Мои правила @media всегда имели малый приоритет и перебивались первоначальными правилами CSS. 
+Медиа правила @media ( max-width:500px ){ } не участвуют в подсчете приоритета (веса).
+Поэтому они всегда должны располагаться ниже всех остальных правил, чтобы перебивать предыдущие правила с таким же весом (приоритетом).
+Тоесть в файле сборке style.scss  я должен импортировать (размещать) @import './media'; ниже всех остальных импортов!!!!!!!

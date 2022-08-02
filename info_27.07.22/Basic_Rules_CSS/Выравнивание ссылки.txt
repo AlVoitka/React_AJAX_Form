@@ -1,0 +1,7 @@
+1. Для работы со ссылкой ее нужно display: block;:
+
+&__phone {
+        display: block;
+        text-align: center;
+        margin-top: 20px;
+    }

@@ -1,0 +1,16 @@
+в ответ от сервера получил в формате JSON. И так его преобразую, паршу:
+
+onPostData = (e) => {
+        e.preventDefault();
+        console.log("Ушел")
+
+        const request = new XMLHttpRequest();
+
+        request.open('POST','https://jsonplaceholder.typicode.com/posts');
+        request.setRequestHeader('Content-type', 'application/json;', 'charset=utf-8');
+        request.send(this.state);
+        console.log(request.readyState);
+        request.addEventListener('readystatechange', ()=> {
+            if (request.readyState === 4 && request.status === 201) {console.log(request.response)}
+            const data = JSON.parse(request.response)  ------------------------------ вот
+            console.log(data)

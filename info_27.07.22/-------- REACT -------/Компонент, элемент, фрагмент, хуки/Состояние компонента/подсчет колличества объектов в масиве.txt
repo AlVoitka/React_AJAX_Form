@@ -1,0 +1,77 @@
+1.
+Имею компонент котрый имеет состояние и содержит импрвизированную базу данных data c некоторым колличеством элементов.
+1.1 - мне нужно их посчитать колличество объектов и передать в другой компонент ниже по иерархии и отрендерить на странице.
+1.2 - нужно посчитать колличество объектов отмеченных звездочкий.
+
+import { Component } from 'react';
+
+import './app.css';
+
+
+class App extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            data: [
+                {name: 'John C.', salary: 800, increase: false, rise: true, id: 1},
+                {name: 'Alex M.', salary: 3000, increase: true, rise: false, id: 2},
+                {name: 'Carl W.', salary: 5000, increase: false, rise: false, id: 3}
+            ],
+            term: '', 
+            filter: 'all'
+        }
+        this.maxId = 4;
+    }
+
+    deleteItem = (id) => {
+        console.log(id);
+        this.setState(({data}) => {
+            return {
+                data: data.filter(item => item.id !== id)
+            }
+        })
+    }
+
+    render() {
+        const {data, term, filter} = this.state;
+        const employees = this.state.data.length; ---------------1. Получаю колличество по методу lenght (определяет колличество элементов в массиве)
+        const increased = this.state.data.filter(item => item.increase).length; -----  2. перребираем фильтром массив и возвращею токо те, у которых increase в позиции true
+        return (
+            <div className="app">
+                <AppInfo employees={employees} increased={increased}/> ---------- 3. Передаю эту инфу в виде пропсов
+    
+                <div className="search-panel">
+                    <SearchPanel onUpdateSearch={this.onUpdateSearch}/>
+                    <AppFilter filter={filter} onFilterSelect={this.onFilterSelect}/>
+                </div>
+                
+                <EmployeesList 
+                    data={visibleData}
+                    onDelete={this.deleteItem}
+                    onToggleProp={this.onToggleProp}/>
+                <EmployeesAddForm onAdd={this.addItem}/>
+                <MyLearn name="Alex" surename="Voitka"/>
+                <BootstrapTest/>
+            </div>
+        );
+    }
+}
+
+export default App;
+
+2.
+В другом компоненте принимаю эти пропсы:
+
+import "./app-info.css";
+
+const AppInfo = ({increased, employees}) => {   ---- вот вытаскиваю из пропсов значения
+    return (
+        <div className="app-info">
+            <h1>Учет сотрудников в компании "Neman-Auto"</h1>
+            <h2>Общее число сотрудников: {employees}</h2> ------- подставляю
+            <h2>Премию получат: {increased}</h2> ------- подставляю
+        </div>
+    )
+}
+
+export default AppInfo;

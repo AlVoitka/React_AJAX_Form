@@ -1,0 +1,37 @@
+В папке SRC есть вложенная папка resources там картинки, и дял того чтбы импортировать и работать с картинкой:
+
+1.
+import mjolnir from '../../resources/img/mjolnir.png';  --- тут уссловно назначаю типр переменную mjolnir
+                                                       и далее путь к картинке 
+
+2.
+
+render() {
+
+    const {char, loading, error} = this.state;
+    const errorMessage = error ? <ErrorMessage/> : null;
+    const spinner = loading ? <Spinner/> : null;
+    const content = !(loading || error) ? <View char={char}/> : null;
+
+    return (
+        <div className="randomchar">
+            {errorMessage}
+            {spinner}
+            {content}
+            <div className="randomchar__static">
+                <p className="randomchar__title">
+                    Random character for today!<br/>
+                    Do you want to get to know him better?
+                </p>
+                <p className="randomchar__title">
+                    Or choose another one
+                </p>
+                <button onClick={this.updateChar} className="button button__main">
+                    <div className="inner">try it</div>
+                </button>
+                <img src={mjolnir} alt="mjolnir" className="randomchar__decoration"/> ---- вот так и webpack подставит 
+            </div>
+        </div>
+    )
+}
+

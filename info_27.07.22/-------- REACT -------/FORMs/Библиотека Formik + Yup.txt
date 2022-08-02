@@ -1,0 +1,494 @@
+https://formik.org/docs/overview
+
+1.
+ 
+npm install formik --save   -- устанавливаю пакет 
+npm install yup --save  --- это дополнительный пкает для валидации (по желанию)
+
+2.
+Можно использовать как компонет <Fornik> так и хук useFormik:
+Начнку с хука.
+
+Импортирую хук формик в компонент:
+
+import { useFormik } from "formik";  ----------вот
+
+const Form = () => {
+    return (
+        <form className="form">
+            <h2>Отправить пожертвование</h2>
+            <label htmlFor="name">Ваше имя</label>
+            <input
+                id="name"
+                name="name"
+                type="text"
+            />
+            <label htmlFor="email">Ваша почта</label>
+            <input
+                id="email"
+                name="email"
+                type="email"
+            />
+            <label htmlFor="amount">Количество</label>
+            <input
+                id="amount"
+                name="amount"
+                type="number"
+            />
+            <label htmlFor="currency">Валюта</label>
+            <select
+                id="currency"
+                name="currency">
+                    <option value="">Выберите валюту</option>
+                    <option value="USD">USD</option>
+                    <option value="UAH">UAH</option>
+                    <option value="RUB">RUB</option>
+            </select>
+            <label htmlFor="text">Ваше сообщение</label>
+            <textarea 
+                id="text"
+                name="text"
+            />
+            <label className="checkbox">
+                <input name="terms" type="checkbox" />
+                Соглашаетесь с политикой конфиденциальности?
+            </label>
+            <button type="submit">Отправить</button>
+        </form>
+    )
+}
+
+export default Form;
+
+3.
+создам переменную , которая буде содержать все нужние вещи из формика:
+
+const formik = useFormik({  ---использую хук и в него помещаю объект с настройками
+
+    initialValues: {  --  значения с которых будет начинаться форма и перечесляю импуты которые будет контролировать форма
+                          обязательно по атрибуту name в импуте!!!!
+        name: '',  ----- 
+        email: '',
+        amount: 0, ---- колл-во
+        currency: '',  --- валюта
+        text: '',
+        terms: false  --- политика конфиденциальности лобо подтверждена либо отклонена
+        },
+        onSubmit: values => console.log(JSON.stringify(values,null,2))   ---- это второй обязательный аргумен, его интересует что делать 
+                                                                          когда форма будет отправляться, это будет функция values  которая
+    });                                                       принемает значения, а именно объект с name, email, amount, currency и тд
+                                                 JSON.stringify(values,null,2) - это приобразует в нармальный читаемый формат 
+
+
+4.
+Эту переменную помещаю в компонент и использую её:
+
+import { useFormik } from "formik";
+
+const Form = () => {
+
+    const formik = useFormik({  ------ 1. вот поместил
+        initialValues: {
+            name: '',
+            email: '',
+            amount: 0, 
+            currency: '',
+            text: '',
+            terms: false
+        },
+        onSubmit: values => console.log(JSON.stringify(values,null,2))
+    });
+
+    return (
+        <form className="form" onSubmit={formik.handleSubmit}> ----2. обработчик на отправку формы и при ее отправке выполнится функция 
+            <h2>Отправить пожертвование</h2>                          вот эта- onSubmit: values => console.log(JSON.stringify(values,null,2))
+            <label htmlFor="name">Ваше имя</label>
+            <input
+                id="name"
+                name="name"
+                type="text"
+                value={formik.values.name} ------------3. дозаполняю импуты, в value будет записано значение из formik.values.name
+                onChange={formik.handleChange} -------4. Вешаю обработчик отслеживающий изменения. Когда в импут будет что то вводится,
+                                                будет вызыватся функция handleChange встроенная в хук useFormik и она будет смотреть какой
+                                                импут изменяется и автоматом будет записыватся в объект  initialValues: 
+                                                                                                             name: '',email: '',
+                                                и соответственно изменять состояние                                                             
+
+            />
+            <label htmlFor="email">Ваша почта</label>
+            <input
+                id="email"
+                name="email"
+                type="email"
+                value={formik.values.email} ------------5. тоже на импут с name
+                onChange={formik.handleChange} ------------5. тоже на импут с name="email"
+            />
+            <label htmlFor="amount">Количество</label>
+            <input
+                id="amount"
+                name="amount"
+                type="number"
+                value={formik.values.amount}
+                onChange={formik.handleChange}
+            />
+            <label htmlFor="currency">Валюта</label>
+            <select
+                id="currency"
+                name="currency"
+                value={formik.values.currency} ----------------6. так же и тут
+                onChange={formik.handleChange}> ----------------6. так же и тут
+                    <option value="">Выберите валюту</option>
+                    <option value="USD">USD</option>
+                    <option value="UAH">UAH</option>
+                    <option value="RUB">RUB</option>
+            </select>
+            <label htmlFor="text">Ваше сообщение</label>
+            <textarea 
+                id="text"
+                name="text"
+                value={formik.values.text} ------7. и тут
+                onChange={formik.handleChange} ------7. и тут
+            />
+            <label className="checkbox">
+                <input 
+                name="terms" 
+                type="checkbox" 
+                value={formik.values.terms} ------ 8. и т ут
+                onChange={formik.handleChange}/> ------ 8. и т ут
+                Соглашаетесь с политикой конфиденциальности?
+            </label>
+            <button type="submit">Отправить</button>
+        </form>
+    )
+}
+
+export default Form;
+
+Если код правильно выполне, то на странице в форме отобразится значения 
+const formik = useFormik({  
+        initialValues: {
+            name: '',
+            email: '',
+            amount: 0,   ---- вот эти значения 
+            currency: '',
+            text: '',
+            terms: false
+        },
+
+
+5.
+создам проверки для валидации формы:
+для этого создам отдельную функцию и помещу ее в переменную , в которую будет приходить объект как аргумент:
+
+const validate = values => {
+    const errors = {};           -----1. Так по документации нужен объект куда буду приходить ошибки
+
+    if (!values.name) {    ----2. Если не будет значения в name
+        errors.name = 'Обязательное поле';  ----3. то в объект errors создам name и помещу строку 'Обязательное поле'
+    } else if (values.name.length < 2) {  ---4. если длина строки менн2 симыолов
+        errors.name = 'Минимум 2 символа';  ---5. то в объект errors создам name и помещу строку 'Минимум 2 символа'
+    }
+
+    if (!values.email) {  ---------6. и по накатаной для каждого импута
+        errors.email = 'Обязательное поле';
+    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {   ------7. это валидация на правильный email
+            errors.email = 'Invalid email address';
+        }
+
+    return errors; ----8. ОБЯЗАТЕЛНО - когда фугкция закончит работу, она вернет объект с ошибками который был сформирован
+                        либо прочто пустой орбъект если все ок
+}
+
+
+и теперь эту функцию по валидации validate  нужно передать в formik
+
+const formik = useFormik({
+        initialValues: {
+            name: '',
+            email: '',
+            amount: 0, 
+            currency: '',
+            text: '',
+            terms: false
+        },
+        validate,  ------ вот таким синтаксисом и эта функция будет срабатывать каждый раз,при изменении в импуте который  отслеживает 
+        onSubmit: values => console.log(JSON.stringify(values,null,2))                                  onChange={formik.handleChange}/>
+    });
+
+
+
+
+6. 
+И теперь чтобы юзеру отрендерить информацию об валидации    
+нужно разместь объект с ошибками const errors = {}; что в функции по валидации validate :
+
+return (
+        <form className="form" onSubmit={formik.handleSubmit}>
+            <h2>send money</h2>
+            <label htmlFor="name">Ваше имя</label>
+            <input
+                id="name"
+                name="name"
+                type="text"
+                value={formik.values.name}
+                onChange={formik.handleChange}
+            />
+            {formik.errors.name ? <div>{formik.errors.name}</div> : null}  ---- 1. обращаюсь к формику, к его ошибкам и говорю, что если там есть 
+                                                                 если там есть ошибка связанная с полем name, то я отрендерю в этом месте
+                                                                див, в котором будет строка из {formik.errors.name}, а если ошибки нет,
+                                                                то ничего не рендерю - null
+
+            <label htmlFor="email">Ваша почта</label>
+            <input
+                id="email"
+                name="email"
+                type="email"
+                value={formik.values.email}
+                onChange={formik.handleChange}
+            />
+            {formik.errors.email ? <div>{formik.errors.email}</div> : null} ---2. К этому импуту по такой же схеме
+
+
+
+
+7.
+Все работает, но присктствует неправильное поведение- когда ввожу в одном из импутов, то сообщения появляются 
+под каждим из импутов. Это происходит потому что после каждой манипуляции в импутее идет вызов функции  handleChange
+
+<label htmlFor="email">Ваша почта</label>
+    <input
+        id="email"
+        name="email"
+        type="email"
+        value={formik.values.email} 
+        onChange={formik.handleChange} ------------ вот этой
+    />
+
+после этого запускается функция validate и внутри формируется объект errors c ошибкой для каждогог из импутов.
+
+Для решения этого бага нужен еще один объект, который будет следить использвется ли конкретный импут.
+А таже обработчик события onBlur - который отслеживает фокус ( в фокусе ли элемент)
+а точнее момент ухода фокуса с элемента, Событие focus вызывается в момент фокусировки, а blur – когда элемент теряет фокус. 
+Получается, что когда юзер ушел с импута то срабатывает Blur и название этого импута 
+записывается в специальный объект touched:
+
+
+return (
+        <form className="form" onSubmit={formik.handleSubmit}>
+            <h2>send money</h2>
+            <label htmlFor="name">Ваше имя</label>
+            <input
+                id="name"
+                name="name"
+                type="text"
+                value={formik.values.name}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur} ----------1. Вот добавляю этот обработчик на фокус на каждый импут
+            />
+            {formik.errors.name && formik.touched.name ? <div>{formik.errors.name}</div> : null} ------2.  если есть ошибки и при этом есть
+            <label htmlFor="email">Ваша почта</label>                                событие в объекте touched, то только в этом случае ошибка 
+            <input                                                                   отрендерится
+                id="email"
+                name="email"
+                type="email"
+                value={formik.values.email}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur} ----------1. Вот добавляю этот обработчик на фокус на каждый импут
+            />
+            {formik.errors.email && formik.touched.email ? <div>{formik.errors.email}</div> : null} -----------2. тут та же схема тольк email
+            <label htmlFor="amount">Количество</label>                                                 
+            <input
+                id="amount"
+                name="amount"
+                type="number"
+                value={formik.values.amount}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+            />
+            <label htmlFor="currency">Валюта</label>
+            <select
+                id="currency"
+                name="currency"
+                value={formik.values.currency}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}>
+                    <option value="">Выберите валюту</option>
+                    <option value="USD">USD</option>
+                    <option value="UAH">EUR</option>
+                    <option value="RUB">BYN</option>
+            </select>
+            <label htmlFor="text">Ваше сообщение</label>
+            <textarea 
+                id="text"
+                name="text"
+                value={formik.values.text}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+            />
+            <label className="checkbox">
+                <input 
+                name="terms" 
+                type="checkbox" 
+                value={formik.values.terms}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}/>
+                Соглашаетесь с политикой конфиденциальности?
+            </label>
+            <button type="submit">Отправить</button>
+        </form>
+    )
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+
+    
+                                   Библиотека Yup
+
+https://github.com/jquense/yup
+
+
+Эта библиотека упрощает работу  валидации  формы 
+В документации прямо по группа разбиты команды( методы) на что нужно валидировать.
+оБЯЗАТЕЛЬНО СМОТРЕТЬ ДОКУМЕТАЦИЮ
+
+
+и сделаю совместную работу Formik и Yup
+
+1.
+Импортирую в компонент
+
+import { useFormik } from "formik";
+import * as Yup from 'yup';
+
+
+2.
+Функция validate мне уже не нужна , удаляю:
+
+import { useFormik } from "formik";
+import * as Yup from 'yup';
+
+const Form = () => {
+
+    const formik = useFormik({
+        initialValues: {
+            name: '',
+            email: '',
+            amount: 0, 
+            currency: '',
+            text: '',
+            terms: false
+        },
+        // validate, ---------------------1. И здесь фенкция validate тоже уже не нужна в этом случае
+        validationSchema: Yup.object({ -----2. вместо нее подтягиваю из библиотеки метод и раскрываю объект
+
+            name: Yup.string()  ---------3.  Буду валидировать инпут name на строку
+                     .min(2, 'Минимум 2 символа')  ----и применю метод из докуметации на кол-во символов
+                                                string.min(limit: number | Ref, message?: string | function) - лимит на число и вывод сообщения или вызов функции
+                     .required('Обязательное поле!'),  --- тут проверка на то, что просто не пустое поле, и тоже либо выведет строку либо вызов функции
+
+            email: Yup.string()
+                      .email('Неправильный адрес!')
+                      .required('Обязательное поле!'),
+
+            amount: Yup.number()
+                       .min(5, 'Не менее 5 бачков')
+                       .required('Обязательное поле!'),
+
+            currency: Yup.string()
+                         .required('Выберите валюту!'),
+
+            text: Yup.string()
+                     .min(10, 'Не менее 10 символов'),          
+
+            terms: Yup.boolean() ------ c чекбоксом внимаельнее, тут true/false
+                      .required('Необходимо согласие')
+                      .oneOf([true], 'Поставте галочку'),  ---- и нужен такой синтаксис
+
+        }),
+        onSubmit: values => console.log(JSON.stringify(values,null,2))
+    });
+
+
+3. И конечно же нужно отрендерить сообщения об ошибке:
+
+    return (
+        <form className="form" onSubmit={formik.handleSubmit}>
+            <h2>send money</h2>
+            <label htmlFor="name">Ваше имя</label>
+            <input
+                id="name"
+                name="name"
+                type="text"
+                value={formik.values.name}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+            />
+            {formik.errors.name && formik.touched.name ? <div>{formik.errors.name}</div> : null}  ----- .name
+            <label htmlFor="email">Ваша почта</label>
+            <input
+                id="email"
+                name="email"
+                type="email"
+                value={formik.values.email}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+            />
+            {formik.errors.email && formik.touched.email ? <div>{formik.errors.email}</div> : null}  ---2. .email
+            <label htmlFor="amount">Количество</label>
+            <input
+                id="amount"
+                name="amount"
+                type="number"
+                value={formik.values.amount}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+            />
+            {formik.errors.amount && formik.touched.amount ? <div>{formik.errors.amount}</div> : null}  --- 3. amount
+            <label htmlFor="currency">Валюта</label>
+            <select
+                id="currency"
+                name="currency"
+                value={formik.values.currency}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}>
+                    <option value="">Выберите валюту</option>
+                    <option value="USD">USD</option>
+                    <option value="UAH">EUR</option>
+                    <option value="RUB">BYN</option>
+            </select>
+            {formik.errors.currency && formik.touched.currency ? <div>{formik.errors.currency}</div> : null} -----4. currency
+            <label htmlFor="text">Ваше сообщение</label>
+            <textarea 
+                id="text"
+                name="text"
+                value={formik.values.text}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+            />
+            {formik.errors.text && formik.touched.text ? <div>{formik.errors.text}</div> : null}  ----- 5. text
+            <label className="checkbox">
+                <input 
+                name="terms" 
+                type="checkbox" 
+                value={formik.values.terms}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}/>
+                Соглашаетесь с политикой конфиденциальности?
+            </label>
+            {formik.errors.terms && formik.touched.terms ? <div>{formik.errors.terms}</div> : null}  ----6. terms
+            <button type="submit">Отправить</button>
+        </form>
+    )
+}
+
+export default Form;
+
+
+4.
+В css есть класс для ошибки .error {
+                                color: #e53e3e;
+                                margin-top: 8px;
+                            }
+и конечно нужно добавить каждому диву с ошибкой этот класс - <div className='error'>:
+
+{formik.errors.amount && formik.touched.amount ? <div className='error'>{formik.errors.amount}</div> : null}                           

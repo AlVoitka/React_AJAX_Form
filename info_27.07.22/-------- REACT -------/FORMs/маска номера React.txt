@@ -1,0 +1,118 @@
+https://github.com/sanniassin/react-input-mask
+
+Библиотека
+react-input-mask
+
+1.
+Монтирую npm пакет
+
+npm install react-input-mask@next --save
+
+2.
+
+import InputMask from "react-input-mask";    -----1. Импортирую
+
+
+const Form = (props) => {
+    return (
+        <form className="form">
+            <h2>Форма обратной связи</h2>
+
+            <label htmlFor="name">Имя Фамилия</label>
+            <input
+                id="name"
+                name="name"
+                type="text"
+            />
+
+            <label htmlFor="email">E-mail</label>
+            <input
+                id="email"
+                name="email"
+                type="email"
+            />
+
+            <label htmlFor="phone">Номер телефона</label>
+            <InputMask mask="+7(999)999-99-99" onChange={props.onChange} value={props.value} alwaysShowMask={true}/> -----2. Вставляю так всегда показывает
+            <InputMask mask="+7(999)999-99-99" onChange={props.onChange} value={props.value}/> -----2. А так только если в фокусе
+
+            <label htmlFor="date">Дата рождения</label>
+            <input
+                id="date"
+                name="date"
+                type="date"
+            />
+
+            <label htmlFor="text">Сообщение</label>
+            <textarea 
+                id="text"
+                name="text"
+            />
+
+            <button type="submit">Отправить</button>
+        </form>
+    )
+}
+
+export default Form;
+
+
+
+3.
+Если компонент классовый:
+
+import { Component } from "react";
+import InputMask from "react-input-mask";
+
+
+
+class Form extends Component {
+
+    constructor(props) { -----1. Пропсы принимаю в конструкторк
+        super(props);
+        this.state = {
+            
+        }
+    }
+    render() {
+        return (
+            <form className="form">
+                <h2>Форма обратной связи</h2>
+    
+                <label htmlFor="name">Имя Фамилия</label>
+                <input
+                    id="name"
+                    name="name"
+                    type="text"
+                />
+    
+                <label htmlFor="email">E-mail</label>
+                <input
+                    id="email"
+                    name="email"
+                    type="email"
+                />
+    
+                <label htmlFor="phone">Номер телефона</label>
+                <InputMask mask="+7(999)999-99-99" onChange={this.props.onChange} value={this.props.value} alwaysShowMask={true}/> ----2. Добавляю контекст вызова
+    
+                <label htmlFor="date">Дата рождения</label>
+                <input
+                    id="date"
+                    name="date"
+                    type="date"
+                />
+    
+                <label htmlFor="text">Сообщение</label>
+                <textarea 
+                    id="text"
+                    name="text"
+                />
+    
+                <button type="submit">Отправить</button>
+            </form>
+        )
+    }
+}
+
+export default Form;

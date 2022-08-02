@@ -1,0 +1,58 @@
+104 урок 2 курс
+
+боле глубокое понимание в курсе Практический JavaScript (Продвинутый уровень)
+https://www.udemy.com/course/javascript_practice/?referralCode=9DD7B19DD5505880B724
+
+Главное правило ES6 
+-Каждый модуль должен быть независим друг от друга! Тоесть нельзя допускать жесткой привязки к сущностям селекторам ( классам, id или дата-атрибутам),
+нужно делать так чтобы модуль или его елементы могли быть переиспользованы, зависили только от аргументов которые в них передаются.
+
+
+
+1. Вот я к блоку с модалками добавил 2 функции вне  основного модуля
+
+function closeModal(modalSelector) {
+    const modal = document.querySelector(modalSelector);
+
+    modal.classList.add('hide');
+    modal.classList.remove('show');
+    document.body.style.overflow = '';
+}
+
+function openModal(modalSelector, modalTimerId) {
+    const modal = document.querySelector(modalSelector);
+
+    modal.classList.add('show');
+    modal.classList.remove('hide');
+    document.body.style.overflow = 'hidden';
+
+    if (modalTimerId) {
+        clearInterval(modalTimerId);
+    }
+}
+
+2.
+Ниже основной модуль
+
+function modal() {
+    xxx
+}
+
+
+3.
+Вот я экспортирую две именованные функции {closeModal} и {openModal}:
+
+
+export default modal;
+export {closeModal};
+export {openModal};
+
+
+4. 
+Я их отправил и тепер нужно их принять в бругом блоке forms:
+
+import {closeModal, openModal} from './modal';  ---- вот их импортирую из блока modal в блок form
+
+function form(){
+
+}

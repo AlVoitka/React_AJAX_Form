@@ -1,0 +1,50 @@
+https://www.youtube.com/watch?v=xp-vksTfTW0&t=195s
+
+<div>
+    <nav class="header__links">
+        <a href="#" class="header__link">to home</a>
+        <a href="#" class="header__link">about as</a>
+        <a href="#" class="header__link">careers  <i class="fa-solid fa-rectangle-list"></i></a>
+        
+
+        <ul class="menu">
+            <li><a href="#" class="header__link">item</a>
+                <ul>
+                    <li><a href="#" class="header__link">elem</a></li>
+                    <li><a href="#" class="header__link">elem</a></li>
+                </ul>
+            </li>
+
+            <li><a href="#" class="header__link">item</a></li>
+        </ul>
+
+    </nav>
+</div>
+
+
+
+2. Стили:
+
+.menu {
+    display: flex;
+}
+
+.menu li {    ------ вложенные элементы меню
+    width: 63px;   ---- ширина для них
+    list-style: none;   ----- убераю точки 
+    position: relative;   
+}
+
+.menu a {      ------- сами ссылки внутрии  вложенных элементов
+    text-decoration: none;    ----- убираю точки
+    display: block;
+}
+
+.menu ul {
+    position: absolute;
+    display: none;  ---- скрываю ul
+}
+
+.menu li:hover ul {    ----- поведение вложенных элементов при наведении на родительский
+    display: block;    ------   раскрывает ul
+}

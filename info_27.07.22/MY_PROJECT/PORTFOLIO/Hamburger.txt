@@ -1,0 +1,121 @@
+Главное - я создаю блок с меню и убираю (отвожу) его  влево за зону видимости экрана.
+Прописываю класс активности в css при котором он выезжает.
+И скрипнтом назначаю кнопки и добавляю и убираю класс активности.
+
+.menu {
+    position: fixed;  ---  применяю фиксед чтобы при скроле она все равно оставалась на месте
+    top: 0;
+    left: -100%;  ---- смещаю левве отэкрана чтобы потом выезжала
+    height: 100vh;   --- высота меню весь монитор
+    z-index: 10;   --- индекс чтобы перекрывал другой контент
+    visibility: hidden;   ----- так скрываю- это свойство более правильное чем display-none
+    opacity: 0;   --- это для эффекта
+    transition: 0.6s all;   ---  добавит эффект выезжания!!!!
+    &.active {   ---- вот так я указываю (menu__active) и скриптом его создам
+        left: 0;  --- возвращаю в зону видимости
+        visibility: visible;  ---- это както красиво визуализирует
+        opacity: 1;  --- и это отоже
+    }
+    &__block {
+        width: 345px;  ---- ширину блоку задаю 
+        height: 100%;    ---- высота 100% от родителя .menu 
+        background-color: $main-color;
+    }
+}
+
+1.
+Верстка гамбургера
+
+<div class="hamburger">
+    <span></span>
+    <span class="hamburger__long"></span>
+    <span></span>
+</div>
+
+2.
+Стилизую
+
+.hamburger {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    height: 21px;  --- задал высоту самого гамбургера
+    display: flex;
+    flex-direction: column;  - выставил элементы флекса верикально
+    justify-content: space-between;  --- раздвинул их
+    align-items: flex-end;   ---- и выровнеял по правой стороне
+    cursor: pointer;
+    span {  ----- просто спэны
+        display: block;
+        width: 30px;
+        height: 3px;
+        background: #151812;
+    }
+    span.long {  --- спен имеющий класс long -более длинный
+        width: 36px;
+    }
+}
+
+3. 
+cоздаю выезжающее меню
+
+<div class="menu">
+        
+    <div class="menu__block">   ---- сам блок
+        <div class="menu__close">   ---- крестик закрытия
+            <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                    viewBox="0 0 212.982 212.982" style="enable-background:new 0 0 212.982 212.982;" xml:space="preserve">
+                <g id="Close">
+                    <path style="fill-rule:evenodd;clip-rule:evenodd;" d="M131.804,106.491l75.936-75.936c6.99-6.99,6.99-18.323,0-25.312
+                        c-6.99-6.99-18.322-6.99-25.312,0l-75.937,75.937L30.554,5.242c-6.99-6.99-18.322-6.99-25.312,0c-6.989,6.99-6.989,18.323,0,25.312
+                        l75.937,75.936L5.242,182.427c-6.989,6.99-6.989,18.323,0,25.312c6.99,6.99,18.322,6.99,25.312,0l75.937-75.937l75.937,75.937
+                        c6.989,6.99,18.322,6.99,25.312,0c6.99-6.99,6.99-18.322,0-25.312L131.804,106.491z"/>
+                </g>
+            </svg>
+        </div>
+
+        <nav>   --- меню 
+            <ul class="menu__list">
+                <li class="menu__link"><a href="#">ПРО МЕНЯ</a></li>
+                <li class="menu__link"><a href="#">МОЙ ОПЫТ</a></li>
+                <li class="menu__link"><a href="#">МОИ НАВЫКИ</a></li>
+                <li class="menu__link"><a href="#">МОИ РАБОТЫ</a></li>
+                <li class="menu__link"><a href="#">ПРАЙС-ЛИСТ</a></li>
+                <li class="menu__link"><a href="#">КОНТАКТЫ</a></li>
+            </ul>
+        </nav>
+
+        <div class="menu__social">  ----- блок с иконками соц сетей
+            <a href="#" class="menu__social"><img src="icons/hamburger/Facebook.svg" alt="facebook"></a>
+            <a href="#" class="menu__social"><img src="icons/hamburger/Github.svg" alt="github"></a>
+            <a href="#" class="menu__social"><img src="icons/hamburger/linkedin.svg" alt="linkeid"></a>
+        </div>
+
+    </div>
+
+    <div class="menu__overlay"></div>  ---- и отдельно оверлей на оставшуюся часть
+
+</div>
+
+
+
+4.
+JS 
+
+const closeMenu = document.querySelector('.menu__close'),  --- получил крестик закрытия
+      hamburger = document.querySelector('.hamburger'),   --- кнопку гамбергер
+      menu = document.querySelector('.menu');   ---- сам блок меню которому добавлю класс
+      overlay = document.querySelector('.menu__overlay');  --- подложка -мгла
+      hamburger.addEventListener('click', ()=> {
+          menu.classList.add('active');
+      });
+
+      closeMenu.addEventListener('click', ()=> {
+        menu.classList.remove('active');
+    });
+
+    overlay.addEventListener('click', (e)=> {  --- если жму на подложку и объект события и есть подложка, то
+      if(e.target === overlay) {
+        menu.classList.remove('active');  ---- убираю активный класс
+      }
+    })

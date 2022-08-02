@@ -1,0 +1,50 @@
+1.По центру блока: 
+
+text-align: center;  ---- ставит в центр по горизонтали
+
+padding-top: 135px;  ---- так опускаю текст на нужное значение
+line-height: 100px;  ---- Устанавливает интерлиньяж (межстрочный интервал) текста, отсчет ведется от базовой линии шрифта.
+
+2. Если обернуть в div то тогда:
+
+display: inline-block;
+vertical-align: middle;
+
+3. FLEX
+
+display: flex;
+// justify-content: center;
+margin: 0 auto;
+align-items: center;
+
+
+или 
+
+display: block; 
+margin: 0 auto;   
+
+2.если елемент должен быть строго справа:
+
+display: block; 
+margin: 0;   
+
+
+
+
+3.  text-transform: uppercase;  --- Все буквы в верхний регистр
+    font-weight: normal;  --- толщина шрифтаfont-weight: 700;
+    font-size: 36px;     -- размер шрифта
+    line-height: 60px;   --- межстрочный интервал
+
+4.
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);    
+    //transform: translateX(-50%); 
+
+5. Выранивание по вертикальной оси
+
+top: 50%;
+transform: translateY(-50%);       
+

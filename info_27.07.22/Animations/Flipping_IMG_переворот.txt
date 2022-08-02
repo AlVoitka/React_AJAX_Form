@@ -1,0 +1,3 @@
+http://beloweb.ru/novichkam/kak-sdelat-flipping-effekt-s-pomoshhyu-css-animatsii.html
+
+https://davidwalsh.name/demo/css-flip.php

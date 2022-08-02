@@ -1,0 +1,54 @@
+курс 2 урок 75
+
+Эта функция служит для констриурования объектов. те в переменную записывается объект:
+function User(name, id) {
+    this.name = name;
+    this.id = id;
+    this.human = true;
+}
+
+Конструкторы, создание объектов через "new"
+Обычный синтаксис {...} позволяет создать только один объект. Но зачастую нам нужно создать множество однотипных объектов, 
+таких как пользователи, элементы меню и т.д.
+
+Это можно сделать при помощи функции-конструктора и оператора "new".
+
+Функция-конструктор
+Функции-конструкторы являются обычными функциями. Но есть два соглашения:
+
+Имя функции-конструктора должно начинаться с большой буквы.
+Функция-конструктор должна вызываться при помощи оператора "new".
+Например:
+
+function User(name) {
+  this.name = name;
+  this.isAdmin = false;
+}
+
+let user = new User("Вася");
+
+alert(user.name); // Вася
+alert(user.isAdmin); // false
+
+
+От себя
+
+function User(name, id) {
+    this.name = name;
+    this.id = id;
+    this.human = true;
+    this.hello = function() {
+        console.log("Zdarou ${this.name}");
+    };
+}
+
+const Alex = new User('Sasha', 37);
+const Tolik = new User('Anatolii', 47);
+
+Alex.hello();
+Tolik.hello();
+
+console.log(Alex);
+console.log(Tolik);
+// User { name: 'Sasha', id: 37, human: true }
+// User { name: 'Anatolii', id: 47, human: true }

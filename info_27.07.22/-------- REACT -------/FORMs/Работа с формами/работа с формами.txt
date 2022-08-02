@@ -1,0 +1,56 @@
+Мне нужно навесть обработчики onChange на импуты, чтобы введеные в них значения записались в состояние и отобразились на странице по клику.
+
+
+import { Component } from 'react';
+
+// import './employees-add-form.css';
+import './employees-add-form.scss';
+
+class EmployeesAddForm extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            name: '',
+            salary: ''
+        }
+    }
+
+    onValueChange = (e) => {   ----2. Вот метод с объектом события
+        this.setState({    ----- 3. Изменяю состояние
+            [e.target.name] : e.target.value ---5.  И вот к этим атрибутам добераюсь, те в stste записываю то что ввел пользователь
+        })                                    --- И в консоли- components - state - можно видеть как меняется состояние
+    }
+
+    
+
+    render() {
+        const {name, salary} = this.state; ----6. Деструктурирую стэйт
+
+        return (
+            <div className="app-add-form">
+                <h3>Добавьте нового сотрудника</h3>
+                <form
+                    className="add-form d-flex"
+                    onSubmit = {this.onSubmit}>
+                    <input type="text"
+                        className="form-control new-post-label"
+                        placeholder="Как его зовут?"
+                        name="name"  ----4.Задаю атрибут, чтобы к нему привязатся в методе onValueChange
+                        value={name} -----7. задаю атрибут который позволяет рендерить форму и контролировать ее поведение в ответ на пользовательский ввод
+                        onChange={this.onValueChange}/>  -----1. Нивешиваю обрабочтик и он запистит метод onValueChange
+                    <input type="number"
+                        className="form-control new-post-label"
+                        placeholder="З/П в $?"
+                        name="salary"  ----4.Задаю атрибут, чтобы к нему привязатся в методе onValueChange
+                        value={salary} -----7. задаю атрибут  который позволяет рендерить форму и контролировать ее поведение в ответ на пользовательский ввод
+                        onChange={this.onValueChange}/>  -----1. Нивешиваю обрабочтик и он запистит метод onValueChange
+    
+                    <button type="submit"
+                            className="btn btn-outline-light">Добавить</button>
+                </form>
+            </div>
+        )
+    }
+}
+
+export default EmployeesAddForm;

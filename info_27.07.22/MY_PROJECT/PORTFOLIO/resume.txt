@@ -1,0 +1,61 @@
+1.
+После создания заголовков делю секцию на две части при помощи css-grid
+
+&__wrapper {
+        display: grid;
+        padding: 60px 65px 0 65px; --- 
+        grid-template-columns: repeat(2, 425px); ---- создаю 2 колонки по 425px
+        column-gap: 135px;  - -- ращрыв между колонками
+
+2.
+создаю нружок при роможу псевдоэлемента
+
+&__column {
+    &-title {
+        position: relative;  ---родителю 
+        padding-left: 35px;
+        &:before {
+            content: '';
+            position: absolute;  --- элементу
+            width: 15px;
+            height: 15px;
+            background: $main-color;
+            border-radius: 100%;
+            left: -7px;
+            top: 50%;
+            transform: translateY(-50%); -- выравниваю по вертикальной оси
+        }
+    }    
+}   
+
+3. 
+Создаю вертикальную линию от кружков на основаниеи элемента li
+
+ul {
+    list-style-type: none;
+    li {
+        position: relative;
+        &:after {
+            content: '';
+            width: 1px;
+            height: calc(100% + 16px);  --- высоту назначил 100% от блока li + 16px чтобы уткнулась в кружок 
+            position: absolute;
+            top: -16px;  --- поднял вверх 
+            left: 0;
+            background-color: #000;
+        }
+    }
+}
+
+4. Создаю горизонтальную линию тоже как псевдоэлемент
+
+&__item {
+    position: relative;
+    &:before {
+        content: '';
+        height: 1px;
+        width: 45px;
+        position: absolute;
+        top: 68px;
+        background-color: #000;
+    }

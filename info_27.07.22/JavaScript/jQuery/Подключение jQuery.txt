@@ -1,0 +1,69 @@
+тут документация
+https://page2page.lohmach.info/index.php5/%D0%97%D0%B0%D0%B3%D0%BB%D0%B0%D0%B2%D0%BD%D0%B0%D1%8F_%D1%81%D1%82%D1%80%D0%B0%D0%BD%D0%B8%D1%86%D0%B0.html
+
+1. 
+Для того чтобы ее успоьзовть ее конечно же нужно подключить к проекту:
+ест 3 способа:
+
+- скачать библиотеку поместьть ее в папку JS и оттуда напрямую обращаться к файлику. 
+<script src="../js/jquery.js"></script> - вот так примерно в HTML
+
+- используя cdn сервера
+https://cdnjs.com/libraries?q=jquery
+
+Вводишь название и как правило подключают min.js версию
+копируешь ссылу и подключаешь в HTML
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+- самый правильный 
+использовать npm пакеты тк будет меньше в HTML скриптов и запросов на другие сервера.
+
+в терминале
+
+npm i jquery --save  (save тк ога будет работать в продакш версии, будет сключаться в работу на самом сайте).
+библиотека записалась в папку node_modules.
+вот она появилась pakage.json.js:
+{
+  "name": "food",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "browsersList": [
+    ">1%"
+  ],
+  "devDependencies": {
+    "@babel/cli": "^7.17.10",
+    "@babel/core": "^7.17.10",
+    "@babel/preset-env": "^7.17.10",
+    "json-server": "^0.16.1",
+    "webpack": "^5.69.1",
+    "webpack-cli": "^4.9.2"
+  },
+  "dependencies": {
+    "jquery": "^3.6.0"  --- именно в тут так --save
+  }
+}
+
+и уже в файле script.js импортрую библиотеку:
+
+import "jquery";  --- вот она должна быть перед другими скриптами
+import $ from "jquery"; -- или такой синтаксис подключит более надежно
+
+import  upslider from './modules/upslider';
+import  header from './modules/header';
+import  downslider from './modules/downslider';
+
+
+window.addEventListener('DOMContentLoaded', function() {
+
+    header();      
+    upslider();
+    downslider();
+
+    new WOW().init();
+});

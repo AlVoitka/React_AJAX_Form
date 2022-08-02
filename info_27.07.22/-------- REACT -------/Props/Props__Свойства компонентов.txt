@@ -1,0 +1,179 @@
+Props - он же проперти, он же свойства компонента.
+как пропсы можно передавать обЪекты, функции или просто значения.
+
+
+1.
+Имею функциональный компонент WhoAmI который возвращает верстку:
+
+function WhoAmI () {
+  return (
+    <div>
+      <h1>My name is, surname - </h1>
+      <a href="">My profile</a>
+    </div>
+  )
+}
+
+Это комонент выступает как заготовка, он не имеет динамических данных. Для того чтобы компонент менялся динамически
+вводится аргумент, в реакте его обозвали props (англ. реквизит, подвтавка, свойства). Он принемается функциональным компонентом 
+и уже внутри используется. Глобально props - это объект 
+
+
+
+
+В App использую этот компонент  с заданными для передачи свойствами
+а задаются они в качестве атрибута, те props будет формироваться в объект из атрибутов которые задаются так:
+
+function App () {
+    return (
+        <div className="app">
+            <WhoAmI name="Alex" surname="Voitka" link="hppt://facebool.com"/>  --- вот задал три атрибута 
+        </div>
+    )
+}
+
+export dafault App;  
+
+
+2.
+И вот самое интересное, я передам в один компонент WhoAmI несколько значений чтобы сформировать несколько 
+элементов на странице по одной болванке, но с разным контентом:
+
+function App () {
+    return (
+        <div className="app">
+            <WhoAmI name="Alex" surname="Voitka" link="hppt://facebool.com"/> 
+            <WhoAmI name="Mikhail" surname="Dedenko" link="hppt://facebook.com"/> 
+        </div>
+    )
+}
+
+export dafault App;  
+
+По итогу я получаю две блока с разным контентом на основании одног компонента- болванки WhoAmI
+
+3. 
+Но чаще всего пропсы деструктурируют:
+
+так было:
+
+function WhoAmI (props) { 
+  return (
+    <div>
+      <h1>My name is {props.name}, surname - {props.surname}</h1> 
+      <a href={props.link}>My profile</a>
+    </div>
+  )
+}
+
+так делают:
+
+function WhoAmI ({name, surename, link}) { ---- вот деструктурировал props
+  return (
+    <div>
+      <h1>My name is {name}, surname - {surname}</h1>  --- вот обратился напрямую
+      <a href={link}>My profile</a>
+    </div>
+  )
+}
+
+А в функциональном компоненте синтаксис деструктуризации выглядит так:
+  class MyLearn extends Component {
+
+
+    constructor(props) {
+        super(props); 
+
+        this.state = {  
+            sex: '---',
+            amount: 33,
+            position: '',
+            color: false
+        } 
+    }
+
+    render() {
+        const {name, surename} = this.props;  --- так деструктурирую пропсы
+        const {sex, position, amount, color} = this.state;  --- так состояние
+
+        let classNames = "learn-btn";
+
+        if (color) {
+            classNames += ' color';
+        }
+
+
+        return (
+            <div className="my-learn">
+                <h1> My name is {name}, my surname is {surename}, my sex - {sex}, position- {position} </h1>
+                <button onClick={this.changeSexM} className={classNames}>Man</button>
+                <button onClick={this.changeSexW} className={classNames}>Woman</button>
+                <button onClick={this.nextPush} className={classNames}>Push</button>
+                <button onClick={this.changeColor} className={classNames}>ChangeColor</button>
+                <span className="learn-span"> {amount}</span>
+                <form>
+                    <span>Введите должность </span>
+                    <input type="text" onChange={this.commitInput}></input>
+                </form>
+                
+            </div>
+        )
+    }
+
+
+//////////////////////////////////////////////////////////////////////
+
+1.добавлю в компонты пропсы ( props )
+
+так у меня было:
+  const EmployeesList = () => {
+    return (
+        <ul className="app-list list-group">
+            <EmployeesListItem/>
+            <EmployeesListItem/>
+            <EmployeesListItem/>
+            <EmployeesListItem/>
+            <EmployeesListItem/>
+        </ul>
+    )
+}
+
+добавленияю пропсов как атрибуты name И salary:
+const EmployeesList = () => {
+    return (
+        <ul className="app-list list-group">
+            <EmployeesListItem name="Vitia M." salary={300}/>
+            <EmployeesListItem name="Tolia N." salary={400}/>
+            <EmployeesListItem name="Valera S." salary={500}/>
+            <EmployeesListItem name="Vitalt L." salary={700}/>
+            <EmployeesListItem name="Alex V." salary={900}/>
+        </ul>
+    )
+}
+
+и теперь их нужно использовать,  передаю как аргумент в функцию эти пропсы:
+
+const EmployeesListItem = (props) => { ------------вот
+    return (
+        <li className="list-group-item d-flex justify-content-between">
+            <span className="list-group-item-label">{props.name}</span>  ----------вот
+            <input type="text" className="list-group-item-input" defaultValue={props.salary +'$'}/> ----- вот
+            <div className='d-flex justify-content-center align-items-center'>
+
+
+Для того чтобы код лучше читался, применияю деструтуризацию. Я пропсы разрезаю на части:            
+было так
+
+const EmployeesListItem = (props) => {
+    return (
+        <li className="list-group-item d-flex justify-content-between">
+            <span className="list-group-item-label">{props.name}</span>
+            <input type="text" className="list-group-item-input" defaultValue={props.salary +'$'}/>
+
+сделал так
+
+const EmployeesListItem = ({name, salary}) => {   -------вот разрезал
+    return (
+        <li className="list-group-item d-flex justify-content-between">
+            <span className="list-group-item-label">{name}</span>  -----------------вот сократил 
+            <input type="text" className="list-group-item-input" defaultValue={salary +'$'}/>  ------------- вот сократил

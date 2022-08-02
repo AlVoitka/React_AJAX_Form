@@ -1,0 +1,131 @@
+1.
+классовый компонент отличается от функционального, тем что у него есть состояние state которое можно менять\
+динамически.
+
+Создам классовый компонент:
+
+import { Component } from 'react'; - --------импортировал компонент это обязательно
+
+
+class AlexV extends Component {
+    render () {                 ------------ все было в return помещается в метод рендер!!!!!!!!!!!!! в отличии от функционального
+            return (
+            <div>
+                <h1> My name is Alex</h1>
+            </div>
+        )
+    }
+}
+
+
+
+
+
+2. Чтобы в классовый компонент передать пропсы, нужно использовать конструктор:
+.....................
+ function App () {
+        return (
+            <div className="app">
+                <AlexV surname="Voitka" age="37"/>   ----- вот у меня компонент с пропсами surname="Voitka" age="37"
+            </div>
+        )
+    }
+
+    export dafault App; 
+..........................
+
+и уже в самом компоненте я принимаю пропсы через конструктор
+
+import { Component } from 'react'; 
+
+
+class AlexV extends Component {
+
+
+    constructor(props) { --- вот принял пропсы 
+        super(props);  --- просто такой синтаксис обязателен
+    }
+
+
+
+    render(
+        return (
+            const {surname, age} = this.props;  ---- вот деструртурирую пропсы в читаемый код
+
+            <div>
+                <h1> My name is Alex, my surname is{surname} my age is{age} </h1>
+            </div>
+        )
+    )
+    
+}
+
+3.
+
+
+import { Component } from 'react';   --- вот импортирую компонент
+
+import './my-learn.css'
+
+class MyLearn extends Component {    --- создан классовый компонент
+
+
+    constructor(props) {  ----- конструктор для передачи (принятия) пропсов
+        super(props); 
+
+        this.state = {    ------ состояние компонента
+            sex: '---',
+            amount: 33,
+            position: ''
+        } 
+    }
+
+    changeSexW = () => {  ----- метод ( функция) сработывающая по нажатию на обработчик
+        this.setState ({
+            sex: 'woman'
+        })
+    }
+
+    changeSexM = () => {  ----- метод ( функция) сработывающая по нажатию на обработчик
+        this.setState ({
+            sex: 'man'
+        })
+    }
+
+
+    nextPush = () => {   ----- метод ( функция) сработывающая по нажатию на обработчик
+        this.setState ({
+            amount: this.state.amount + 1
+        })
+    }
+
+
+    commitInput = (e) => {   ----- метод ( функция) сработывающая по нажатию на обработчик
+        this.setState ({
+            position: e.target.value
+        })
+    }
+
+
+    render() {     ------------ в классовом компоненте обязателльно!!!! оборачиваем в рендер
+        const {name, surename} = this.props;  ---- деструктурирую пропсы - вытаскиваю тх из пропсов
+        const {sex, position} = this.state;  ----  деструктурирую состояние  - вытаскиваю из состояния
+        return (
+            <div className="my-learn">
+                <h1> My name is {name}, my surname is {surename}, my sex - {sex}, position- {position} </h1>
+                <button onClick={this.changeSexM} className="learn-btn">Man</button>
+                <button onClick={this.changeSexW} className="learn-btn">Woman</button> ---- обраюотчики на клик
+                <button onClick={this.nextPush} className="learn-btn">Push</button>
+                <span className="learn-span"> {this.state.amount}</span>
+                <form>
+                    <span>Введите должность </span>
+                    <input type="text" onChange={this.commitInput}></input>  ---- обработчики на изменения в форие
+                </form>
+                
+            </div>
+        )
+    }
+    
+}
+
+export default MyLearn;   --- экспортирую компонент

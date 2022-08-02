@@ -1,0 +1,104 @@
+
+было так
+
+const data = [
+    {name: 'Ales K.', salary: 800},
+    {name: 'Ales M.', salary: 700},
+    {name: 'Ales S.', salary: 600},
+  ];
+
+
+добавлю cвойство increase  
+
+const data = [
+    {name: 'Ales K.', salary: 800, increase: false},
+    {name: 'Ales M.', salary: 700, increase: true},
+    {name: 'Ales S.', salary: 600, increase: false},
+  ];
+
+
+
+  const EmployeesListItem = ({name, salary, increase}) => { --- вот передал в компонент новый пропс
+
+
+    let classNames = "list-group-item d-flex justify-content-between";
+
+    if (increase) {  ----если increase в состоянии тру, то
+        classNames += ' increase';  --- вот добавил класс к сущиствующим  в случае если increase = true
+    }
+  
+    
+
+
+
+
+3. Теперь сделаю чтобы при нажатии на кнопку печеньки напротив фамили сотрудника, его данные окрашивались в другой цвет.
+
+для этот добавлю еще один класс increase: для каждого елемента в базе данных data в app.js:
+
+function App() {
+
+  const data = [
+    {name: 'Ales K.', salary: 800, increase: false},
+    {name: 'Ales M.', salary: 700, increase: false},
+    {name: 'Ales S.', salary: 600, increase: false},
+    {name: 'Ales S.', salary: 99999900, increase: true},
+    
+  ];
+
+  и далле в файле Employees-List-Item.js добавляю этот класс как аргумент:
+
+  const EmployeesListItem = ({name, salary, increase}) => {
+    return (
+
+далее создам переменную в которую запишу строчку содержащую все css классы 
+
+let classNames = "list-group-item d-flex justify-content-between";    -вот
+
+и пропишу условие:
+где если  increase в позиции true? то к нему добавится еще один класс
+if (increase) {
+        classNames += ' increase';   - тут вожно поставить пробел, чтобы не слились классы
+    }
+
+и теперь вместо всех классов css для списка li
+
+return (
+        <li className="list-group-item d-flex justify-content-between">   -------вот вместо этих классов
+            <span className="list-group-item-label">{name}</span>
+            <input type="text" className="list-group-item-input" defaultValue={salary +'$'}/>
+            <div className='d-flex justify-content-center align-items-center'>
+                <button type="button"
+                    className="btn-cookie btn-sm ">
+                    <i className="fas fa-cookie"></i>
+                </button>
+
+                <button type="button"
+                        className="btn-trash btn-sm ">
+                    <i className="fas fa-trash"></i>
+                </button>
+                <i className="fas fa-star"></i>
+            </div>
+        </li>
+    )
+
+    подставляю {classNames}:
+
+    return (
+        <li className={classNames}>  ----- вот тут
+            <span className="list-group-item-label">{name}</span>
+            <input type="text" className="list-group-item-input" defaultValue={salary +'$'}/>
+            <div className='d-flex justify-content-center align-items-center'>
+                <button type="button"
+                    className="btn-cookie btn-sm ">
+                    <i className="fas fa-cookie"></i>
+                </button>
+
+                <button type="button"
+                        className="btn-trash btn-sm ">
+                    <i className="fas fa-trash"></i>
+                </button>
+                <i className="fas fa-star"></i>
+            </div>
+        </li>
+    )    

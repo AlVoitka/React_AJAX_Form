@@ -1,0 +1,133 @@
+Любая ошибка в коде ломает все приложение, и в терминале появляется оверлей с информациец о ней - это в режиме разработки,
+а в продакшн версии для пользователя, реакт остановит свою работу, удалит весь интерфейс будет отображен просто белый экран.
+
+1.
+Такие сутуации конечно нужно фиксеть, к примеру делать чтобы ломался только то компонент в котором ошибка,а не ложилась вся прилага.
+Для этого есть специальный хук - componentDidCatch():
+
+componentDidCatch (err, info) {
+
+}
+хук принемает в себя 2 аргумента err- сама ошибка, и информация о том компоненте в котором произошла ошибка
+
+2.
+раньше такой синтакчии работал, но теперь в последней версии реакта разрабы изменили это поаведение по некоторым причинам, и таперь
+правильно выносить это все в отдельный компонент, который называют предохранитель
+
+3.
+Поэтом  создам новый компонент ErrorBoundary который и будет отлавливать ошибки:
+Этот компонент будет оборачивающим, тоесть помещать в сембя тот компонент который может сломаться.
+
+
+    import { Component } from "react";
+    import ErrorMassage from "../errorMassage/ErrorMassge";
+
+    class ErrorBoundary extends Component {
+        state = {
+            error: false ----- 1.он содержит состояние
+        }
+
+        componentDidCatch(error, errorInfo) {   ---- 2.хук 
+            console.log(error, errorInfo);
+            this.setState({   ----- 3.если ошибка то измениет свое состоение на тру
+                error: true
+            })
+        }
+
+        render() {
+
+            if (this.state.error) {   ---- 4. если error в позиции тру
+                return <ErrorMassage/>   ---- то или текст с информацией return <h1> Wrong! </h1>
+            }
+
+            return this.props.children;  ----5. вот такая конструкция
+        }
+    }
+
+    export default ErrorBoundary;
+
+    4.
+    Далее импортирую этот компонент в app.js
+
+
+    import { Component } from "react";
+import AppHeader from "../appHeader/AppHeader";
+import RandomChar from "../randomChar/RandomChar";
+import ErrorBoundary from "../errorBoundary/ErrorBoundary";  ----- вот
+import CharList from "../charList/CharList";
+import CharInfo from "../charInfo/CharInfo";
+
+import decoration from '../../resources/img/vision.png';
+
+
+
+class App extends Component {
+    
+    state = {
+        selectedChar: null
+    }
+
+    onCharSelected = (id) => {
+        this.setState({
+            selectedChar: id
+        })
+    }
+
+    render() {
+        return (
+            <div className="app">
+                <AppHeader/>
+                <main>
+                    <ErrorBoundary>
+                        <RandomChar/>  --- и оборачиваю проблемный компонент
+                    </ErrorBoundary>
+                </main>
+            </div>
+        )
+    }
+}
+
+export default App;
+
+И вот теперь если произошла ошибка , то прилаго не ляжет, а вместо проблемного компонента будет отрендорена ошибка:
+return <ErrorMassage/>   ---- то или текст с информацией return <h1> Wrong! </h1>
+
+
+
+
+2.
+Есть и другой метод отлова ошибок:
+
+Классовый компонент является предохранителем, если он включает хотя бы один из следующих методов 
+жизненного цикла: static getDerivedStateFromError() или componentDidCatch(). Используйте static getDerivedStateFromError() 
+при рендеринге запасного UI в случае отлова ошибки. Используйте componentDidCatch() при написании кода для журналирования 
+информации об отловленной ошибке.
+
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error) {
+    // Обновить состояние с тем, чтобы следующий рендер показал запасной UI.
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    // Можно также сохранить информацию об ошибке в соответствующую службу журнала ошибок
+    logErrorToMyService(error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      // Можно отрендерить запасной UI произвольного вида
+      return <h1>Что-то пошло не так.</h1>;
+    }
+
+    return this.props.children; 
+  }
+}
+
+
+

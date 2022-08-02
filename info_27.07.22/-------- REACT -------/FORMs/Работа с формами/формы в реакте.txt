@@ -1,0 +1,238 @@
+1.
+все что вносится в импуты относится к состоянию формы. Поэтом Этот компонент должен имет state и быть классовым.
+
+import { Component } from "react";
+import InputMask from "react-input-mask";
+
+
+
+class Form extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            name: '',    ----- создал 4 состояния для кодого импута с одноименным названием
+            email: '',
+            text: '',
+            submit: false
+        }
+    }
+    render() {
+        return (
+            <form className="form">
+                <h2>Форма обратной связи</h2>
+    
+                <label htmlFor="name">Имя Фамилия</label>
+                <input
+                    id="name"
+                    name="name" ----------------------вот названия
+                    type="text"
+                />
+    
+                <label htmlFor="email">E-mail</label>
+                <input
+                    id="email"
+                    name="email"
+                    type="email"
+                />
+    
+                <label htmlFor="phone">Номер телефона</label>
+                <InputMask mask="+7(999)999-99-99" onChange={this.props.onChange} value={this.props.value} alwaysShowMask={true}/>
+    
+                <label htmlFor="date">Дата рождения</label>
+                <input
+                    id="date"
+                    name="date"
+                    type="date"
+                />
+    
+                <label htmlFor="text">Сообщение</label>
+                <textarea 
+                    id="text"
+                    name="text"
+                />
+    
+                <button type="submit">Отправить</button>
+            </form>
+        )
+    }
+}
+
+export default Form;
+
+
+2. 
+Ножно создать метод который быдет работать с теми данными что введен в импут, а также
+навесить на импуты обработчики событий на изменения onChange={}, 
+и отследвать что вводит пользователь и записывать эти значения в состояние и соответственно валидировать.
+
+
+    onValueChange = (e) => {  ----- 1.метод в виде стрелочной функции, которя принемает себя аргумен е - объект события
+        this.setState({  -----------2. Меняю состояние методом setState
+            [e.target.name] : e.target.value ---3. при взаимодействии с определенным импутом в него запишется вводимое значение 
+        })                                   код по name определит в каком импуте активность и в состояние запишет вводимое значение
+
+render() {
+        return (
+            <form className="form">
+                <h2>Форма обратной связи</h2>
+    
+                <label htmlFor="name">Имя Фамилия</label>
+                <input
+                    id="name"
+                    name="name"
+                    type="text"
+                    onChange={this.onValueChange}  -----4. Навеил обработчик и в него передал этот метод
+                />
+    
+                <label htmlFor="email">E-mail</label>
+                <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    onChange={this.onValueChange}   -----4. Навеил обработчик и в него передал этот метод
+                />
+    
+                <label htmlFor="phone">Номер телефона</label>
+                <InputMask mask="+7(999)999-99-99" onChange={this.props.onChange} value={this.props.value} alwaysShowMask={true}/>
+    
+                <label htmlFor="date">Дата рождения</label>
+                <input
+                    id="date"
+                    name="date"
+                    type="date"
+                />
+    
+                <label htmlFor="text">Сообщение</label>
+                <textarea 
+                    id="text"
+                    name="text"
+                    onChange={this.onValueChange}   -----4. Навеил обработчик и в него передал этот метод
+                />
+    
+                <button type="submit">Отправить</button>
+            </form>
+        )
+    }
+}
+
+export default Form;  
+
+------5. Если зайти в консоль  разраба, во вкладку Components то там в состоянии будет срузу же записывать вводимые в импут значения.
+
+
+
+4.
+теперь что тут происходит:
+
+инпут запускает событие onChange, он запускоет метод onValueChange который изменяет состояние и перезаписывает его, 
+соответсвенно изменение состояниея вызывае метод render().
+И теперь вожный момент: нужно в импуты добавлять атрибут value={}, и вот в него при перерендеринге запишится актуальное значение
+состояния компонента. Это значит что значение value будет контролироватся реактом, и компонент буде -УПРАВЛЯЕМЫМ! И теперь 
+на все изменения в импуте реакт будет реагировать мгновенно, особенно это важно при валидации. 
+
+Добавляю его:
+
+render() {
+        return (
+            <form className="form">
+                <h2>Форма обратной связи</h2>
+    
+                <label htmlFor="name">Имя Фамилия</label>
+                <input
+                    id="name"
+                    name="name"
+                    type="text"
+                    value={this.name}---------------------- вот так
+                    onChange={this.onValueChange}
+                />
+    
+                <label htmlFor="email">E-mail</label>
+                <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    value={this.email}---------------------- вот так
+                    onChange={this.onValueChange}
+                />
+    
+                <label htmlFor="phone">Номер телефона</label>
+                <InputMask mask="+7(999)999-99-99" onChange={this.props.onChange} value={this.props.value} alwaysShowMask={true}/>
+    
+                <label htmlFor="date">Дата рождения</label>
+                <input
+                    id="date"
+                    name="date"
+                    type="date"
+                />
+    
+                <label htmlFor="text">Сообщение</label>
+                <textarea 
+                    id="text"
+                    name="text"
+                    value={this.text}---------------------- вот так
+                    onChange={this.onValueChange}
+                />
+    
+                <button type="submit">Отправить</button>
+            </form>
+        )
+    }
+
+
+а лучше деструктурировать:
+
+render() {
+
+        const {name, email, text, submit} = this.state;  ----- вот деструктурирую
+
+        return (
+            <form className="form">
+                <h2>Форма обратной связи</h2>
+    
+                <label htmlFor="name">Имя Фамилия</label>
+                <input
+                    id="name"
+                    name="name"
+                    type="text"
+                    value={name}      --------и вот так уже при менею переменную, вместо  value={this.name}
+                    onChange={this.onValueChange}
+                />
+    
+                <label htmlFor="email">E-mail</label>
+                <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    value={email}
+                    onChange={this.onValueChange}
+                />
+    
+                <label htmlFor="phone">Номер телефона</label>
+                <InputMask mask="+7(999)999-99-99" onChange={this.props.onChange} value={this.props.value} alwaysShowMask={true}/>
+    
+                <label htmlFor="date">Дата рождения</label>
+                <input
+                    id="date"
+                    name="date"
+                    type="date"
+                />
+    
+                <label htmlFor="text">Сообщение</label>
+                <textarea 
+                    id="text"
+                    name="text"
+                    value={text}
+                    onChange={this.onValueChange}
+                />
+    
+                <button type="submit"
+                        name="submit"
+                        value={submit}
+                        onSubmit={this.onSendForm}>
+                    Отправить
+                </button>
+            </form>
+        )
+    }
+}

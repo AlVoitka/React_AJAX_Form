@@ -1,0 +1,226 @@
+1.Классическая верстка 
+
+<form class="feed-form" action="#">
+    <input name="name" required placeholder="Name" type="text" maxlength="10">
+    <input name="phone" required placeholder="Phone number" type="number" minlength="3">
+    <input name="email" required placeholder="e-mail" type="email">
+
+    <button class="btn">consult</button>
+</form>
+
+Валидация форм 
+1. первый уровень:
+Значения свойств:
+
+-name="name"  - обязательно задавать этот атрибут, он очень важен для корректной работы формы
+
+- required - Устанавливает поле формы обязательным для заполнения перед отправкой формы на сервер. Если обязательное поле пустое, браузер выведет сообщение, а форма отправлена не будет. Вид и содержание сообщения
+ зависит от браузера и меняться пользователем не может.
+
+- type="button|checkbox|file|hidden|image|password|radio|reset|submit|text"  - нужно указывать тот тип который будет приходить от юзера
+http://htmlbook.ru/html/input/type  - тут описание
+
+- placeholder  -Выводит текст внутри поля формы, который исчезает при получении фокуса.
+
+-maxlength="10" - Устанавливает максимальное число символов, которое может быть введено пользователем в текстовом поле. 
+Когда это количество достигается при наборе, дальнейший ввод становится невозможным.
+
+-minlength="3" - Задаёт минимальное число символов, которое может быть введено пользователем в текстовом поле. 
+Если число символов меньше указанного значения, то браузер выдаёт сообщение об ошибке и не отправляет форму.
+
+2. Второй уровень, это проверки при помощи JavaScript
+
+3. И еще есть такой плагин Query Validation Plugin  - https://jqueryvalidation.org/  1 курс -урок 60
+тут как сделать чтобы появлялись подсказки и при ошибке открашивалаь красным форма
+
+4. Плагин для создания маски набора номера jQuery Masked Input - https://plugins.jquery.com/maskedinput/ 1 курс -урок 61
+
+
+/////////Чекбоксы/////////////
+
+<form method="post" action="input5.php">
+    <p><b>С какими операционными системами вы знакомы?</b></p>
+    <p><input type="checkbox" name="option1" value="a1" checked>Windows 95/98<Br>
+    <input type="checkbox" name="option2" value="a2">Windows 2000<Br>
+    <input type="checkbox" name="option3" value="a3">System X<Br> 
+    <input type="checkbox" name="option4" value="a4">Linux<Br> 
+    <input type="checkbox" name="option5" value="a5">X3-DOS</p>
+    <p><input type="submit" value="Отправить"></p>
+</form>
+
+
+/////// И ещё много разных форм бывает//////////////////
+весь список тут http://htmlbook.ru/html/input/type
+
+<form action="#">
+    <label for="Year">Year</label>
+    <input id="Year" type="checkbox">
+</form>
+
+<form action="#">
+    <input type="file">  ---- это для выбора файла для подкрепления
+</form>
+
+<form action="#">
+    <input type="date">
+</form>
+
+<form action="#">
+    <input type="range">  --- это ползунок
+</form>
+
+<form action="#">
+    <label for="first">Name</label>
+    <input id="first" type="range">
+</form>
+<br>
+<br>
+<form action="#">
+    <textarea name="" id="" cols="30" rows="10"></textarea>   --- это поле для ввода сообщения или отзыва
+</form>
+
+
+<!-- 
+
+            <form class="feed-form feed-form_mt25" action="#"> 
+                <input name="name" required placeholder="Ваше имя" type="text">
+                <input name="phone" required placeholder="Ваш телефон" type="number">
+                <input name="email" required placeholder="Ваш E-mail" type="email">
+
+                <button class="button button_submit catalog-item__button">ну шо, берём?</button>
+            </form>
+
+
+   Вот мои формы и тут атрибут   required   - отвечает за валидацию форм, а атрибут type="text"  - указывает четко какие символы 
+   быду приходить в эту форму
+
+   <input name="email" required minlength="3" placeholder="Ваш E-mail" type="email">
+
+   minlength="3" - мах кол-во символов
+
+   maxlenght="5" - мах кол-во символов
+
+
+   
+
+
+   ///////////////////////// Но для более гибкой и мощной валидации нужен сторонний плагин ////////////////////////
+
+   https://jqueryvalidation.org/
+
+   1. Files:
+        Download
+
+    перекидывеает на гит репозиторий и там нужна вкладка Assets
+
+    скачиваю это архив
+     jquery-validation-1.19.3.zip
+
+     - в распокованном папка Dist, в ней нужен фыйл
+     jquery.validate.min.js
+
+     копирую его в проект в папку js
+   
+    2. Подключаю  jquery.validate.min.js  к проекту
+
+    <script src="/js/jquery.validate.min.js"></script>
+
+
+    3. настройка по средствам JS
+
+    Тк плагин  плагин задает параметры только первой по списку форме, мне необходима задать каждой из форм идентификатор id
+
+    <div class="first"  id="1">
+        <form class="feed-form" action="#"> 
+
+    <div class="second" id="2">
+        <form class="feed-form" action="#">
+
+            и всплывающе окно
+
+    <div class="overlay"> 
+
+        <div class="modal" id="consultation">   - тут назначен текстом
+
+    
+4. Прописываю скрипт
+
+    $('.feed-form').validate();
+    $('#1 form').validate();
+    $('#2 form').validate();
+    $('#consultation form').validate();
+
+    так я подключил плагин к формам
+
+
+
+    для донастройки на сайте плагина щем вкладку Methods
+
+    если работаем с этим плагином то свойство  required нужно удалить, его настраивать буду через скрипт
+
+    <form class="feed-form" action="#"> 
+                <input name="name" placeholder="Ваше имя" type="text">
+                <input name="phone" placeholder="Ваш телефон" type="number">
+                <input name="email" placeholder="Ваш E-mail" type="email">
+
+    
+    задаю правила для первой формы
+    
+    $('.feed-form').validate();
+    $('#1 form').validate({
+      rules: {
+        name: "required",
+        phone: "required",
+        email: {
+          required: true,
+          email: true,
+        }
+      }
+    });
+    $('#2 form').validate();
+    $('#consultation form').validate();
+
+
+если введенные данные не валидны появляется сообщение на английском, но его можно кастомизировать
+
+находим на сайте плагина щем вкладку Methods и внутри ищем messages
+
+$('.feed-form').validate();
+    $('#1 form').validate({
+      rules: {
+        name: "required",
+        phone: "required",
+        email: {
+          required: true,
+          email: true,
+        }
+      },
+      messages: {
+        name: "Введи правильно, лодырь!",
+        phone: "А телефон!?",
+        email: {
+          required: "Нужно ввести адрес почты",
+          email: "Лжёшь! нет сабачки!"
+        }
+      }
+    });
+    $('#2 form').validate();
+    $('#consultation form').validate();
+
+
+
+
+
+ для стилизации ошибки в доме находим и используеи  класс
+    .error  
+        border: 1px solid red  - красная рамка
+
+    label.error 
+        border: none        - убрал красную рабку с описания ошибки
+     
+
+
+
+   
+      
+ -->

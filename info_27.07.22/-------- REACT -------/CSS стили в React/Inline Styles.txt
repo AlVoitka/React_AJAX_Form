@@ -1,0 +1,64 @@
+
+
+Это не самая предпочтительная техника, но иногда применяемая!
+
+Для того чтобы назначить инлайн стили понадобится атрибут 'style'
+
+возьму к примеру span в верске:
+
+import './employees-list-item.css';
+
+const EmployeesListItem = (props) => {
+
+    const {name, salary, onDelete, onToggleProp, increase, rise} = props;
+
+    let classNames = "list-group-item d-flex justify-content-between";
+    if (increase) {
+        classNames += ' increase';
+    }
+    if (rise) {
+        classNames += ' like';
+    }
+
+    return (
+        <li className={classNames}>
+            <span className="list-group-item-label" onClick={onToggleProp} data-toggle="rise">{name}</span>  ---------- вот этот
+            <input type="text" className="list-group-item-input" defaultValue={salary + '$'}/>
+            <div className='d-flex justify-content-center align-items-center'>
+                <button type="button"
+                    className="btn-cookie btn-sm "
+                    onClick={onToggleProp}
+                    data-toggle="increase">
+                    <i className="fas fa-cookie"></i>
+                </button>
+
+                <button type="button"
+                        className="btn-trash btn-sm "
+                        onClick={onDelete}>
+                    <i className="fas fa-trash"></i>
+                </button>
+                <i className="fas fa-star"></i>
+            </div>
+        </li>
+    )
+}
+
+export default EmployeesListItem;
+
+
+и дабавлю ему атрибут style={}:
+этот атрибут принемает в себя в реакте объект со стилями.
+
+<span className="list-group-item-label" 
+onClick={onToggleProp} 
+data-toggle="rise"
+style={}>{name}</span>
+
+к примеру я хочу увеличить размер шрифта имени сотрудника, для этого нужно открыть еще одни скобки чтобы создать объект
+и внести в него свойство. Внутри реакта свойства прописываются в формате кэмел-кейса.
+
+style={{fontSize: 40}}  - рект сам подставляет пиксели (исключительно пиксели) если не указана еденица измерения.
+style={{fontSize: 40em}} - будет ошибка, тк нужно згначение помещать в формат строки
+style={{fontSize: '40em'}} - вот так будет хорошо
+
+style={{fontSize: 40, color: 'blueviolet', transition: 'all'}} --- цвет тоже в формате строки

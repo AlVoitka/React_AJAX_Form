@@ -1,0 +1,4 @@
+1.
+ &__text, &__social {
+        margin-top: 20px;
+    }

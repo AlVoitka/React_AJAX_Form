@@ -1,0 +1,58 @@
+1.
+В app.js создам метод(функцию) по удалению элемента:
+
+deliteItem() => {
+    this.setState(({data}) => {
+
+    })
+};
+
+2. 
+Теперь передам ее как пропс с другой классовый компонент нуже по иерархии:
+
+    render() {
+        const {data, term, filter} = this.state;
+
+        return (
+            <div className="app">
+                <AppInfo employees={employees} increased={increased}/>
+    
+                <div className="search-panel">
+                    <SearchPanel onUpdateSearch={this.onUpdateSearch}/>
+                    <AppFilter filter={filter} onFilterSelect={this.onFilterSelect}/>
+                </div>
+                
+                <EmployeesList 
+                    data={visibleData}
+                    onDelete={this.deleteItem}   -------- вот назвал атрибут(он же и есть пропс) onDelete, и в нем функция по удалению deliteItem()
+                    onToggleProp={this.onToggleProp}/>
+                <EmployeesAddForm onAdd={this.addItem}/>
+                <MyLearn name="Alex" surename="Voitka"/>
+                <BootstrapTest/>
+            </div>
+        );
+    }
+
+ 
+ 3.
+Принемаю этот пропс:
+
+
+const EmployeesList = ({data, onDelete}) => {
+
+    
+    return (
+        <ul className="app-list list-group">
+            {elements}
+        </ul>
+        <button type="button"
+                    className="btn-trash btn-sm "
+                    onClick={onDelete}>  ----- на кнопку вешаю обработчик onClick и он запускает функцию по удалению что пишла как проперти
+                    <i className="fas fa-trash"></i>
+        </button>
+    )
+}
+
+export default EmployeesList;
+
+

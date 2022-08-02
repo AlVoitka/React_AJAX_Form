@@ -1,0 +1,330 @@
+1.
+Имею компонент с состоянием в котором база данных:
+
+
+import { Component } from 'react';
+
+import './app.css';
+
+class App extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {   ---- вот тут в сотоянии свойство date с массивом данных
+            data: [
+                {name: 'John C.', salary: 800, increase: false, rise: true, id: 1},
+                {name: 'Alex M.', salary: 3000, increase: true, rise: false, id: 2},
+                {name: 'Carl W.', salary: 5000, increase: false, rise: false, id: 3}
+            ],
+            term: '', 
+            filter: 'all'
+        }
+
+    render() {
+        const {data, term, filter} = this.state;
+        const employees = this.state.data.length;
+        const increased = this.state.data.filter(item => item.increase).length;
+        const visibleData = this.filterPost(this.searchEmp(data, term), filter);
+
+        return (
+            <div className="app">
+                <AppInfo employees={employees} increased={increased}/>
+    
+                <div className="search-panel">
+                    <SearchPanel onUpdateSearch={this.onUpdateSearch}/>
+                    <AppFilter filter={filter} onFilterSelect={this.onFilterSelect}/>
+                </div>
+                
+                <EmployeesList 
+                    data={visibleData}
+                    onDelete={this.deleteItem}
+                    onToggleProp={this.onToggleProp}/>
+                <EmployeesAddForm onAdd={this.addItem}/>
+                <MyLearn name="Alex" surename="Voitka"/>
+                <BootstrapTest/>
+            </div>
+        );
+    }
+}
+
+export default App;    
+
+
+
+2.
+Мне нужно по клику удалить один из элементов в базе данных. Эта база в компоненте App  и он является самым верхним по иерархии,
+а кнопка по удалению находится совсем в другом компоненте.
+Для этого буду использовать метод deliteItem, который передал как пропс onDelete ниже по иерархии в 
+компонент с кнопкой:
+
+<EmployeesList 
+    data={visibleData}
+    onDelete={this.deleteItem}   ----- вот передаю функцию по удалению как проперти и соответственно принимаю ее в компоненте с кнопкой
+    onToggleProp={this.onToggleProp}/>  
+<EmployeesAddForm onAdd={this.addItem}/>
+
+
+2.1
+
+const EmployeesListItem = (props) => {
+
+    const {name, salary, onDelete} = props;  ----- Вот я принемаю это пропс
+
+    
+    return (
+
+        <button type="button"
+                className="btn-trash btn-sm "
+                onClick={onDelete}>  ---- вот на кнопку вешаю обработчик и он запустит функцию по удалению
+            <i className="fas fa-trash"></i>
+        </button>
+                
+    )
+}
+
+export default EmployeesListItem;
+
+
+
+
+
+3.
+Тепер пропишу сам метод по удалению:
+
+Тут нужно соблюдать принцип иммутабильности который очень важен в реакте - те напрямую нельза менять состояние  state 
+
+Что такое иммутабельность
+Неизменяемым (англ. immutable) называется объект, состояние которого не может быть изменено после создания. 
+Результатом любой модификации такого объекта всегда будет новый объект, при этом старый объект не изменится.
+https://habr.com/ru/company/developersoft/blog/302118/
+
+
+Главная задача это создать новый массив, который будет содержать все элемены старого, но уже без ненужного(тот который удалили) элемента.
+Это и есть соблюдение принципа иммутабильности, то что сохраняется старый объект невредимым.
+
+ deleteItem = (id) => {
+        this.setState(({data}) => {
+            return {
+                data: data.filter(item => item.id !== id)  --- Метод filter() создаёт новый массив со всеми элементами, прошедшими проверку,
+            }
+        })
+    }
+
+Берем data и запускаю метод фильтр который отфильтрует данные и вернёт новый массив. и говорю, что перебираю каждый объект внутри
+item => item.id !== id
+ и говорю:
+
+item.id !== id   --- если елемент с id не равен (не совпадает) с id которай пришел как аргумент, то на этом колбэк функция закончится.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1.
+передам функцию onDelete в виде пропса
+
+const EmployeesList = ({data}) => {
+
+    const elements = data.map(item => {
+        return (
+            <EmployeesListItem {...item}
+            onDelete={() => console.log('Deleted')}/>  ------вот
+        )
+    })
+    
+2.
+функция передана и нужно ее использовать:
+
+в файле employees-list-item.js
+
+нахожу пропсы и добавляю функцию в виде пропса:
+
+import { Component } from 'react';
+
+import './employees-list-item.css';
+
+class EmployeesListItem extends Component{
+    constructor(props) {
+        super(props);
+        this.state = {
+            increase: false,
+            rise: false
+        }
+    }
+
+    onIncrease = () => {
+        this.setState(({increase}) => ({
+            increase: !increase
+        }))
+    }
+
+    onRise = () => {
+        this.setState(({rise}) => ({
+            rise: !rise
+        }))
+    }
+
+    render() {
+        const {name, salary, onDelete} = this.props; ---------------------------------- вот!!!!!!
+        const {increase, rise} = this.state;
+
+        let classNames = "list-group-item d-flex justify-content-between";
+        if (increase) {
+            classNames += ' increase';
+        }
+        if (rise) {
+            classNames += ' like';
+        }
+    
+        return (
+            <li className={classNames}>
+                <span className="list-group-item-label" onClick={this.onRise}>{name}</span>
+                <input type="text" className="list-group-item-input" defaultValue={salary + '$'}/>
+                <div className='d-flex justify-content-center align-items-center'>
+                    <button type="button"
+                        className="btn-cookie btn-sm "
+                        onClick={this.onIncrease}>
+                        <i className="fas fa-cookie"></i>
+                    </button>
+    
+                    <button type="button"
+                            className="btn-trash btn-sm ">
+                        <i className="fas fa-trash"></i>
+                    </button>
+                    <i className="fas fa-star"></i>
+                </div>
+            </li>
+        )
+    }
+}
+
+export default EmployeesListItem;
+
+
+
+и теперь на кнопку с удалением навешиваю обработчик события onClick:
+
+<button type="button"
+        className="btn-trash btn-sm "
+        onClick={onDelete}>  ----------------вот
+    <i className="fas fa-trash"></i>
+</button>
+
+Теперь при нажатии на кнрпку мусорку -в консоль выводится сообщение 'Deleted'
+
+те я связал несколько компонентов на разных уровнях.
+
+2. Соответственно этим я и буду пользоваться, я в главном компоненте app.js передам действие:
+
+в компонент EmployeesList я передем функцию
+
+    <EmployeesList data={data}
+        onDelete={id => console(id)}/>  - вот такое
+
+
+а далее я передаю ее в EmployeesList:
+и использую ее в коде
+
+const EmployeesList = ({data, onDelete}) => {  ------------dвот
+
+    const elements = data.map(item => {
+        const {id, ...itemProps} = item;
+        return (
+            <EmployeesListItem 
+                key={id} 
+                {...itemProps}
+                onDelete={() => onDelete(id)}/>  -----------вот
+        )
+    })
+
+3. Как известно динамически с данными в реакте можно работать только  внутри state, поэтому главный компанент нужно переделать в обычный класс 
+для того чтобы использовать состояние внутрикласового компоненета.
+Поэтому как обычно импортирую  в  главный компанент App компонен из реакта:
+
+import { Component } from 'react';
+
+далее
+
+class App extends Component {   ---- вот переделываю в класс
+    
+и return  помещаю в метод render()
+
+render() {
+        return (
+            <div className="app">
+                <AppInfo />
+    
+                <div className="search-panel">
+                    <SearchPanel/>
+                    <AppFilter/>
+                </div>
+                
+                <EmployeesList 
+                    data={this.state.data}
+                    onDelete={this.deleteItem}/>
+                <EmployeesAddForm onAdd={this.addItem}/>
+            </div>
+        );
+    }
+}
+
+и данные базы данных помещею в конструктор и в state ( в состояние) в свойство data:
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            data: [
+                {name: 'John C.', salary: 800, increase: false, id: 1},
+                {name: 'Alex M.', salary: 3000, increase: true, id: 2},
+                {name: 'Carl W.', salary: 5000, increase: false, id: 3}
+            ]
+        }
+    }
+
+и передаю в компонент EmployeesList 
+
+<EmployeesList 
+    data={this.state.data} />   ----вот так
+   
+
+
+4. Теперь создам и передам метод deleteItem:
+он принемает id. Fа внутри вызывается this.setState, и из этого this.setState вытаскиваю data.
+
+А далее мне нужно методом фильтр профильтровать массив data и сформировать нофый.
+А метод фильтр какраз фильтруеит и создает новый массив с элементами прошедшими проверку
+
+запкскаю проверку (item => item.id !== id) тут я говорю, что нужно перебрать каждый объект
+и если item.id не равен id, те отфильтруются только те элементы id которого не совпадает с id  который пришел
+вот тут deleteItem = (id) => и как итог вернется новый массив без удаленного элемента.
+
+    deleteItem = (id) => {
+        this.setState(({data}) => {
+            return {
+                data: data.filter(item => item.id !== id)
+            }
+        })
+    }
+
+и передаю этот метод   компоненту  EmployeesList в главном файле app.js
+
+<EmployeesList 
+    data={this.state.data}
+    onDelete={this.deleteItem}/>

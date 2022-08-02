@@ -1,0 +1,231 @@
+ Ресурсы с готовыми спинерами.
+ https://loading.io/
+ https://icons8.com/preloaders
+
+ 
+
+ 1. 
+ создам компонент Spinner, ведь в дальнейшем его можно импортировать  куда угодно в разные части приложения.
+
+ Файлик Spinner.js  у меня в plugins
+ 
+ Это компонент который возвращает картинку svg в ней как обычно тэги стилей и тд поэтому нужно быть внимательно
+ и адаптировать теги по рект. В терменале будут подсказки какие тэги подправить.
+
+ Можно просто гивку передать в компонент:
+
+
+
+import spin from '../../resources/img/spinner.gif';  ---- импортировал картинку в компонент и назвал ее spin
+
+const Spinner = () => {
+    return (
+        <img src={spin} style={{margin: '0 auto', background: 'none', display: 'block'}} alt="spinner"></img>  -- передал и застилизовал
+}
+
+export default Spinner;
+ 
+
+
+
+ 2.
+  Перехожу в компонент randomChar и задаю его состоянию дополнителоьное свойство loading:
+ которое будет отвечать за параметр активной загрузки
+
+ class RandomChar extends Component {
+    constructor(props) {
+        super(props);
+        this.updateChar();
+    }
+
+    state = {
+        char: {},
+        loading: true  --------вот
+    }
+
+    и вытаскиваю это свойство :
+
+    
+    render() {
+        const {char: {name, description, thumbnail, homepage, wiki}, loading} = this.state;  ----- вот
+        return (
+            <div className="randomchar">
+                <div className="randomchar__block">
+                    <img src={thumbnail} alt="Random character" className="randomchar__img"/>
+                    <div className="randomchar__info">
+
+и говорю, что если у нас loading ( те в позиции true), то возвращяю компонент spinner:
+
+        if(loading) {
+            return <Spinner/>
+        }
+
+
+И соответственно его нужно импортировать:
+
+import { Component } from 'react';
+import Spinner from '../spinner/Spinner';  ----- вот импортирую
+import MarvelService from '../../services/MarvelService';
+
+
+3. Теперь для того чтобы менять спиннер на данные, нужно менять состояние state после прогрузки данных:
+это я сдедаю в методе по загрузке onCharLoaded:
+
+    onCharLoaded = (char) => {
+        this.setState({char, loading: false})  --- вот добавил( тут говорится, если объект char прогрузился, то loading: false)
+    }
+те как только прогрузятся данные, то loading: false
+
+
+
+/////////////////////////  Error /////////////////////
+
+4. Если по какойто причине сервер дает ошибку, то с этим тоже нужно работать.
+И логика примерно такая же, если приходит ошибка, то   меняем state и отображаем компонент с инфой о ошибке. 
+
+Добавляю состояние для компонента:
+
+   state = {
+        char: {},
+        loading: false,
+        error: false  --- вот, изначально в фолс тк оштбки пока нету
+    }
+ 
+ а вот когда произайдет ошибка от сервера, то мне нужен будет метод который будет с ней работать.
+ И это будет onError:
+
+    onError =() => {
+        
+    }
+
+эта ошибка может происходить тольк по методу запроса updateChar, поэтому я испоьзую метод catch, который и выдаст эту ошибку:
+
+    updateChar = () => {
+        const id = Math.floor(Math.random() * (1011400 - 1011000) + 1011000);
+        this.marvelService
+            .getCharacter(id)
+            .then(this.onCharLoaded)
+            .catch(this.onError)  ----  вот так
+    }
+
+и далее в методе onError меняю состояние:
+тоесть catch() споймал ошибку и запустил метод onError а этот метод изменил состояние компонента:
+
+    onError =() => {
+        this.setState({ 
+            loading: false,  --- произошла ошибка, а значит нет загрузки 
+            error: true  ---- и вот она ошибка
+        })
+    }
+
+5. Для того чтобы отображать ошибку, нужен отдельный компонент с ошибкой который можно использовать в любой части приложения.
+Создаю папку errorMessage и в ней компонент который будет возвращать к примеру картинку( можно что угодно...тескт).
+Я буду использовать gif-картинку которую помещаю в папку с компонентом.
+
+Сначала импортирую ее:
+
+import img from './error.gif'
+
+и потом пропишу:
+
+const ErrorMessage =() => {
+    return (
+        <img src={img}/>
+    )
+}
+и экспортирую компонент:
+
+export default ErrorMessage;
+
+
+6. 
+Далее работаю уже в самом компоненты где все это будет рендериться RandomChar:
+
+сперва импортирую компонент:
+
+import { Component } from 'react';
+import Spinner from '../spinner/Spinner';
+import MarvelService from '../../services/MarvelService';
+import ErrorMessage from '../errorMessage/ErrorMessage';  ----- вот
+
+import './randomChar.scss';
+import mjolnir from '../../resources/img/mjolnir.png';
+
+На данный момент у меня в компоненте RandomChar три состояния:
+
+    state = {
+        char: {},   ---- рендерит контент
+        loading: false,  ----- рендерит спинер загрузки
+        error: false  ----- рендерит ошибку загрузки
+    }
+
+и стоит задача все проавильно разместить в методе render.
+Для этого я создам переменную errorMassage и буду помещать в неё либо компонент с ошибкой либо null:
+
+
+const errorMessage = error ? <ErrorMessage/> : null;  ---ели ошибка, то выведит компонент <ErrorMessage/> 
+
+
+тоже делаю для спиннера:
+
+const spinner = loading ? <Spinner/> : null;
+
+И последнне это контент основной, он должен размещаться на странище в тот момент когда уже нет загрузки и при этом нет ошибки
+
+const content = !(loading || error) ? <RandomChar/> : null;
+
+тут дословно: если сейчас нет загрузки или ошибки, то в таком случае возвращаем компонент RandomChar, иначе null.
+
+
+Осталось только добавить эти переменные в return и вытащить состояние error:
+
+render() {
+        const {char: {name, description, thumbnail, homepage, wiki}, loading, error} = this.state;  ---------вот
+        const errorMessage = error ? <ErrorMessage/> : null;
+        const spinner = loading ? <Spinner/> : null;
+       
+
+        if(loading) {
+            return <Spinner/>
+        }
+
+        return (
+            <div className="randomchar">
+                {errorMessage}           ---        
+                {spinner}               ------вот
+                <div className="randomchar__block">
+                    <img src={thumbnail} alt="Random character" className="randomchar__img"/>
+                    <div className="randomchar__info">
+                        <p className="randomchar__name">{name}</p>
+                        <p className="randomchar__descr">
+                            {description}
+                        </p>
+                        <div className="randomchar__btns">
+                            <a href={homepage} className="button button__main">
+                                <div className="inner">homepage</div>
+                            </a>
+                            <a href={wiki} className="button button__secondary">
+                                <div className="inner">Wiki</div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div className="randomchar__static">
+                    <p className="randomchar__title">
+                        Random character for today!<br/>
+                        Do you want to get to know him better?
+                    </p>
+                    <p className="randomchar__title">
+                        Or choose another one
+                    </p>
+                    <button className="button button__main">
+                        <div className="inner">try it</div>
+                    </button>
+                    <img src={mjolnir} alt="mjolnir" className="randomchar__decoration"/>
+                </div>
+            </div>
+        )
+    }
+}
+
+

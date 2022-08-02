@@ -1,0 +1,31 @@
+Для позиционирования псевдоэлементов применяю абсолютное позиционирование:
+
+Для перехода от абсолютного и/или относительного позиционирования, используйте статическое позиционирование - position: static;
+
+родитель: relative;
+    &__sliderJS-counter {
+        position: absolute;
+        margin-top: 40px;--- так по оси Y опускаю
+        left: 50%;                         -----
+        transform: translateX(-50%);  -----вот я перемещаю элемент влево по оси X на половину его ширины
+
+
+/////  так размещаю в самый центр по  X и Y 
+
+    &__sliderJS-counter {
+        position: absolute;
+        top: 50%;         
+        left: 50%;
+        transform: translate(-50%, -50%);   
+
+/// если нужно повернуть элемент вокруг своей оси
+
+.calculating #gender:after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%) rotate(45deg);  ---- вот одновресенно и поднял по Y и повернул на 45 градусов
+    display: block;
+    width: 16px;
+    height: 16px;
+    background-color: #ee60cb;           

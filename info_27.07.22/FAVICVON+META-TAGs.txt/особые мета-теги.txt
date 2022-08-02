@@ -1,0 +1,4 @@
+https://developers.google.com/search/docs/advanced/crawling/special-tags?hl=ru&visit_id=637901913695640447-152262766&rd=1
+
+особые теги которые поддерживаются в гугле
+К примеру перекидывает на новый url адрес через определенное время.

@@ -1,0 +1,92 @@
+dist -- тоже помещается в игнор
+
+32
+
+Как правило, нужно добавлять в .gitignore
+Базы данных. Для них есть свои способы бэкапирования и применять для этого git нерационально или даже опасно.
+Файлы, образующиеся в процессе и результате компиляции проекта. Как правило, для них отводятся папки с именами вроде target/, output/, release/, debug/. Эти файлы можно получить из исходного кода, поэтому их версионирование не имеет смысла.
+Разные сторонние инструменты, которые вы положили в одну папку с проектом. А еще лучше просто не хранить их в той же папке.
+Файлы, генерируемые тестовым фреймворком, профилировщиком, дебаггером и т.п.
+Сгенерированная из кода документация — только если вы не генерируете ее в отдельный репозиторий, через который потом развертываете сайт с документацией.
+Файлы, создаваемые при выполнении кода: журналы (*.log), результаты работы и т.п.
+Временные файлы вашего текстового редактора или среды разработки. Часто их имя заканчивается тильдой: *~.
+Файлы, создаваемые операционной системой, например thumbs.db, .DS_Store
+
+Стоит подумать
+Большие бинарные файлы. Особенно если они постоянно обновляются вне зависимости от версии кода.
+
+Как правило, нельзя игнорировать, нужно сохранять
+Все файлы конфигурации git игнорировать бессмысленно. Это сама папка .git (ее в любом случае нельзя добавить в индекс) и другие файлы: .gitattributes, .gitignore.
+Файлы, которые определяют структуру проекта. Как правило, они создаются средой разработки. Их потеря в лучшем случае грозит вам потерями времени на перестройку проекта в IDE, в худшем — необходимостью вручную восстанавливать связи.
+Собственно, код и сопутствующие ресурсы.
+
+22
+
+В дополнение к ответу @Nick Volynkin
+Обязательно системные файлы ОС и бекапы
+
+### Linux template
+*~
+# KDE directory preferences
+.directory
+# MacOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Файлы самих IDE (если вы работаете на локалке)
+
+### NetBeans template
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+nbactions.xml
+nb-configuration.xml
+.nb-gradle/
+
+### JetBrains template
+# Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio
+*.iml
+
+## Directory-based project format:
+.idea/
+Разные плагины
+
+## Plugin-specific files:
+
+# IntelliJ
+/out/
+
+# mpeltonen/sbt-idea plugin
+.idea_modules/
+
+# JIRA plugin
+atlassian-ide-plugin.xml
+
+# Crashlytics plugin (for Android Studio and IntelliJ)
+com_crashlytics_export_strings.xml
+crashlytics.properties
+crashlytics-build.properties
+Файловая система
+
+# Thumbnails
+._*
+
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+
+https://github.com/github/gitignore  ---- тут куча вариантов!!!!!!!!!!!!!!

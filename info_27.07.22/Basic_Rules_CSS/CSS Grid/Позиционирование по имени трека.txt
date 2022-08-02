@@ -1,0 +1,32 @@
+
+1. Назначаб имя треку
+#slonim {
+    grid-area: slonim;  --- вот по id трека назначил ему название
+}
+
+2.
+и для того чтобы с нимр рабать и позиционировать :
+grid-template-areas
+
+
+.grid-container {
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: auto;
+    gap: 1px;
+    grid-template-areas: 
+    "slonim slonim slonim slonim"  --- у меня сетка состоит из 4 колонок (grid-template-columns: repeat(4, 1fr);)  и все четыре занимает слоним
+    "madrid madrid madrid slonim"  -- тут 3 клоноки на мадрид и одна на слоним
+    "slonim slonim slinim ."   --- тут точка и это значит пустой трек
+    ;
+}
+
+вывод - я создаю сетки из именных элементов:
+
+х х х e e 
+o o x x x  - так объеденятся и по горизонтали и по вертикали элементы в более крупнвые треки
+o o e e e
+
+Блоки не могут соедениться буквой Г !!!!!!!!!!!!!!!!!!!!!!! - ошибка и вся сетка херится
+

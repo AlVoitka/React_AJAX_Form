@@ -1,0 +1,273 @@
+1. 
+Вот такой имею компонент:
+
+
+import { Component } from "react";
+import AppHeader from "../appHeader/AppHeader";
+import RandomChar from "../randomChar/RandomChar";
+import ErrorBoundary from "../errorBoundary/ErrorBoundary";
+import CharList from "../charList/CharList";
+import CharInfo from "../charInfo/CharInfo";
+
+import decoration from '../../resources/img/vision.png';
+
+
+
+class App extends Component {
+    
+    state = {
+        selectedChar: null
+    }
+
+    onCharSelected = (id) => {
+        this.setState({
+            selectedChar: id
+        })
+    }
+
+    render() {
+        return (
+            <div className="app">
+                <AppHeader/>
+                <main>
+                    <ErrorBoundary>
+                        <RandomChar/>
+                    </ErrorBoundary>
+                    <div className="char__content">
+                        <CharList onCharSelected={this.onCharSelected}/>
+                        <CharInfo charId={this.state.selectedChar}/>
+                    </div>
+                    <img className="bg-decoration" src={decoration} alt="vision"/> 
+                </main>
+            </div>
+        )
+    }
+}
+
+export default App;
+
+2. Так переделал на классовый компонент на хуке:
+
+
+import { useState } from "react";  ------ 1.импортировал хук -- import { Component } from "react";
+import AppHeader from "../appHeader/AppHeader";
+import RandomChar from "../randomChar/RandomChar";
+import ErrorBoundary from "../errorBoundary/ErrorBoundary";
+import CharList from "../charList/CharList";
+import CharInfo from "../charInfo/CharInfo";
+
+import decoration from '../../resources/img/vision.png';
+
+
+
+const App = () => {  ----2. Переписал в функцию
+
+    const [selectedChar, setChar] = useState(null);  --- 3. присвоил состояние
+    
+    const onCharSelected = (id) => {  ----4. Изменяю состояние
+        setChar(id);
+    }
+
+    return (         ---------------5. Удалел render
+        <div className="app">
+            <AppHeader/>
+            <main>
+                <ErrorBoundary>
+                    <RandomChar/>
+                </ErrorBoundary>
+                <div className="char__content">
+                    <CharList onCharSelected={onCharSelected}/> ----6. передал
+                    <CharInfo charId={selectedChar}/>----6. передал
+                </div>
+                <img className="bg-decoration" src={decoration} alt="vision"/>
+            </main>
+        </div>
+    )
+}
+
+export default App;
+
+
+
+
+3.
+Более сложный компонент который будет использовать 3 хука useState, useEffect, useRef:
+
+
+import {useState, useEffect, useRef} from 'react';  ------ тут уже изменил
+import Spinner from '../spinner/Spinner';
+import ErrorMassage from '../errorMassage/ErrorMassge';
+import MarvelService from '../../services/MarvelService';
+import './charList.scss';
+
+const CharList = () => {   ---- и т ут  уже изменил
+
+    state = {
+        charList: [],
+        loading: true,
+        error: false
+    }
+    
+    marvelService = new MarvelService();
+
+    componentDidMount() {
+        this.marvelService.getAllCharacters()
+            .then(this.onCharListLoaded)
+            .catch(this.onError)
+    }
+
+    onCharListLoaded = (charList) => {
+        this.setState({
+            charList,
+            loading: false
+        })
+    }
+
+    onError = () => {
+        this.setState({
+            error: true,
+            loading: false
+        })
+    }
+
+    
+    renderItems(arr) {
+        const items =  arr.map((item) => {
+            let imgStyle = {'objectFit' : 'cover'};
+            if (item.thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg') {
+                imgStyle = {'objectFit' : 'unset'};
+            }
+            
+            return (
+                <li 
+                    className="char__item"
+                    key={item.id}
+                    onClick={() => this.props.onCharSelected(item.id)}>
+                        <img src={item.thumbnail} alt={item.name} style={imgStyle}/>
+                        <div className="char__name">{item.name}</div>
+                </li>
+            )
+        });
+        
+        return (
+            <ul className="char__grid">
+                {items}
+            </ul>
+        )
+    }
+
+    render() {
+
+        const {charList, loading, error} = this.state;
+        
+        const items = this.renderItems(charList);
+
+        const errorMessage = error ? <ErrorMassage/> : null;
+        const spinner = loading ? <Spinner/> : null;
+        const content = !(loading || error) ? items : null;
+
+        return (
+            <div className="char__list">
+                {errorMessage}
+                {spinner}
+                {content}
+                <button className="button button__main button__long">
+                    <div className="inner">load more</div>
+                </button>
+            </div>
+        )
+    }
+}
+
+export default CharList;
+
+.....................................................................................................
+
+после переделки на функцию:
+
+import {useState, useEffect, useRef} from 'react';  ---- 1. импортировал хуки
+import Spinner from '../spinner/Spinner';
+import ErrorMassage from '../errorMassage/ErrorMassge';
+import MarvelService from '../../services/MarvelService';
+import './charList.scss';
+
+const CharList = () => {  ---- 2.  преобразовал в функцию
+
+    const [charList, setCharList] = useState([]); ----3. Создал состояние на хуках
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(false);
+
+
+    
+    const marvelService = new MarvelService();  --4. Создал сервис в качестве переменной
+
+    componentDidMount() {
+        this.marvelService.getAllCharacters()
+            .then(this.onCharListLoaded)
+            .catch(this.onError)
+    }
+
+    onCharListLoaded = (charList) => {
+        this.setState({
+            charList,
+            loading: false
+        })
+    }
+
+    onError = () => {
+        this.setState({
+            error: true,
+            loading: false
+        })
+    }
+
+    
+    renderItems(arr) {
+        const items =  arr.map((item) => {
+            let imgStyle = {'objectFit' : 'cover'};
+            if (item.thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg') {
+                imgStyle = {'objectFit' : 'unset'};
+            }
+            
+            return (
+                <li 
+                    className="char__item"
+                    key={item.id}
+                    onClick={() => this.props.onCharSelected(item.id)}>
+                        <img src={item.thumbnail} alt={item.name} style={imgStyle}/>
+                        <div className="char__name">{item.name}</div>
+                </li>
+            )
+        });
+        
+        return (
+            <ul className="char__grid">
+                {items}
+            </ul>
+        )
+    }
+
+    render() {
+
+        const {charList, loading, error} = this.state;
+        
+        const items = this.renderItems(charList);
+
+        const errorMessage = error ? <ErrorMassage/> : null;
+        const spinner = loading ? <Spinner/> : null;
+        const content = !(loading || error) ? items : null;
+
+        return (
+            <div className="char__list">
+                {errorMessage}
+                {spinner}
+                {content}
+                <button className="button button__main button__long">
+                    <div className="inner">load more</div>
+                </button>
+            </div>
+        )
+    }
+}
+
+export default CharList;

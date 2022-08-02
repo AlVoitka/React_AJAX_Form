@@ -1,0 +1,71 @@
+
+На кнопку вешаю событие onClick, и при нажатии выполняется метод changeSexM, который меняет состояние компонента.
+
+changeSexM = () => {
+        this.setState ({
+            sex: 'man'
+        })
+    }
+
+<button onClick={this.changeSexM} className="learn-btn">---</button>
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////
+Реальный пример как по клику добавить класс и изменить цвет как переключатель:
+
+
+import { Component } from 'react';  ---1. импортрую компонент
+
+import './my-learn.css'
+
+class MyLearn extends Component {  ----2. делаю его классовым
+
+
+    constructor(props) {  -----3. принимаю пропсы
+        super(props); 
+
+        this.state = {   ----- 4. состояние компонента- которое буду изметять
+            color: false ---- 5. изначальная позиция
+        } 
+    }
+
+    changeColor = () => {
+        this.setState (({color}) => ({  ----7. тут синтаксис с колбек функцией. тк нужно обязательно учитывать предыдущее стстояние чтобы изменить на противоположное
+            color: !color     ----- тут булинове значение меняется на противоположное ( было тру в состоянии - стало фолс при клике)            
+        }))
+    }
+
+    
+
+    render() {
+        const {color} = this.state;   ---- деструктурирую состояние, вытаскиваю его из состояния
+
+        let classNames = "norm";  --- назначаю переменнубю в ней классы на h1 
+
+        if (color) {                 ------8. этим условием я добавляю класс к переменной, получится let classNames = "norm color"
+            classNames += ' color';
+        }
+
+
+        return (
+            <div className={classNames}>
+                <h1 className="norm">Color</h1>
+                <button onClick={this.changeColor}>Alex</button>  ---6. навешиваю обработчик на клик, он вызовет метод changeColor, это метод
+            </div>                                                меняет  color: !color (булиновое значение из тру, что в состоянии на фолс)
+        )
+    }            ------------------9. и уже в файле стиле назначаю клас .color - с другим цветом
+    
+}
+
+export default MyLearn;
+
+
+
+/////////////////////////////////////
+Омновление компонента по клику:
+
+<button className="button button__main">
+    <div onClick={this.updateChar} className="inner">try it</div>  --- повесил обработчик и вызвал метод
+</button>

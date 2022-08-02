@@ -1,0 +1,170 @@
+Это в конце урока подъем состояния 136
+
+1.
+Имею два похожих метода которые по клику добавлет звездочку, а второй выделяет иконку.
+
+onToggleIncrease (id) => {
+    this.setState(({data}) => {  
+        data: date.map(item => { 
+            if(item.id === id) {   
+                return(...item, increase: !item.increase )  ----- отличие только в свойстве 
+            }
+            return item;  
+        })
+    }
+}
+
+onToggleRise (id) => {
+    this.setState(({data}) => {  
+        data: date.map(item => { 
+            if(item.id === id) {   
+                return(...item, rise: !item.rise ) ----- отличие только в свойстве  
+            }
+            return item;  
+        })
+    }
+}
+
+this.state = {
+        data: [
+            {name: 'John C.', salary: 800, increase: false, rise: true, id: 1},
+            {name: 'Alex M.', salary: 3000, increase: true, rise: false, id: 2},  ---- вот эти свойства в состоянии
+            {name: 'Carl W.', salary: 5000, increase: false, rise: false, id: 3}
+        ],
+        term: '', 
+        filter: 'all'
+    }
+
+
+2.
+Создам один метод заменяющий два:
+
+onToggleProp = (id, prop) => {  ---- добавляю аргумент prop
+    this.setState(({data}) => ({
+        data: data.map(item => {
+            if (item.id === id) {
+                return {...item, [prop]: !item[prop]}  ---- тут его буду использовать
+            }
+            return item;
+        })
+    }))
+}   
+
+3.
+
+class App extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            data: [
+                {name: 'John C.', salary: 800, increase: false, rise: true, id: 1},
+                {name: 'Alex M.', salary: 3000, increase: true, rise: false, id: 2},
+                {name: 'Carl W.', salary: 5000, increase: false, rise: false, id: 3}
+            ],
+            term: '', 
+            filter: 'all'
+        }
+        this.maxId = 4;
+    }
+
+    render() {
+        const {data, term, filter} = this.state;
+        const employees = this.state.data.length;
+        const increased = this.state.data.filter(item => item.increase).length;
+        const visibleData = this.filterPost(this.searchEmp(data, term), filter);
+
+        return (
+            <div className="app">
+                <AppInfo employees={employees} increased={increased}/>
+    
+                <div className="search-panel">
+                    <SearchPanel onUpdateSearch={this.onUpdateSearch}/>
+                    <AppFilter filter={filter} onFilterSelect={this.onFilterSelect}/>
+                </div>
+                
+                <EmployeesList 
+                    data={visibleData}
+                    onDelete={this.deleteItem}
+                    onToggleProp={this.onToggleProp}/> ---- тут вместо двух методов что были задаю один для передачи его дальше
+                <EmployeesAddForm onAdd={this.addItem}/>
+                <MyLearn name="Alex" surename="Voitka"/>
+                <BootstrapTest/>
+            </div>
+        );
+    }
+}
+
+export default App;
+
+4. 
+Долее его проталкиваю вниз по иерархии:
+
+import EmployeesListItem from "../employees-list-item/employees-list-item";
+
+import './employees-list.css';
+
+const EmployeesList = ({data, onDelete, onToggleProp}) => {
+
+    const elements = data.map(item => {
+        const {id, ...itemProps} = item;
+        return (
+            <EmployeesListItem 
+                key={id} 
+                {...itemProps}
+                onDelete={() => onDelete(id)}
+                onToggleProp={(e) => onToggleProp(id, e.currentTarget.getAttribute('data-toggle'))}/> --- вот так проталкиваю к конечному компоненту
+        )                                                                                              привязываясб к объекту события по дата- атрибуту
+    })
+
+    return (
+        <ul className="app-list list-group">
+            {elements}
+        </ul>
+    )
+}
+
+export default EmployeesList;
+
+
+5.
+
+import './employees-list-item.css';
+
+const EmployeesListItem = (props) => {
+
+    const {name, salary, onDelete, onToggleProp, increase, rise} = props;  ------ 1.принимаю этот метод
+
+    let classNames = "list-group-item d-flex justify-content-between";
+    if (increase) {
+        classNames += ' increase';
+    }
+    if (rise) {
+        classNames += ' like';
+    }
+
+------и в верстке нужно назначить  дата- атрибут который я применил в проталкиваниие выше чтобы по нему привязаться к кнопке с обработчиком
+
+    return (
+        <li className={classNames}>
+            <span className="list-group-item-label" onClick={onToggleProp} data-toggle="rise" style={{fontSize: 30, color: 'blueviolet'}}>{name}</span>   ---- тут назначил первый дата-фтрибут
+            <input type="text" className="list-group-item-input" defaultValue={salary + '$'}/>
+            <div className='d-flex justify-content-center align-items-center'>
+                <button type="button"
+                    className="btn-cookie btn-sm "
+                    onClick={onToggleProp}
+                    data-toggle="increase"> ----------------- вот назначил второй дата-фтрибут
+                    <i className="fas fa-cookie"></i>
+                </button>
+
+                <button type="button"
+                        className="btn-trash btn-sm "
+                        onClick={onDelete}>
+                    <i className="fas fa-trash"></i>
+                </button>
+                <i className="fas fa-star"></i>
+            </div>
+        </li>
+    )
+}
+
+export default EmployeesListItem;

@@ -1,0 +1,17 @@
+Event.preventDefault()
+
+Метод preventDefault () интерфейса Event сообщает User agent, что если событие не обрабатывается явно, 
+его действие по умолчанию не должно выполняться так, как обычно. Событие продолжает распространяться как обычно, до тех пор, 
+пока один из его обработчиков не вызывает методы stopPropagation () или stopImmediatePropagation (), 
+любой из которых сразу же прекращает распространение.
+Как отмечено ниже, вызов метода preventDefault () для события, не подлежащего отмене, например события, 
+отправленного через EventTarget.dispatchEvent (), без указания cancelable: true не имеет эффекта.
+Синтаксис
+event.preventDefault();
+
+
+
+const btn = document.querySelector('link');
+btn.addEventListener('click', (e)=> {
+    e.preventDefault()            ----- вот  при клике на линк отменяю стандартное поведение браузера
+});

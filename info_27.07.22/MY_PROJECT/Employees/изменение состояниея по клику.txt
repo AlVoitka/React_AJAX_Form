@@ -1,0 +1,87 @@
+//////////////////  133  ////////////////
+
+Хочу сделать чтобы при нажатии на печеньку динамически менялось его состояние.
+
+
+
+
+import { Component } from 'react'; - --------импортировал компонент
+
+import './employees-list-item.css';
+
+class EmployeesListItem extends Component{   
+    
+    render() {    -----------обернул все в рендер
+        let classNames = "list-group-item d-flex justify-content-between";
+    if (increase) {
+        classNames += ' increase';
+    }
+
+    return (
+        <li className={classNames}>
+            <span className="list-group-item-label">{name}</span>
+            <input type="text" className="list-group-item-input" defaultValue={salary +'$'}/>
+            <div className='d-flex justify-content-center align-items-center'>
+                <button type="button"
+                    className="btn-cookie btn-sm ">
+                    <i className="fas fa-cookie"></i>
+                </button>
+
+                <button type="button"
+                        className="btn-trash btn-sm ">
+                    <i className="fas fa-trash"></i>
+                </button>
+                <i className="fas fa-star"></i>
+            </div>
+        </li>
+    )
+    }
+    
+}
+
+export default EmployeesListItem;
+
+
+
+
+3. и создаю конструктор в который прихядят пропсы :
+и передаю состояние -false которое будет меняться.
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            increase: false
+        }
+    }
+
+и чтобы улавливать меняющееся состояние ( это кнопка с печенькой) , но эту кнопку 
+назначаю обработчик события:
+
+                <button type="button"
+                    className="btn-cookie btn-sm "
+                    onClick={this.onIncrease}>   ----вот его навесил  на клик и передаю в него метод .onIncrease
+                    <i className="fas fa-cookie"></i>
+                </button>
+
+далее создаю этот метод .onIncrease:
+
+    onIncrease = () => {
+        this.setState(({increase}) => ({
+            increase: !increase
+        }))
+    }
+
+4. Теперь навешу обработчик по клику на Фамилию работника, чтобы по клику на Фамилию
+добавлялся класс и в результате чего на странице появлялась звездочка.
+
+4.1 Навешиваю обработчик onClick= c  методом {this.onRise}:
+
+<span className="list-group-item-label" onClick={this.onRise}>{name}</span>
+
+4.2 Создаю метод для обработчика по аналогии как выше:
+
+    onRise = () => {
+        this.setState(({rise}) => ({
+            rise: !rise
+        }))
+    }

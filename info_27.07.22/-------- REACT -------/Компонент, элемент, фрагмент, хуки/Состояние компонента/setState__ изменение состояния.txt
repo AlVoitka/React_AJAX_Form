@@ -1,0 +1,45 @@
+https://dev-gang.ru/article/react-setstate-pravilnyi-put-9rojos2c9r/
+
+
+
+1.
+
+import { Component } from 'react'; 
+
+import './my-learn.css'
+
+class MyLearn extends Component {  -- 1. вот у меня классовый уомпонент
+
+
+    constructor(props) {  ---2. Вот передею пропсы
+        super(props); 
+
+        this.state = {   ----3.  вот имею состояние компонента с его свойствами
+            sex: 'man',
+            amount: 33
+        } 
+    }
+
+
+    nextPush = () => {  ------ 7. вот создаю этот метод
+        this.setState ({  -----8. и использую метод setState который вызывет метод render() и перерендывает страницу
+            amount: this.state.amount + 1 ------9. Изменяю состояние (добаввляю к значению еденицу)
+        })
+    }
+
+
+    render() {
+        const {name, surename} = this.props;   ---3. тут эти пропсы перевожу в читаемый вид
+        return (
+            <div>
+                <h1> My name is {name}, my surname is {surename}, my sex - {this.state.sex} </h1>  ----4. тут применяю пропсы и состояние
+                <button onClick={this.nextPush}>Push</button>  ---- 5. на кнопку вешаю аналог обрабртчика и при нажатии вызывается метод nextPush
+                <span>  {this.state.amount}</span>  --- 6. хочу по клику 5 изменять состояние 
+                
+            </div>
+        )
+    }
+    
+}
+
+export default MyLearn;

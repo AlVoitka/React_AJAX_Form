@@ -1,0 +1,443 @@
+Git 
+1. git add . 
+2. git commit -m "..."
+3. git push -u origin master
+
+
+//////////////  90  /////////////////
+
+К заготовке проекта подтягиваю Mpm зависимости:
+npm init 
+
+1. создаю папку components  с  кусочками проректа. И в ней размещаю всю структуру проекта по компонентам.
+Основной компонент - app .это основной компонент, объеденяющий в себе все остальные
+
+2. Подключаю  готовые стили и иконки со стороннего cdn сервера (Сеть доставки контента (Content Delivery Network), или CDN)
+https://cdnjs.com/
+- в поиске ищу bootstrap  копирую и вставляю в index.html  линк-тег подключения
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css">
+ненужные атрибута можно удалить, было так:
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.1/js/bootstrap.min.js" 
+integrity="sha512-ewfXo9Gq53e1q1+WDTjaHAGZ8UvCWq0eXONhwDuIoaH8xz2r96uoAYaQCm1oQhnBfRXrvJztNXFsTloJfgbL5Q==" 
+crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+- так же подключю иклнки font-awesome
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+3. Задаю каждому компоненту стили css
+
+К примеру добавлю стили к основному компоненту app:
+Для этого создам файл app.scc и в нем:
+
+.app {
+    margin: 0 auto;
+    max-width: 1000px;
+  }
+
+4. Теперь начну работу в файле app.js:
+
+4.1 создаю функцию App которая будет возвращать структуру.
+Внутри создам див который обернет все структуру (правило работы с реактом) и задам ему класс "app", 
+который я прописал в файле css
+
+function App() {
+  return (
+    <div className="app">
+        
+    </div>
+  );
+}
+
+export default App;  - экспортирую по умолчанию компонент App, а принимать его будет файл index.js, в нем я импорирую его:
+
+import App from './components/app/app';  -/app/app.js - но для вэбпека нужно прописывать без.js
+
+
+4.2 теперь заимпортирую файл app.css:
+
+import './app.css'; - теперь когда вэбпэк будет собирать приложение он будет импортировать этот файл в общие стили
+
+
+Теперь можно запустить и проверить:
+
+npm start
+
+
+5. Начинаю работать по каждому из компонентов. app-info:
+
+- app-info.js - тут начинаю cоздавать отдельный компонент:
+
+import "./app-info.css"; 
+
+const AppInfo = () => {
+    return (
+        <div className="app-info">
+            <h1>Учет сотрудников в компании N</h1>
+            <h2>Общее число сотрудников:</h2>
+            <h2>Премию получат:</h2>
+        </div>
+    )
+}
+
+export default AppInfo;
+
+5.1 Задаю стили в app-info.css:
+беру класс className="app-info" И
+
+.app-info {
+    padding: 25px;
+    background-color: #3d5a80;
+    border-radius: 4px;
+    box-shadow: 15px 15px 30px rgba(0,0,0, .15);
+    color: #fff;
+}
+
+и для того чтобы все стили импорировалиь в общий файл:
+
+import "./app-info.css";   
+и принимею их в файле app.js:
+
+import AppInfo from '../app-info/app-info';
+
+и соответствено этот компонент помещаю в функцию App:
+
+function App() {
+  return (
+    <div className="app">
+        <AppInfo />
+    </div>
+  );
+}
+
+6. Следующий компонент search-panel
+он состоит из двух функциональностей: фильтра и инпута. Поэтому в файле app.js я помещу
+две этих компанента в див:
+
+        <div className="search-panel">
+            <SearchPanel/>
+            <AppFilter/>
+        </div>
+
+а делле все как и раньше:
+ в SearchPanel.js:
+
+import './search-panel.css';
+
+const SearchPanel = () => {
+    return (
+        <input type="text"
+                className="form-control search-input"
+                placeholder="Найти сотрудника"/>
+    )
+}
+
+export default SearchPanel;
+
+
+классы для инпута className="form-control search-input"  - они берутся из библиотеки bootstrap. Тоесть я их не прописываю, а сам, а подтягиваю.
+
+И теперь импортирую в главный компонент с приложением app.js:
+
+import SearchPanel from '../search-panel/search-panel';
+и добавляю его в функцию App:
+
+function App() {
+  return (
+    <div className="app">
+        <AppInfo />
+
+        <div className="search-panel">
+            <SearchPanel/>
+            <AppFilter/>
+        </div>
+               
+    </div>
+  );
+}
+
+export default App;
+
+
+7. Создаю компонент app-filter
+тут все по аналогии. И классы для стилей подтягиваются из Bootsrtap, а именн на 
+https://getbootstrap.com/docs/5.0/components/buttons/ 
+и тут пример:
+<button type="button" class="btn btn-light">Light</button>
+
+
+8.Все оставшиеся компоненты по аналогии, но с компонентом EmployeesList есть нюанс.
+Это компонент будет в себе содержать компонет EmployeesListItem, тоесть я буду его переиспользовать.
+Для этого нужно в файл EmployeesList.js импортировать EmployeesListItem :
+
+import EmployeesListItem from "../employees-list-item/employees-list-item";
+
+import './employees-list.css';
+
+const EmployeesList = () => {
+    return (
+        <ul className="app-list list-group">
+            <EmployeesListItem/>
+            <EmployeesListItem/>
+            <EmployeesListItem/>
+        </ul>
+    )
+}
+
+export default EmployeesList;
+
+И теперь в главном фале app.js импортирую только EmployeesList тк EmployeesListItem уже внутри его.
+
+import EmployeesList from '../employees-list/employees-list';
+
+/////////////////  92  /////////////
+
+1.добавлю в компонты пропсы ( props )
+
+так у меня было:
+  const EmployeesList = () => {
+    return (
+        <ul className="app-list list-group">
+            <EmployeesListItem/>
+            <EmployeesListItem/>
+            <EmployeesListItem/>
+            <EmployeesListItem/>
+            <EmployeesListItem/>
+        </ul>
+    )
+}
+
+после добавления пропсов:
+const EmployeesList = () => {
+    return (
+        <ul className="app-list list-group">
+            <EmployeesListItem name="Vitia M." salary={300}/>
+            <EmployeesListItem name="Tolia N." salary={400}/>
+            <EmployeesListItem name="Valera S." salary={500}/>
+            <EmployeesListItem name="Vitalt L." salary={700}/>
+            <EmployeesListItem name="Alex V." salary={900}/>
+        </ul>
+    )
+}
+
+и теперь их нужно использовать, в файле employees-list-item.js  я передаю как аргумент в функцию эти пропсы:
+и в span  заменяю имя на {props.name}. А также зап 1000$  заменяю на 
+
+const EmployeesListItem = (props) => { ------------вот
+    return (
+        <li className="list-group-item d-flex justify-content-between">
+            <span className="list-group-item-label">{props.name}</span>  ----------вот
+            <input type="text" className="list-group-item-input" defaultValue={props.salary +'$'}/> ----- вот
+            <div className='d-flex justify-content-center align-items-center'>
+
+
+Для того чтобы код лучше читался, применияю деструтуризацию. Я пропсы разрезаю на части:            
+было так
+
+const EmployeesListItem = (props) => {
+    return (
+        <li className="list-group-item d-flex justify-content-between">
+            <span className="list-group-item-label">{props.name}</span>
+            <input type="text" className="list-group-item-input" defaultValue={props.salary +'$'}/>
+
+сделал так
+
+const EmployeesListItem = ({name, salary}) => {   -------вот разрезал
+    return (
+        <li className="list-group-item d-flex justify-content-between">
+            <span className="list-group-item-label">{name}</span>  -----------------вот сократил 
+            <input type="text" className="list-group-item-input" defaultValue={salary +'$'}/>  ------------- вот сократил
+
+2. Но запалнять каждого сотрудника вручною это не ризонно, нужно откуда то получать данные и автоматом прописывать их.
+В идеале эти данные должны приходить с сервера.Но на данном этапе я симитирую данные которые типо приходят с сервера.
+В файле app.js  в вункции App создам бузу данных, как буд то бы она пришла к нам с сервера:
+
+function App() {
+
+  const data = [
+    {name: 'Ales K.', salary: 800},
+    {name: 'Ales M.', salary: 700},
+    {name: 'Ales S.', salary: 600},
+  ];
+
+  данные пришли, теперь их нужно использовать:
+  я передаю их в компонент массив с данными :
+
+  function App() {
+
+  const data = [
+    {name: 'Ales K.', salary: 800},
+    {name: 'Ales M.', salary: 700},
+    {name: 'Ales S.', salary: 600},
+  ];
+
+  return (
+    <div className="app">
+        <AppInfo />
+
+        <div className="search-panel">
+            <SearchPanel/>
+            <AppFilter/>
+        </div>
+        
+        <EmployeesList data={data}/>   ------------ вот таким образом передал массив данных
+        <EmployeesAddForm/>
+    </div>
+  );
+}
+
+export default App;
+
+
+И вот теперь мне нужно принять его в employees-list.js:
+
+const EmployeesList = ({data}) => {  ----------------  пот передал в виде аргумента
+    return (
+        <ul className="app-list list-group">
+            <EmployeesListItem name="Vitia M." salary={300}/>
+            <EmployeesListItem name="Tolia N." salary={400}/>
+            <EmployeesListItem name="Valera S." salary={500}/>
+            <EmployeesListItem name="Vitalt L." salary={700}/>
+            <EmployeesListItem name="Alex V." salary={900}/>
+        </ul>
+    )
+}
+
+и далее нужно перебрать каждый элемент масив ( базы данных data) И сформировать каждый новый компонент EmployeesListItem.
+Делаю это при помощи метода перебора .map - он подходит тк возвращает.
+
+создаю переменную в нее записываю базу данных и запускаю метод map. у нег внутри колбэк функция где item - это
+каждый отдельный элемент из массива data. И внутри я возвращаю те помещаю  компонент
+<EmployeesListItem /> и на значаю ему пропсы и вместо жестких значений что раньше прописывал руками, я беру каждое из этих значений
+ из item - ведь он и есть каждый последовательный элемент из массива:
+  name={item.name} salary={item.salary}
+
+const EmployeesList = ({data}) => {
+
+    const elements = data.map(item => {
+        return (
+            <EmployeesListItem name={item.name} salary={item.salary}/>
+        )
+    })
+
+и вместо рукотворных компонентов  я подставляю переменную со значениями после переборки :
+
+    return (
+        <ul className="app-list list-group">
+            {elements}  ---------------------------вот
+        </ul>
+    )
+}
+
+export default EmployeesList;
+
+Ну и последный штрих дял оптимизации кода:
+
+    const elements = data.map(item => {
+        return (
+            <EmployeesListItem name={item.name} salary={item.salary}/>  --- вот такой синтаксис
+
+            можно заменить использую обджект спред оператор который разворачивает обЪект на отдельные элементы
+
+    const elements = data.map(item => {
+        return (
+            <EmployeesListItem {...item}/> ---- ВОТ НОВЫЙ СИНТАКСИС!!!!!!!!!!!!
+        )
+    })
+
+    Но и с таким синтаксисом в консоли разработчика будет выдавать ошибку:
+    index.js:1 Warning: Each child in a list should have a unique "key" prop.
+
+    Для решения нужно поменять синтаксис, 
+
+    const {id, ...itemProps} = item;   - добавляю это
+
+    <EmployeesListItem key={id} {...itemProps}
+
+    и в базе данных четвертым свойством нужно добавить этот идентификатор id:
+    я добавил простой(1-2-3-4), но в реале с сервера будут приходить более сложные айдишки с уникальным ключём.
+
+    function App() {
+
+  const data = [
+    {name: 'Ales K.', salary: 800, increase: false, id: 1},
+    {name: 'Ales M.', salary: 700, increase: false, id: 2},
+    {name: 'Ales S.', salary: 600, increase: false, id: 3},
+    {name: 'Ales S.', salary: 99999900, increase: true, id: 4},
+    
+  ];
+
+
+
+3. Теперь сделаю чтобы при нажатии на кнопку печеньки напротив фамили сотрудника, его данные окрашивались в другой цвет.
+
+для этот добавлю еще один класс increase: для каждого елемента в базе данных data в app.js:
+
+function App() {
+
+  const data = [
+    {name: 'Ales K.', salary: 800, increase: false},
+    {name: 'Ales M.', salary: 700, increase: false},
+    {name: 'Ales S.', salary: 600, increase: false},
+    {name: 'Ales S.', salary: 99999900, increase: true},
+    
+  ];
+
+  и далле в файле Employees-List-Item.js добавляю этот класс как аргумент:
+
+  const EmployeesListItem = ({name, salary, increase}) => {
+    return (
+
+далее создам переменную в которую запишу строчку содержащую все css классы 
+
+let classNames = "list-group-item d-flex justify-content-between";    -вот
+
+и пропишу условие:
+где если  increase в позиции true? то к нему добавится еще один класс
+if (increase) {
+        classNames += ' increase';   - тут вожно поставить пробел, чтобы не слились классы
+    }
+
+и теперь вместо всех классов css для списка li
+
+return (
+        <li className="list-group-item d-flex justify-content-between">   -------вот вместо этих классов
+            <span className="list-group-item-label">{name}</span>
+            <input type="text" className="list-group-item-input" defaultValue={salary +'$'}/>
+            <div className='d-flex justify-content-center align-items-center'>
+                <button type="button"
+                    className="btn-cookie btn-sm ">
+                    <i className="fas fa-cookie"></i>
+                </button>
+
+                <button type="button"
+                        className="btn-trash btn-sm ">
+                    <i className="fas fa-trash"></i>
+                </button>
+                <i className="fas fa-star"></i>
+            </div>
+        </li>
+    )
+
+    подставляю {classNames}:
+
+    return (
+        <li className={classNames}>  ----- вот тут
+            <span className="list-group-item-label">{name}</span>
+            <input type="text" className="list-group-item-input" defaultValue={salary +'$'}/>
+            <div className='d-flex justify-content-center align-items-center'>
+                <button type="button"
+                    className="btn-cookie btn-sm ">
+                    <i className="fas fa-cookie"></i>
+                </button>
+
+                <button type="button"
+                        className="btn-trash btn-sm ">
+                    <i className="fas fa-trash"></i>
+                </button>
+                <i className="fas fa-star"></i>
+            </div>
+        </li>
+    )
+
+
+

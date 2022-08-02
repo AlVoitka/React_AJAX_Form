@@ -1,0 +1,15 @@
+1.
+оборачиваем нужное слово в sapan
+
+<h1 class="wow promo__title animate__animated animate__fadeInLeft title_fz36 title_fz48" data-wow-duration="0.5s"  data-wow-delay="1s">
+    Я web-разработчик<br>из города <span class="wow animate__animated animate__fadeOut" data-wow-duration="1s"  data-wow-delay="2s">
+        Минск
+    </span> 
+</h1>
+
+
+span {
+    background: rgba($color: #2bbbe7, $alpha: 0.6);
+    padding: 0 10px 0 10px;
+    border-radius: 15px;
+}

@@ -1,0 +1,26 @@
+Существует 3 способа назначение обработчика:
+
+1. как HTML атрибут onClick="alert()"
+
+<button onClick="alert('Hi')" class="interactive__btn">Accept</button>
+
+такой код в реальных проектах не исползуется
+
+
+2. Используя свойство дом-дерева:
+
+const btn = document.querySelector('button');
+btn.onClick = function() {
+    alert('Hi');
+}
+
+тоже не самый удачный вариант,, есть много проблем.
+
+
+
+3. Метод addEventListener()
+
+const btn = document.querySelector('button');
+btn.addEventListener('click', ()=> {
+    alert('Hi');
+});

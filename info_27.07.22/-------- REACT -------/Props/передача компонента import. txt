@@ -1,0 +1,31 @@
+1. 
+Имею простой функциональный компонент c картинкой
+
+const Error = () => {
+    return (
+        <img src={err} style={{margin: '0 auto', background: 'none', display: 'block',width:'150px'}} alt="spinner" />
+    )
+}
+
+export default Error;  ---- тутя его экспортирую
+
+2.
+Он мне нужен в другом компоненте RandomChar:
+
+
+import { Component } from 'react';
+import MarvelService from '../../services/MarvelService';
+import mjolnir from '../../resources/img/mjolnir.png';
+import Spinner from '../spinner/Spinner';
+import Error from '../errorMassage/Error';  ---- тут импортирую
+
+import './randomChar.scss';
+
+
+class RandomChar extends Component {
+
+    
+    constructor(props) {
+        super(props);
+        this.updateChar();
+    }

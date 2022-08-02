@@ -1,0 +1,56 @@
+1. 
+Create React App -создаю структуру 
+
+npx create-react-app my-app
+
+my-app - это название проекта (папки)
+
+2.
+npm i - подтягиваю зависимости
+
+3.
+в src создаю папку components
+
+4.
+создаю папки с отдельными компонентами и радом при каждом компоненте в них создаю файлы стилей и js
+
+5.
+Также создаю главный файл app.js куда буду импортировать все другие кусочки и затем сам app буду рендерить на страницу.
+и также сразу стилизую app.css
+
+.app {
+    margin: 0 auto;  --- размещаю по центру 
+    max-width: 1000px;  --- максимальная ширина 
+  }
+
+и в файле app.js
+
+                                import './app.css';  ---  Импортирую стили
+
+                                function App () {
+                                    return (
+                                        <div className="app">
+
+                                        </div>
+                                    )
+                                }
+
+                                export dafault App;  --- экспортирую компонент
+
+6.
+Принимаю (импортирую) этот компонент в index.js
+
+                    import React from 'react';
+                    import ReactDOM from 'react-dom';
+                    import App from './components/app/app';  ----- вот импортирую
+
+                    import './index.css';
+
+                    import 'bootstrap/dist/css/bootstrap.min.css';
+
+                    ReactDOM.render(
+                        <React.StrictMode>
+                            <App />  ------------ вот рендерю его на страницу
+                        </React.StrictMode>,
+                    document.getElementById('root')   --- в тот единственный див, что есть в index.html
+                    );

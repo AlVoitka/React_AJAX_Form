@@ -1,0 +1,50 @@
+1. Изменение стилей элементов.
+
+Любой элемент можно посмотреть в качестве объекта при помощи команды
+console.dir(xxx);
+там можно увидеть все свойста, методы, стили и тд.
+Если открыть свойство style, то откроется еще один объект внутри объекта:
+там я вижу инлайн стили (inline - когда стиль прописан не в отдельном файле/блоке, а непосредственно в коде.
+то есть не
+    <div class="center"></div>
+    a
+    <div style="text-align: center;"></div>)
+
+Плюс к сказанному, Inline стиль имеет самый высокий приоритет, игнорируя CSS правила,
+распространяющиеся на родителя и одноименные элементы/классы.     
+
+Пример изменеия инлайн стиля элемента:
+
+let elem = document.getElementById("box");  --- вот  получил элемент
+
+elem.style.backgroundColor = 'yellow';  --- вот назначил стили (формат кмел кейс)
+elem.style.width = '500px';  --- оазмеры назначаются толко в ""
+
+<div class="box" id="box" style="background-color: yellow;"></div> ---вот в консоли получил инлайн стиль самый приоритетный 
+                                                                      и перебивает CSS стили
+
+вот еще пример                                                                      
+
+let xxx = document.querySelectorAll('.heart');
+
+xxx.forEach(item => {
+    xxx[1].style.backgroundColor ='blue';  --- тут важно обращаться не к псевдомассиву, а к конкретному элементу
+})
+
+
+
+Также существуе формат записы более удобный, если стилей нужно изменить много:
+
+elem.style.cssText = 'background-color: blue; width: 500px'; - тут уже все как в css
+
+const slider = document.querySelector('aboutAs__sliderJS-wrapper');
+slider.style.position = 'relative'; ---- обратился к элементу и назначил ему позицию
+
+
+2. Если нужно назначить стили не одному, элементу а всему псевдомассиву:
+
+let xxx = document.querySelectorAll('.heart');
+
+xxx.forEach(item => {
+    item.style.backgroundColor ='blue';
+})

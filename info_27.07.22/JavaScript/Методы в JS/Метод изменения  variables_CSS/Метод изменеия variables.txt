@@ -1,0 +1,13 @@
+Определение и использование
+Метод setProperty() устанавливает новое или изменяет существующее свойство CSS в блоке объявления CSS.
+
+
+const root = document.querySelector(':root'),   -- получаю корневой элемент 
+      rootStyles = getComputedStyle(root);  --- а также все стили(значения) в нем лежащие
+      btn = document.querySelector('button');  --- кнопка
+
+  btn.addEventListener('click', ()=> {
+    root.style.setProperty('--text-color', 'blue');
+  })
+
+  при клике на кнопку меняется цвет

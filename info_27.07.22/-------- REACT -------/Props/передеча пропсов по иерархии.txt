@@ -1,0 +1,175 @@
+1.
+В app.js создам метод(функцию) по удалению элемента:
+
+deliteItem() => {
+    this.setState(({data}) => {
+
+    })
+};
+
+2. 
+Теперь передам ее как пропс с другой классовый компонент нуже по иерархии:
+
+    render() {
+        const {data, term, filter} = this.state;
+
+        return (
+            <div className="app">
+                <AppInfo employees={employees} increased={increased}/>
+    
+                <div className="search-panel">
+                    <SearchPanel onUpdateSearch={this.onUpdateSearch}/>
+                    <AppFilter filter={filter} onFilterSelect={this.onFilterSelect}/>
+                </div>
+                
+                <EmployeesList 
+                    data={visibleData}
+                    onDelete={this.deleteItem}   ------ вот назвал атрибут(он же и есть пропс) onDelete и в нем функция по удалению
+                    onToggleProp={this.onToggleProp}/>
+                <EmployeesAddForm onAdd={this.addItem}/>
+                <MyLearn name="Alex" surename="Voitka"/>
+                <BootstrapTest/>
+            </div>
+        );
+    }
+
+
+3.
+Принемаю этот пропс:
+
+
+const EmployeesList = ({data, onDelete}) => {
+
+    
+    return (
+        <ul className="app-list list-group">
+            {elements}
+        </ul>
+        <button type="button"
+                    className="btn-trash btn-sm "
+                    onClick={onDelete}>  ----- на кнопку вешаю обработчик onClick и он запускает функцию по удалению что пишла как проперти
+                    <i className="fas fa-trash"></i>
+        </button>
+    )
+}
+
+export default EmployeesList;
+
+//////////////////////////////////
+
+Если второй сверху по иерархии компонент содержит в себе  еще компонен, то синтаксис немного меняется:
+
+
+1.
+В app.js создам метод(функцию) по удалению элемента:
+
+deliteItem() => {
+    this.setState(({data}) => {
+        xxxx
+    })
+};
+
+2. 
+Теперь передам ее в другой компонент нуже по иерархии:
+
+    render() {
+        const {data, term, filter} = this.state;
+
+        return (
+            <div className="app">
+                <AppInfo employees={employees} increased={increased}/>
+    
+                <div className="search-panel">
+                    <SearchPanel onUpdateSearch={this.onUpdateSearch}/>
+                    <AppFilter filter={filter} onFilterSelect={this.onFilterSelect}/>
+                </div>
+                
+                <EmployeesList 
+                    data={visibleData}
+                    onDelete={this.deleteItem}   ------ вот назвал атрибут(он же и есть пропс) onDelete и в нем функция по удалению
+                    onToggleProp={this.onToggleProp}/>
+                <EmployeesAddForm onAdd={this.addItem}/>
+                <MyLearn name="Alex" surename="Voitka"/>
+                <BootstrapTest/>
+            </div>
+        );
+    }
+
+
+3.
+Принемаю  пропс в друком компоненте,
+а этоткомпонент формирует в себе еще компоненты:
+
+
+import EmployeesListItem from "../employees-list-item/employees-list-item";
+
+import './employees-list.css';
+
+const EmployeesList = ({data, onDelete, onToggleProp}) => {  ----- 1. Вот обычный функциональный компонент, он принемает сверху пропсы
+
+    const elements = data.map(item => {
+        const {id, ...itemProps} = item;
+        return (
+            <EmployeesListItem  ----- 2. Вот он внутри себя формирует последующии компоненты на основании data
+                key={id} 
+                {...itemProps}
+                onDelete={() => onDelete(id)} ---3. Вот я передаю эту функциию еще ниже по иерархии и внутри запускаю колбэк функцию с методам и передаю как аргумент id
+                onToggleProp={(e) => onToggleProp(id, e.currentTarget.getAttribute('data-toggle'))}/>
+        )
+    })
+
+    return (
+        <ul className="app-list list-group">
+            {elements}
+        </ul>
+    )
+}
+
+export default EmployeesList;
+
+
+
+4. 
+Принимаю в последнем по иерархии компоненте :
+
+
+import './employees-list-item.css';
+
+const EmployeesListItem = (props) => {
+
+    const {name, salary, onDelete, onToggleProp, increase, rise} = props;  --- вот тут принемаю
+
+    let classNames = "list-group-item d-flex justify-content-between";
+    if (increase) {
+        classNames += ' increase';
+    }
+    if (rise) {
+        classNames += ' like';
+    }
+
+    return (
+        <li className={classNames}>
+            <span className="list-group-item-label" onClick={onToggleProp} data-toggle="rise" style={{fontSize: 30, color: 'blueviolet'}}>{name}</span>
+            <input type="text" className="list-group-item-input" defaultValue={salary + '$'}/>
+            <div className='d-flex justify-content-center align-items-center'>
+                <button type="button"
+                    className="btn-cookie btn-sm "
+                    onClick={onToggleProp}
+                    data-toggle="increase">
+                    <i className="fas fa-cookie"></i>
+                </button>
+
+                <button type="button"
+                        className="btn-trash btn-sm "
+                        onClick={onDelete}>   ------ и тут исполшьзую!!!!!!!!!!!!!!!!
+                    <i className="fas fa-trash"></i>
+                </button>
+                <i className="fas fa-star"></i>
+            </div>
+        </li>
+    )
+}
+
+export default EmployeesListItem;
+
+

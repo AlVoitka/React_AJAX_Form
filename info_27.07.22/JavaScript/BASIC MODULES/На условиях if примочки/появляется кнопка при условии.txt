@@ -1,0 +1,5 @@
+
+<div className="text-center mt-5">Active slide {slide} <br/>{autoplay ? 'auto' : null}</div>
+
+{autoplay ? 'auto' : null}  - это проверка. Беру переменную autoplay провераю какое згначение внутри, и если true 
+то подставляем строку в диве 'auto', а если false то null- ничего

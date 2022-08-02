@@ -1,0 +1,4 @@
+
+git remote add origin https//……. 
+
+git push –u origin master --- пушу файлы на удаленный репозиторий origin в  ветку master

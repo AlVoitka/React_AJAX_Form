@@ -1,0 +1,3 @@
+Вытаскиваю из реакта хук useCallback:
+
+import {Component, useState, useEffect, useCallback} from 'react';

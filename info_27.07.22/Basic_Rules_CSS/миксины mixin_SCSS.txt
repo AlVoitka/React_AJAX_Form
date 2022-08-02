@@ -1,0 +1,81 @@
+Важным оружием препроцессора SASS являются миксины. Также они ещё называются примеси. Это повторяющиеся участки кода.
+Миксины (часто используется название примеси) позволяют определить стили, которые могут
+ быть использованы повторно в любом месте документа без необходимости прибегать к несемантическим классам вроде .float-left. 
+ Миксины также могут содержать целые CSS правила или что-либо другое, разрешённое в Sass документе.
+ Они даже могут принимать аргументы, что позволяет создавать большое разнообразие стилей при помощи небольшого количества миксинов.
+
+ 
+
+!!!  в файле сборщике style.scss миксинцы нужно всегда импортировать сразу после (под) переменными,
+тк перменные используются внутри миксинов!!!!!!
+@import 'base/variables';
+@import 'base/mixins';
+
+
+
+ К примеру был код:
+
+ &_header {
+    width: 200px;
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+    font-size: 15px;
+    font-weight: bold;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+    cursor: pointer;
+    transition: 0.3s all;
+    outline: none;
+    &:hover {
+        color:black;
+        border: 2px solid rgb(9, 24, 107);
+        background-color:rgb(65, 90, 235);
+    }
+}
+
+//////////////////////////////
+
+И такой ховер я буду применять много где, для оптимизации кода применю миксин.
+Для начала создам его   и назаву btn_hover:
+
+@mixin btn_hover {
+    &:hover {
+        color:black;
+        border: 2px solid rgb(9, 24, 107);
+        background-color:rgb(65, 90, 235);
+    }
+}
+
+Бывает и другой синтаксис назначения миксина: 
+=btn_hover {
+}
+а в коде применяется так:
+width: 303px;
+height: 54px;
+display: flex;
++btn_hover;  ---- вот так
+
+а потом просто импортирую его в свойства:
+
+.btn {
+    width: 303px;
+    height: 54px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+    font-size: 15px;
+    font-weight: bold;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+    cursor: pointer;
+    transition: 0.3s all;
+    outline: none;
+    @include btn_hover;   ------- вот также
+
+    и соответственно буду дальше в коде тупо подставлять @include btn_hover;

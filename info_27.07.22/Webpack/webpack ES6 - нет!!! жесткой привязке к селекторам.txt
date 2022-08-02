@@ -1,0 +1,34 @@
+1.
+Вот я жестко привязан к селектору и если экспорирую этот модуль то тум будет ошибка, тк 
+там нет перменной  const modal =
+
+function Modal() {
+    const modal = document.querySelector('.selector');  ---- вот
+
+    modal.classList.add('hide');
+    modal.classList.remove('show');
+}
+export default modal;
+
+2.
+поэтому мне этот селектор нужно передвать в качестве аргумента в функцею самого модуля чтобы внутри его применить
+
+function Modal(argument) {
+    const modal = document.querySelector(argument);  ---- вот
+
+    modal.classList.add('hide');
+    modal.classList.remove('show');
+}
+
+3. Ну а впервкю очередь этот аргумент нужно задать в основном файле  script.JavaScript чтобы webpack его применил при сборке
+
+
+
+import modal from './modules/modal';
+
+window.addEventListener('DOMContentLoaded', function() {
+    
+    modal('.selector'); ----вот
+    
+});
+

@@ -1,0 +1,182 @@
+
+начинаю работу с компонентом RandomChar. чтобы по нажатью на кнопки производились действия с состоянием его илоя этого
+переделываю его в формат класса:
+
+было
+
+import './randomChar.scss';
+import thor from '../../resources/img/thor.jpeg';
+import mjolnir from '../../resources/img/mjolnir.png';
+
+const RandomChar = () => {
+    return (
+        <div className="randomchar">
+            <div className="randomchar__block">
+                <img src={thor} alt="Random character" className="randomchar__img"/>
+                <div className="randomchar__info">
+                    <p className="randomchar__name">Thor</p>
+                    <p className="randomchar__descr">
+                        As the Norse God of thunder and lightning, Thor wields one of the greatest weapons ever made, the enchanted hammer Mjolnir. While others have described Thor as an over-muscled, oafish imbecile, he's quite smart and compassionate...
+                    </p>
+                    <div className="randomchar__btns">
+                        <a href="#" className="button button__main">
+                            <div className="inner">homepage</div>
+                        </a>
+                        <a href="#" className="button button__secondary">
+                            <div className="inner">Wiki</div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div className="randomchar__static">
+                <p className="randomchar__title">
+                    Random character for today!<br/>
+                    Do you want to get to know him better?
+                </p>
+                <p className="randomchar__title">
+                    Or choose another one
+                </p>
+                <button className="button button__main">
+                    <div className="inner">try it</div>
+                </button>
+                <img src={mjolnir} alt="mjolnir" className="randomchar__decoration"/>
+            </div>
+        </div>
+    )
+}
+
+export default RandomChar;
+
+стало:
+
+import { Component } from 'react';    ------------------  1  импортировал компонент
+import MarvelService from '../../services/MarvelService';
+
+import './randomChar.scss';
+import mjolnir from '../../resources/img/mjolnir.png';
+
+class RandomChar extends Component {   -----------------   2  переделал в класс
+        
+        
+    state = {     -------------------------  4 создал состояние и все данные в этом состоянии которые будем вытаскиват отсюда позже
+                                               а браться  они будут из объекта который придёт от API сервера
+        name: null,                           
+        description: null,
+        thumbnail: null,
+        homepage: null,
+        wiki: null
+    } 
+    5 .Стэйт готов и буду использовать его вниутри метода render
+
+    
+
+    render() {    ------------------    3  весь return поместил в метод рендер
+
+        const {name, description, thumbnail, homepage, wiki} = this.state;  -------- 6. вытаскиваю значения из стэйта
+
+7. И остается только эти переменные подставить в нужные места чтобы 
+данные динамически изменялись
+
+        return (
+            <div className="randomchar">
+                <div className="randomchar__block">
+                    <img src={thumbnail} alt="Random character" className="randomchar__img"/>   -------- 
+                                                                        вместо src={thor}  и уже картинка тора не нужна, 
+                                                                        удаля import thor from '../../resources/img/thor.jpeg';
+                    <div className="randomchar__info">
+                        <p className="randomchar__name">{name}</p>   ----- вместо Thor
+                        <p className="randomchar__descr">
+                            {description}      -----------------------------------------------тут вместо опписания
+                        </p>
+                        <div className="randomchar__btns">
+                            <a href={homepage} className="button button__main">  -------- -- суда подставляю
+                                <div className="inner">homepage</div>
+                            </a>
+                            <a href={wiki} className="button button__secondary">    ---- тут ссылка на вики
+                                <div className="inner">Wiki</div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div className="randomchar__static">
+                    <p className="randomchar__title">
+                        Random character for today!<br/>
+                        Do you want to get to know him better?
+                    </p>
+                    <p className="randomchar__title">
+                        Or choose another one
+                    </p>
+                    <button className="button button__main">
+                        <div className="inner">try it</div>
+                    </button>
+                    <img src={mjolnir} alt="mjolnir" className="randomchar__decoration"/>
+                </div>
+            </div>
+        )
+    }
+}
+
+export default RandomChar;
+
+
+
+2. Теперь нужно получить Эти даные {name, description, thumbnail, homepage, wiki} от сервера
+Для этого понадобится MarvelService
+
+3. Вырезаю его из из файла index.js
+
+const marvelService = new MarvelService();
+
+marvelService.getAllCharacters().then(res => res.data.results.forEach(item => console.log(item.name)));
+
+И немного модифицирую:
+
+marvelService = new MarvelService(); -- это значит что я создал новое свойство внутри класс RandomChar
+
+4. Сперво импорирую import MarvelService from '../../services/MarvelService';  в  классе randomChar
+
+и в нем
+
+Теперь создам здесь создам метод updateChar который будет обращаться к серверу, получать данные и 
+записывать их в стейт (state)
+
+
+    updateChar = () => {
+        
+        this.marvelService  -----обращаюсь к серверу
+            .getCharacter(id)   ------ вызываю метод по которому получу данные на одного персонажа по id
+
+        далее результат работы этого метода буду обрабатывать:
+
+            .then(res => {   ----говорю что ко мне придет результат и из него нужно записать нужные данные
+                                 и сформирорвать объект с новыми значениями свойст
+                и говорю как их получить ( в идеале нужно видеть что приходит  в виде объектаи из него тащить нужные данные)
+                this.setState({
+                    name: res.data.results[0].name,  -  тут я беру результат  который получил как объект
+                    у этого объекта есть свойство data  и у этой дейти есть поле results - там массив сданными И
+                    я обращаюсь к первому персонажк [0] и записываю name  
+                    теперь в состоянии name будет записано имя персонажа                
+                    description: res.data.results[0].description,   ---- по аналогии
+                    thumbnail: res.data.results[0].thumbnail + '.' + res.data.results[0].extenseonal, --хз как то так 
+                    получаю данные из двух частей
+                    homepage: res.data.results[0].urls[0].url,
+                    wiki: res.data.results[0].urls[1].url
+                })
+            }) 
+    }
+
+
+    5. Метод создан и теперь его нужно запустить в самом начале, при первом запуске страницы
+и далее когда юзер будет нажимать кнопку. И для этого нужен конструктор:
+
+class RandomChar extends Component {
+    constructor(props) {
+        super(props);
+        this.updateChar();   --- вот запускаю
+    }
+
+
+
+
+
+

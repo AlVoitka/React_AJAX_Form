@@ -1,0 +1,21 @@
+
+
+.portfolio {
+    padding-top: 120px;
+    &__wrapper {
+        margin-top: 60px;
+        display: grid;
+        grid-template: repeat(2, 280px) / repeat(4, 280px); --- 2 строки по 280 и 4 колонки по 280
+        grid-auto-rows: 280px;  --- если контент будет добавлятся и сетке расти, то ячейки будут тоже по 280px
+        gap: 5px;   -- разрывы
+
+        .vertical {  --- задаю размеры большим трэкам
+            grid-row: 1 / 3;  -- начинается с 1 линии и закончится на 3 ( по вертикальной оси)
+            grid-column: 4 / 5;  ( по горищонтальной оси)
+        }
+
+        .horizonal {
+            grid-row: 2 / 3;
+            grid-column: 2 / 4;
+        }
+    }

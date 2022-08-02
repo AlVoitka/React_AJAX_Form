@@ -1,0 +1,15 @@
+
+function openModal() { -------------------действия обернул в функцию
+        modal.classList.add('show','fadeIn');
+        modal.classList.remove('hide');
+        document.body.style.overflow = 'hidden';
+        clearInterval(modalTimerId);
+    }
+
+
+modalTrigger.forEach(btn => {  --------------- тут перебрал массив из кнопок
+        btn.addEventListener('click', openModal); --------------- по клику вызвал эту функцию
+    });
+
+
+    

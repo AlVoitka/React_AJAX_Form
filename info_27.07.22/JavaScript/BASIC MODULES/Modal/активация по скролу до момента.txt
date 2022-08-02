@@ -1,0 +1,49 @@
+урок 73 5 минута 2 курс
+
+Создам функционал, чтобы модалка активировалась при скролинге страницы до определенного значения в пикселях по событию scroll:
+
+- обращаюсбь к окну виндовс (видимая зона экрана юзера) и вешаю обработчик на скролл
+
+    window.addEventListener('scroll', ()=> {
+        if(window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight -1) {
+            openModal();
+        }
+    })
+
+разбор:
+window.pageYOffset - прокрученная часть
+document.documentElement.clientHeight  - видимая часть которую видит пользователь в данный момен на сайте
+ и если ех сумма больше либо равна
+document.documentElement.scrollHeight - полная прокрутка или полный сайт 
+-1  это чтобы срабатывало наверняка, тк некоторые браузеры в прошивке  имеют ограничения
+
+как только они совпадают, значит пользователь долистал до конца страницы.
+И если это произошло то срабатывает условие - openModal(); функция по открытию окна
+
+
+
+13.1
+ Модальное окно появляется постоянно при прокрутке до самого низа, это плохое поведение. Нужно только чтобы один раз
+окно отработало. Для этого буду удалять обработчик после ого как он сработает 1 раз.
+
+Для этого я создам функцию
+и в нее помещу функционал что открывает окно в конце cтраницы:
+
+    function showModalByScroll() {
+        if(window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight -1) {
+            openModal();
+        }
+    }
+
+ и уже в обработчик передаю эту функцию:
+
+ window.addEventListener('scroll', showModalByScroll); 
+
+ и теперь удаляю обработчик после того как он отработает 1 раз:
+
+    function showModalByScroll() {
+        if(window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
+            openModal();
+            window.removeEventListener('scroll', showModalByScroll); ---- вот так и нужно передат событие и функцию
+        }
+    }  

@@ -1,0 +1,42 @@
+
+Событие DOMContentLoaded  запускается когда первоначальный HTML документ будет полностью загружен и сформерован, 
+тоесть построена вся дом-структура, тогда и запустятся скрипты, без ожидания полной загрузки таблиц стилей, изображений и фреймов. 
+
+Аростыми словами:
+Юзер зашел на сайт пошла прогрузка дом-структуры, и как она полностью прогрузилась то пошли запускаться скрипты, 
+и их загрузка не ждет дозагрузки тяжелых фото или еще чего.
+
+В него помещается остальной скрипт:
+
+document.addEventListener("DOMContentLoaded",() => {
+    
+});
+
+
+На сборщике webpack он ставится на основной файл-сборщик:
+
+
+window.addEventListener('DOMContentLoaded', function() {  ---- вот
+    
+    const upslider = require('./modules/upslider'),
+          downslider =require('./modules/downslider'),
+          tabs =require('./modules/tabs'),
+          scrollUP =require('./modules/scrollUP')
+          prompts = require('./modules/prompts');
+          modal = require('./modules/modal');
+          mailer = require('./modules/mailer');
+          interactive = require('./modules/interactive');
+          
+
+    upslider();
+    downslider();
+    tabs();
+    scrollUP();
+    modal();
+    mailer();
+    prompts();
+    interactive();
+    
+
+    new WOW().init();
+});

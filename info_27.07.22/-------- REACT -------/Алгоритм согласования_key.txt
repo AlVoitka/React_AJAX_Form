@@ -1,0 +1,25 @@
+  Но и с таким синтаксисом в консоли разработчика будет выдавать ошибку:
+    index.js:1 Warning: Each child in a list should have a unique "key" prop.
+
+    Для решения нужно поменять синтаксис, смотреть урок 129 -Работа со списками алгоритм согласования.
+
+    1. в базе данных четвертым свойством нужно добавить идентификатор id:
+    я добавил простой(1-2-3-4), но в реале с сервера будут приходить более сложные айдишки с уникальным ключём.
+
+    
+    function App() {
+
+  const data = [
+    {name: 'Ales K.', salary: 800, increase: false, id: 1},
+    {name: 'Ales M.', salary: 700, increase: false, id: 2},
+    {name: 'Ales S.', salary: 600, increase: false, id: 3},
+    {name: 'Ales S.', salary: 99999900, increase: true, id: 4},
+    
+  ];
+
+    2.
+    И самому компоненту нужно добавить атрибут key:
+
+    const {id, ...itemProps} = item;  ---ТУТ СЛОЖНО нужно смотреть урок 129 -Работа со списками алгоритм согласования.
+
+    <EmployeesListItem key={id} {...itemProps}

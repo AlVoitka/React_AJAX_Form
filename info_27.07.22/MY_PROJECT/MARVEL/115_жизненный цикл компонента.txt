@@ -1,0 +1,3 @@
+https://ru.reactjs.org/docs/react-component.html#the-component-lifecycle
+
+Сейчас в консоли ошибка говорящая, что делать сетевой запрос во время конструирования цикла - это плозая практика

@@ -1,0 +1,148 @@
+
+----------------- Динамические классы ----------------
+
+1.
+Ниже пример формирования динамического класса:
+Тоесть в зависимости от условия формируется класс для элемента.
+В этом случае для добавления класса 'increase' 
+
+const EmployeesListItem = (props) => {
+
+    const {name, salary, onDelete, onToggleProp, increase, rise} = props;
+
+    let classNames = "list-group-item d-flex justify-content-between";  -----1. Создал переменную с длинным классом.
+    if (increase) {                    ---------2. Тут условие если в состоянии state increase = true, то 
+        classNames += ' increase';    ------3. К класу добавится класс -increase' 
+    }
+    if (rise) {
+        classNames += ' like';
+    }
+
+    return (
+        <li className={classNames}>  -----------4. тут применяю переменную  и она имеет 2 состояния в -зависимости от условия (true/false)
+            <span className="list-group-item-label" onClick={onToggleProp} data-toggle="rise" style={{fontSize: 30, color: 'blueviolet'}}>{name}</span>
+            <input type="text" className="list-group-item-input" defaultValue={salary + '$'}/>
+            <div className='d-flex justify-content-center align-items-center'>
+                <button type="button"
+                    className="btn-cookie btn-sm "
+                    onClick={onToggleProp}
+                    data-toggle="increase">
+                    <i className="fas fa-cookie"></i>
+                </button>
+
+                <button type="button"
+                        className="btn-trash btn-sm "
+                        onClick={onDelete}>
+                    <i className="fas fa-trash"></i>
+                </button>
+                <i className="fas fa-star"></i>
+            </div>
+        </li>
+    )
+}
+
+export default EmployeesListItem;
+
+
+
+-------------------- Динамические стили ----------------
+
+
+Логика:
+Если у кнопки есть свойство colored в позиции true, то она изменит цвет.
+
+const AppFilter = (props) => {
+    const buttonsData = [
+        {name: 'all', label: 'Все сотрудники', colored: false},  ---------1. У кнопок есть свойства colored
+        {name: 'rise', label: 'На повышение', colored: false},
+        {name: 'moreThen1000', label: 'З/П больше 1000$', colored: true}
+    ];
+
+    const buttons = buttonsData.map(({name, label, colored}) => {   - ------2. Вытаскиваю это свойство
+        const active = props.filter === name;
+        const clazz = active ? 'btn-light' : 'btn-outline-light';
+        return (
+            <button type="button"
+                    className={`btn ${clazz}`}
+                    key={name}
+                    onClick={() => props.onFilterSelect(name)}
+                    style={colored ? {color: 'red'} : null }> ------ 3. Тут работою со стилем - передаю в него colored и использую тернарный оператор:
+                    {label}                                  если true то применим стиль {color: 'red'}, а если false - null (ничего не возвращаем)     
+            </button>
+        )
+    })
+
+    return (
+        <div className="btn-group">
+            {buttons}
+        </div>
+    )
+}
+
+export default AppFilter;
+
+
+
+Но правильно будет условие вынести в отдельную переменную:
+
+const AppFilter = (props) => {
+    const buttonsData = [
+        {name: 'all', label: 'Все сотрудники', colored: false}, 
+        {name: 'rise', label: 'На повышение', colored: false},
+        {name: 'moreThen1000', label: 'З/П больше 1000$', colored: true}
+    ];
+
+    const buttons = buttonsData.map(({name, label, colored}) => {   
+        const active = props.filter === name;
+        const clazz = active ? 'btn-light' : 'btn-outline-light';
+        const style = colored ? {color: 'red'} : null;  ------------ Вот вынес условие в переменную
+        return (
+            <button type="button"
+                    className={`btn ${clazz}`}
+                    key={name}
+                    onClick={() => props.onFilterSelect(name)}
+                    style={style}>    ------ вот передал переменную
+                    {label}                                       
+            </button>
+        )
+    })
+
+    return (
+        <div className="btn-group">
+            {buttons}
+        </div>
+    )
+}
+
+export default AppFilter;
+
+
+
+Еще пример:
+
+
+ render() {
+        const {char: {name, description, thumbnail, homepage, wiki}, loading, error} = this.state;  
+        const errorMessage = error ? <ErrorMassage/> : null;
+        // const spinner = loading ? <Spinner/> : null;
+        // const content = !(loading || error) ? <RandomChar/> : null;
+
+        let imgStyle = {'objectFit' : 'cover'};  ---1. задал переменную
+        if (thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg') {  --2. если вервер дает ошшибку и назанчена эта картинка
+            imgStyle = {'objectFit' : 'contain'};  --- 3. то к ней применяю стили
+        }
+
+        if(loading) {
+            return <Spinner/>
+        }
+
+        return (
+            <div className="randomchar">
+                {errorMessage}
+                <div className="randomchar__block">
+                    <img src={thumbnail} alt="Random character" className="randomchar__img" style={imgStyle}/>  ----4. вот в доме назначаю стиль
+                    <div className="randomchar__info">
+                        <p className="randomchar__name">{name}</p>
+                        <p className="randomchar__descr">
+                            {description}
+                        </p>

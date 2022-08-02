@@ -1,0 +1,10 @@
+1 курс урок 42 4 минута
+
+
+1. Внутри нужного репоза нажимаю Setting --> Pages
+2. None - выбираю нужную метку (master)
+3. Your site is ready to be published at https://alvoitka.github.io/portfolio_Voitka_Finish/ 
+Но ссылка еще не работает
+4. Копирую ссылку и возвпащаюсь в это репоз
+5. Справа шестеренка About и там Website и сохраняю изменеия.
+6. Появляктся линк в поле About - его можно скидвывть всем.

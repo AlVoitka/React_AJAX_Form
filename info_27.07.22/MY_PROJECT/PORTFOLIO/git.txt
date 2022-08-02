@@ -1,0 +1,9 @@
+git remote -v    -- Эта команда покажет все имена репозиториев, где вы можете делать fetch/push.
+                  Фактически к какому удаленному репозу подвязан проект
+
+Portfolio_Finish
+
+git add .
+git commit -m ""
+git push -u origin master
+

@@ -1,0 +1,30 @@
+
+
+основная особенность REACT это возможность переиспользования компонента.
+
+у меня есть компонент 
+const EmployeesListItem;
+
+
+и я планирую его переиспользовать в другом компоненте const EmployeesList;
+
+
+
+
+import EmployeesListItem from "../employees-list-item/employees-list-item";  ---- импортирую  EmployeesListItem
+
+import './employees-list.css';  -- это импорт стилей
+
+
+const EmployeesList = () => {   --- вот новый компонет
+
+    return (
+        <ul className="app-list list-group">
+            <EmployeesListItem/> -------------- вот использую его внутри нового компонента
+            <EmployeesListItem/>
+            <EmployeesListItem/>
+        </ul>
+    )
+}
+
+export default EmployeesList;

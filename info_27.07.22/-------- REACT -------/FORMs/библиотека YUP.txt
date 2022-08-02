@@ -1,0 +1,6 @@
+https://github.com/jquense/yup
+
+1.
+Импортирую в компонент
+
+import * as Yup from 'yup';

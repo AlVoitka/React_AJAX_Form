@@ -1,0 +1,5 @@
+курс 2 урок 74
+
+MutationObserver
+MutationObserver предоставляет возможность получать уведомления об изменении определённых DOM-элементов. 
+MutationObserver является заменой Mutation Events, определённой в спецификации DOM3 Events.

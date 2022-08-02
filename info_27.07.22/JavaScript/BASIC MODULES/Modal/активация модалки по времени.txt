@@ -1,0 +1,47 @@
+2 курс урок 73
+
+Создам setTimeout - чтотбы появлялось модальное окно через 6 секунд после входа
+юзера на страницу.
+
+1.
+для этого содзам переменную:
+
+const modalTimerId = setTimeout(); 
+
+туда нужно поместить функционал по открытию окна, но у меня уже он есть навешенный  на первую кнопку:
+
+    modalTrigger.addEventListener('click', () => {
+       overlay.style.display="block";
+       modalFeedback.style.display="block";
+       document.body.style.overflow="hidden";
+   })
+
+и чтобы не дублироавать код, я создам функцию и бужду ее использовать:
+
+    function openModal() {
+        overlay.style.display="block";  ------------- вот я в нее перенес функционал по открытию
+        modalFeedback.style.display="block";
+        document.body.style.overflow="hidden";
+    }    
+
+2. 
+в сет интервал передаю функцию по закрытию окна и время срабатывания в мс:
+
+const modalTimerId = setTimeout(openModal, 3000); 
+
+3.
+окно появится через 3 сек
+
+4. Дороботка
+Если вдруг пользователь сам открыл окно, и уже повторный автовызов его будет не уместен:
+
+нужно просто удалить этот интервал в  функции по открытию окна:
+
+function openModal() {
+        overlay.style.display="block";  
+        modalFeedback.style.display="block";
+        document.body.style.overflow="hidden";
+        clearInterval(modalTimerId);  ------- вот очищаю  интервал в переменной modalTimerId
+    }    
+
+

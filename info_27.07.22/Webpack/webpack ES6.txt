@@ -1,0 +1,222 @@
+
+
+Сперва сборщик нужно установить в проект :
+https://webpack.js.org/guides/getting-started/ 
+
+нужно в пакет npm добавить это плагин командой:
+
+npm install webpack webpack-cli --save-dev
+
+Установить можно как локально так и глобально.
+
+
+Файл webpack.config.js - это файл в котором прописона как должен работать сборщик модулей webpack, этот файл нужно размещать в каждом проекте 
+и подстраивать при необходимости . В нем я расписал что и как, но нужно следить за этим:
+
+module.exports = {
+  mode: 'development',
+  entry: './src/js/script.js',  ------ путь к файлу- сборщику
+  output: {
+    filename: 'bundle.js',  --- так назавется вновьсозданный файл
+    path: __dirname + './src/js/'   ---- место куда создастся файл bundle.js
+  },
+
+В нем я сказал что весь проект соберется будет в файле bundle.js
+тоесть при запуске в терменале  --- npx webpack сформируется  файл bundle.js в папке js
+
+И уже в конце следим за путем к этому файлу в inndex.html
+
+<script src="./js/script.js"></script>   ----- проверяю правильность пути!!!!!!!!!!!!
+
+
+5. Cоздам папку modules в папке js. И уже внутри него я буду размещать части проекта - скрипты по кускам.
+
+К примеру создаю первый модуль, файл modal.js
+
+в нем создаю функцию  и в нее помещаю весь тот код:
+
+function modal() {
+    x
+}
+
+ну и чтобы она отработала, ниже этой функции  прописываю:
+
+module.exports = tabs;
+
+те я экспортирую эту функцию.
+
+6. В файле script.js теперь нужно все модули заимпортировать,
+    а делается это при помощи обработчика событий:
+
+window.addEventListener('DOMContentLoaded', function() {
+    const tabs = require('./modules/tabs'),
+          modal = require('./modules/modal'),
+          timer = require('./modules/timer'),
+          Функуии из модулей импортированы и нужно ух просто вызвать:
+    tabs();
+    modal();
+    timer();
+});
+
+!!!! Сборщик часто пытается в этом файле самостоятельно добавить вне обработчика импортируемый файл,
+а потом консоль бьет ошибку. Нужно перемещать его (modal = require('./modules/modal');) в обработчик.!!!!
+
+
+7. 4.  Теерь нужно в терменале (в корне проекта) запустить webpack:
+
+npx webpack
+
+если все ок, то будет так:
+./js/modules/modal.js 1.38 KiB [built] [code generated]
+./js/modules/timer.js 1.53 KiB [built] [code generated]
+./js/modules/cards.js 2.03 KiB [built] [code generated]
+./js/modules/calc.js 3.45 KiB [built] [code generated]
+./js/modules/forms.js 2.36 KiB [built] [code generated]
+./js/modules/slider.js 4.48 KiB [built] [code generated]
+webpack 5.69.1 compiled successfully in 179 ms
+
+и в папке js  появится файл bundle.js , так он назван потому что я так в конфиге webpack прописал:
+
+output: {
+    filename: 'bundle.js',
+
+Теперь вебпэк следит за нашими модулями  и если я внесу изменения, то сборщик занаво пересоберет проект.
+Но если я применю терминал для другой задачи, то сборщик остановит свою работу. И для этого предусмотрен + в терменале,
+ добавляю новую вкладку и там делаю другие задачи.
+
+8. Ну и в конце в index.html  пропишу что  нужно скрипты подсасывать не из script.js  а из bundle.js
+это делается в самом низу <body>
+
+ <script src="js/bundle.js"></script>  --- следить за правильностью пути!!!!!!!!!!
+
+
+9. 
+И для того чтобы придерживаться более нового формата ES6 нужно внести изменения.
+
+Первая часть настройка экспортов:
+
+каждый отдельный модуль имел синтаксис:
+
+                function timer() {
+
+                    тут код 
+
+                }
+
+                module.exports = timer;  -- и так экспортирю модуль
+
+По синтаксису ES6 нужно сделать так:
+
+                function timer() {
+
+                    тут код 
+
+                }
+
+                export default timer;  -- вот само изменение
+
+Таккую манипуляцию нужно проделать с каждым модулем!!!!!!!!!      
+
+
+
+
+И вторая часть это работа с файлом script.js - где все собирается.
+Настраиваю импорты:
+
+Вот так выглядит файл в старом формате, все получения были внутри глобального обработчика:
+
+window.addEventListener('DOMContentLoaded', function() {
+    
+    const upslider = require('./modules/upslider'),
+          header = require('./modules/header'),
+          downslider =require('./modules/downslider'),
+          sliderJS = require('./modules/sliderNativeJS'),
+          tabs =require('./modules/tabs'),
+          scrollUP =require('./modules/scrollUP')
+          prompts = require('./modules/prompts'),
+          modal_jQ = require('./modules/modal_jQ'),
+          modal_JS = require('./modules/modal_JS'),
+          mailer = require('./modules/mailer'),
+          interactive = require('./modules/interactive'),
+          timer = require('./modules/timer'),
+          clientCard = require('./modules/clientCard'),
+          form = require('./modules/form'),
+          calculating = require('./modules/calculating');
+          
+
+    header();      
+    upslider();
+    downslider();
+    sliderJS();
+    tabs();
+    scrollUP();
+    modal_jQ();
+    modal_JS();
+    mailer();
+    prompts();
+    interactive();
+    timer();
+    clientCard();
+    form();
+    calculating();
+    
+    
+
+    new WOW().init();
+});
+
+
+По синтакчичу ES6 вношу следующие изменения:
+
+
+import  upslider from './modules/upslider';   ------- вот как было  const upslider = require('./modules/upslider'),
+import  header from './modules/header';
+import  downslider from './modules/downslider';
+import  sliderJS from './modules/sliderNativeJS';
+import  tabs from './modules/tabs';
+import  scrollUP from './modules/scrollUP';
+import  prompts from './modules/prompts';
+import  modal_jQ from './modules/modal_jQ';
+import  modal_JS from './modules/modal_JS';
+import  mailer from './modules/mailer';
+import  interactive from './modules/interactive';
+import  timer from './modules/timer';
+import  clientCard from './modules/clientCard';
+import  form from './modules/form';
+import  calculating from './modules/calculating';
+
+
+window.addEventListener('DOMContentLoaded', function() {  ---- внутри оставляю толко вызовы
+
+    header();      
+    upslider();
+    downslider();
+    sliderJS();
+    tabs();
+    scrollUP();
+    modal_jQ();
+    modal_JS();
+    mailer();
+    prompts();
+    interactive();
+    timer();
+    clientCard();
+    form();
+    calculating();
+    
+    
+
+    new WOW().init();
+    
+});
+
+
+если будут возникать проблемы с экспортом, то можно еще экспортировать 'именные экспорты' или отдельные куски кода:
+тут более подробно 104 урок 2 курс " собираем наш проект"
+
+
+
+
+
+
+

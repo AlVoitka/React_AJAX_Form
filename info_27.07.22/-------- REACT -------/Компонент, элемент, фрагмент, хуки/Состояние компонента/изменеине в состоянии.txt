@@ -1,0 +1,56 @@
+По клику появляется звездочка. те состояние increase нужно из false переключить в true и наоборот.
+Принцип следующий:
+
+Нужно взать оперделенный объект, с которым работает пользователь. Сделать его копию, затем поменять в нем свойства которые пользователь изменияет,
+ затем создать новый стэйт и поменять его в компоненте. Это все для того чтобы не нарушить принцип иммутабельности ( напрямею на
+  менять состояниекомпонента)
+
+
+1.
+вот у меня компонент с состоянием и со свойством data в виде масива:
+вот в этот массив я хочу внести ихзменения, а именно свойство increase - заменитть на противопопожное (true на false)
+
+  class App extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            data: [
+                {name: 'John C.', salary: 800, increase: false, rise: true, id: 1},
+                {name: 'Alex M.', salary: 3000, increase: true, rise: false, id: 2},
+                {name: 'Carl W.', salary: 5000, increase: false, rise: false, id: 3}
+            ],
+            term: '', 
+            filter: 'all'
+        }
+        this.maxId = 4;
+    }
+
+  2.
+  Для этого создаю метод:
+
+  onToggleIncrease (id) => {
+     this.state(({data}) =>{  
+        const index = data.findIndex(elem => elem.id == id)  --- 1. так получаю индех объекта (элемента) 
+        const old = data[index];  -- так получаю старый объект
+        const newItem = {...old, increase: !old.increase}; -- 2. так разворочиваю ставрый объект и тоглю в increase
+        const newArr = [data.slice(0, index), newItem, ...data.slice(index + 1)]; ---3. вставляю изменению в новый массив
+
+        return {
+            data.newArr   --------4... Формирую новый масив с измененными свойствами
+        }
+     })
+  }
+
+  Но это сложный блядский подход, ниже все проще!!!
+  3.
+
+  onToggleIncrease (id) => {
+        this.setState(({data}) => {  
+            data: date.map(item => {  --- изменяю свойство data при помощи метода map который формирует новый массив. Item - это будет каждый отдельный объект внитри массива
+                if(item.id === id) {   ---- если id кождого из элементов  совпадет с id который пишел как аргумент (onToggleIncrease (id))
+                    return(...item, increase: !item.increase )  --- то возвращаем новый объект  с новыми свойствами (переключили true/false)
+                }
+                return item;  
+            })
+        }
+  }

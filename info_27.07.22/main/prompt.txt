@@ -1,0 +1,49 @@
+
+1. Задаю промпты пользователю и записываю его ответ в переменную ask_1 и ask_2
+
+    const ask_1 = prompt('Are you a cargo owner or logistician?','')
+    const ask_2 = prompt('Do you want a consultation?','')
+
+2. Создаю объект базу данныx const userDB и в нем будет свойства в формате ключ- значение.
+
+    const userDB = {
+        answers: {}
+    };
+
+3. Записываю в этот объект то что ввел пользователь    
+
+    userDB.answers[ask_1] = ask_2;
+
+4. Запрашиваю у консоли ответ пользователя
+
+     console.log(userDB);  -- так выводит большой объект
+     console.log(userDB.answers);  -- а так уже свойство как объект
+     console.log(userDB[answers]); ---- второй вариант синтаксиса, более правельный но у мнея он что то не сработал
+
+     
+5. Проверки на валидность.
+
+Если пользователь нажмет ОТМЕНА, а у него есть такоя возможность, то в базу запишется null.
+И нужно устроить проверку на null, на пустую строку, на кол-во символов:
+
+Для начала, нужно поместить все в цикл, для того чтобы если условия не выполнятся, то вопросы будут задаваться по новой.
+
+for (let i = 0; i < 1; i++) {
+
+    const ask_1 = prompt('Are you a cargo owner or logistician?','')
+    const ask_2 = prompt('Do you want a consultation?','')
+
+    if(ask_1 != null && ask_2 != null && ask_1 !='' && ask_2 !='' && ask_1.length < 11 && ask_2.length < 11 ) {
+        console.log('Done!');
+        userDB.answers[ask_1] = ask_2;
+    } else {
+        console.log('Error!');
+        i--;
+    }
+}
+
+Если вопрос не null, не пустая строка '', длина символов не более 11, то пыпланяем условия {}
+Иначе else {
+        console.log('Error!');  - в консоль ошибка
+        i--;  ---- и цикл возврыщает назад на вопросы.
+    }

@@ -1,0 +1,97 @@
+//////////////////////---------Псевдоклассы---------//////////////////////// 
+
+нужны для тогог, чтобы управлять состоянием элементов.
+https://webref.ru/css#pseudo-class
+
+.btn {
+    width: 220px;
+    height: 65px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+    font-size: 15px;
+    font-weight: bold;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+    cursor: pointer;
+    transition: 0.3s all;   -----  своиство времени  изменения эффекта
+    outline: none;
+    &:hover {   ----- псевдоклас наведения мыши
+        color:rgb(65, 90, 235);
+        border: 1px solid rgb(238, 125, 125); 
+        font-size: 16px;
+    }
+    &:active {  ----------------- применяется пока удерживаем элемент при нажатой кнопке мыши
+        font-size: 19px;
+    }
+    &:focus{   ------------------ когда нажмешь на кнопку и потом перемещаешь мышь, а кнопка есе еще в фокусе ( tab - скидывает фокус)
+        background:   
+    }
+    &:nth-child(2) {  ----- используется для добавления стиля к элементам на основе нумерации в дереве элементов.
+        color: 
+    }
+}
+
+Значение	Номера элементов	Описание
+1	1	Первый элемент, является синонимом псевдокласса :first-child.
+5	5	Пятый элемент.
+2n	2, 4, 6, 8, 10,…	Все чётные элементы, аналог значения even.
+2n+1	1, 3, 5, 7, 9,…	Все нечётные элементы, аналог значения odd.
+
+
+
+
+////////////////////-----Псевдоэлементы ------/////////////////////
+Основные 
+:after и :before
+
+Применяются для создания дополнительных элементов имеющих правильную геометрическую форму, 
+вот создаю появляющуюся линию при наведении на элемент  в нав меню:
+
+&__link {
+        position: relative;    ------------  для абсолютного размещения детского элемента
+        margin-right: 45px;
+        font-weight: bold;
+        font-size: 18px;
+        color: $dark;
+        &:hover {
+            color:rgb(65, 90, 235);
+           
+            &:after {                 ------ псевдоэлемент
+                content: '';          
+                position: absolute;
+                display: block;
+                width: 100%;          ------ вновьсозданный элемент будет иметь ширину 100%
+                bottom: -1px;         ------ размещаю его относительно родителя
+                z-index: -1;          ------  z индех
+                height: 2px;
+                background: $red;
+        }
+
+А тут я добавил стрелку у четвертого элементв списка:
+
+&__link {
+        position: relative;
+        margin-right: 45px;
+        font-weight: bold;
+        font-size: 18px;
+        color: $dark;
+        &:nth-child(4) {   ---- вот ссылаюсь на 4 элемент
+            &::before {
+                content: '';
+                position: absolute;
+                border: solid #303030;
+                border-width: 0 2px 2px 0;
+                display: block;
+                padding: 3px;
+                transform: rotate(45deg);
+                bottom: 7px;
+                right: -12px;
+                z-index: -1;
+                
+            }    
+            &:hover {
+                color:rgb(193, 228, 36);
+            }

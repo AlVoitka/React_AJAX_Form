@@ -1,0 +1,17 @@
+.filter()
+Метод filter() создаёт новый массив!!!!!!!! со всеми элементами, прошедшими проверку, задаваемую в передаваемой функции.
+
+
+
+есть массив:
+const words = ['spray', 'limit', 'elite', 'exuberant', 'destruction', 'present'];
+
+создам новый массив в котором будет отфилтрован массив words:
+
+const new_words = words.filter()
+
+и во внурь помещаю функцию:
+
+const new_words = words.filter(function(name) {    -- name - это каждый отдельный элемент внутри массива
+    return name.lenght < 5;
+})
