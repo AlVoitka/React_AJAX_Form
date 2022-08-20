@@ -1,0 +1,219 @@
+2 курс урок 64
+
+Мы можем вызвать функцию не в данный момент, а позже, через заданный интервал времени. Это называется «планирование вызова».
+
+Для этого существуют два метода:
+
+-----setTimeout   - позволяет вызвать функцию один раз через определённый интервал времени.
+-----setInterval   - позволяет вызывать функцию регулярно, повторяя вызов через определённый интервал времени.
+
+
+
+1. Для того чтобы запустить функцию через промежуток времени используется конструкция - setTimeout
+
+const timerId = setTimeout(function() {
+    console.log('Darou!');
+}, 3000);
+
+Синтаксис таков: таймайт принемает в себя ту функцию которая должна запуститься с опозданием, она просто объявлена но не вызывается, 
+а для ее вызова задается второй аргумент - время:  , 3000, - это время в милисикундах = 3с
+
+
+1.2
+
+ну и при желании может задаются аргументы , к примеру ,(text)  = 'Darou!'
+
+const timerId = setTimeout(function(text) {
+    console.log(text);
+}, 3000, 'Darou!');
+
+
+
+2. 
+Также можно передавать уже готовую функцию:
+
+function logger() {
+    console.log('Alex');
+}
+
+const timerId = setTimeout (logger, 3000);  -- функция просто передается logger, а не вызывается logger()
+   
+
+
+
+
+
+3. Для того чтобы сбросить действие setTimeout (те отключить его) используется:  clearInterval();
+
+function logger() {
+    console.log('Alex');
+}
+
+const timerId = setTimeout (logger, 3000);
+
+clearInterval(timerId);  - вот я сбрасываю конкретный таймер
+
+В таком коде функция даже не запустится, тк она сразу ои остановлена clearInterval(timerId);
+   
+
+
+
+4. А теперь напиши код где команда  clearInterval(); будет вызываться только после определённого действия:
+к примеру после клика на кнопку:
+
+const btn = document.querySelector('.btn');  -- получил кнопку
+
+function logger() {
+    console.log('Alex');
+}
+
+btn.addEventListener('click', () => {   --------на нее навесил обработчик на клик
+    const timerId = setTimeout (logger, 3000);            - скрип отрабатывает 1 раз  с заданной задержкой после клика
+
+    ниже использую  setInterval:
+
+    const timerId = setInterval (logger, 3000);        - скрипт непрерывно повторяется через заданный промежуток времени
+});
+
+для того чтобы остановить сlearInterval(timerId); 
+
+Но тут возникает проблема: timerId is not defined  
+а это потому что она обЪявлены внутри обработчика событий, она является локальной
+и соответственно мы ее использовать снаружи обработчика не можем.
+Решение простое, нужно объявить глобальную переменную:
+
+let timerId;
+
+получаем:
+
+const btn = document.querySelector('.btn');
+      let timerId;     ---- вот объявил и ничего не присваиваю
+
+      function logger() {
+        console.log('Alex');
+        }
+
+
+btn.addEventListener('click', () => {
+     timerId = setInterval (logger, 3000); - вот тут ее использовал, а не как раньше объявлял const timerId = setInterval (logger, 3000);
+});
+
+clearInterval(timerId);
+
+
+Но и теперь интервал не отключится тк  в let timerId; ничего нет. Она объявлена, но в неё ничего не записано.
+поэтому реализую следующее:
+
+Мне нуже счетчик который внутри функции function logger будет отслеживать колличесво интервалов:
+
+и это буде i = 0; те изначально она равна нулю:
+
+const btn = document.querySelector('.btn');
+      let timerId;
+      i=0;
+
+
+
+
+Далее я внутри функции буду каждый раз увеличивать ее на 1:
+
+function logger() {
+    console.log('Alex');
+    i++;
+}
+
+
+
+И далле я добавлю условие: если i = 2, то код будет очищать интервал и прерывать этот цикл:
+
+if(i === 2) {
+        clearInterval(timerId);
+    }
+
+
+
+
+
+вот так это выглядит в конечном итоге:
+
+const btn = document.querySelector('.btn');
+      let timerId,
+      i = 0 ;
+
+
+btn.addEventListener('click', () => {
+     timerId = setInterval (logger, 3000);
+});
+
+
+function logger() {
+    if(i === 2) {
+        clearInterval(timerId);
+    }
+    console.log('Alex');
+    i++;
+}
+
+
+
+
+
+5. Анимация при помощи setInterval
+
+5.1
+создаю функцию и получаю элемент с которым буду взаимодействовать:
+а так же переменная позиции (let pos = 0;) с которой будет все начинаться
+
+function myAnimation() {
+    const elem = document.querySelector('.box');
+}   let pos = 0;
+
+
+5.2
+Далее мне нужна функция которая будет запускаться через промежуток времени
+и вней задаю условия 
+
+function kadr() {
+        if(pos == 300) {                   - если позиция 300 то останавливаем счетчик
+            clearInterval(start);
+        } else {                            - иначе
+            pos++;                          - начальную позицию увеличиваю на 1
+            elem.style.top = pos + 'px';    - изменяю на один пиксель позицию в инлайн стилях
+            elem.style.left = pos + 'px';
+            
+        }
+
+Осталось запустить интервал чтобы функция kadr вызывалась через каждые 50мс
+
+const start = setInterval(kadr, 50);
+
+
+И последняя вещь - запуск анимации по нажатию кнопки:
+
+btn.addEventListener('click', myAnimation);
+
+5.3
+вот конечный код:
+
+const btn = document.querySelector('.btn');
+      let timerId;
+
+function myAnimation() {
+    const elem = document.querySelector('.box');
+    let pos = 0;
+
+    const start = setInterval(kadr, 50);
+
+    function kadr() {
+        if(pos == 300) {
+            clearInterval(start);
+        } else {
+            pos++;
+            elem.style.top = pos + 'px';
+            elem.style.left = pos + 'px';
+            
+        }
+    }
+}  
+
+btn.addEventListener('click', myAnimation);

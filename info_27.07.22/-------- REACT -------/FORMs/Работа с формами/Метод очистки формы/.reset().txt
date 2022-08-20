@@ -1,0 +1,67 @@
+HTMLFormElement.reset()
+Метод HTMLFormElement.reset() восстанавливает стандартные значения всем элементам формы. 
+Данный метод выполняет действие идентичное нажатию кнопки имеющей тип reset.
+
+Если элемент управления формы (такой как кнопка типа reset) имеет имя или идентификатор reset, 
+это маскирует метод HTMLFormElement.reset(). Это не сбрасывает другие атрибуты, такие как disabled.
+
+
+addForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const userValue = addInput.value;
+              userCheck = checkbox.checked;
+
+        typeDB.type.push(userValue);
+        typeDB.type.sort();
+        createNewUserList(vehicleList, typeDB.type);
+        addForm.reset();  --------------------- вот очищаю формцу после события 'submit
+
+
+    });
+
+
+2.
+В React все немного иначе:
+
+2.1
+eturn (
+      <form className="form"
+            onSubmit={this.onPostData}>  ----- 1.обработчик событяй отслеживающий отправку формы
+            <h2>Форма обратной связи</h2>
+
+            <label htmlFor="name">Имя Фамилия</label>
+            <input
+
+2.2
+onPostData = (e) => { -------------2. сРАБАТЫВАЕТ СОБЫТИЕ и вызывается этот метод
+      e.preventDefault();  ------3. Отменяет стандартное поведение браузера
+      console.log("Ушел")
+
+axios.post('https://jsonplaceholder.typicode.com/posts', { userId: 'Alex', title: 'Test', body: this.state})  ------4. Отправляет запрос POST
+        .then(respons => {
+            console.log(respons)
+            if (respons.status === 201 ) {
+                this.setState({
+                    post: true
+                })
+                this.resetForm();  -----5. Если статус ответа 200, то вызываю метод resetForm()
+            } 
+        })
+        .catch(() => {
+            this.setState({
+                postErr: true
+            })
+        })
+
+2.3
+
+resetForm = () => { --------6. Вот вызывается метод который меняет состояние и очищает инпуты
+        this.setState({
+            ...this.state,
+            name: '',
+            email: '',
+            tel: '',
+            text: ''
+        })
+     }

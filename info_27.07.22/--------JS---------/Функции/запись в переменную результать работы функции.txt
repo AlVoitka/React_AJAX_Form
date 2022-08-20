@@ -1,0 +1,8 @@
+
+getCharacter = (id) => {
+    return this.getResource(`${this._apiBase}characters/${id}?${this._apiKey}`);  ---- тут функция возращает результат
+}
+
+getCharacter = (id) => {
+        const res = this.getResource(`${this._apiBase}characters/${id}?${this._apiKey}`);  --- тут записан в переменную результат работы 
+    }

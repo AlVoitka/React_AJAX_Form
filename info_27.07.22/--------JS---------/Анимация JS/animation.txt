@@ -1,0 +1,60 @@
+
+урок 113 курс 2
+https://developer.mozilla.org/ru/docs/Web/API/Element/animate
+
+1. Получаю элемент
+
+const     trackLess = document.querySelector('#track_less img'),  -- - левая иконка
+          trackOver = document.querySelector('#trackTwo_over img'),  ---  правая
+          btmLess = document.querySelector('#less_5'),  --- левая кнопка
+          btmOver = document.querySelector('#over_5');  -- правая
+
+2. основной синтаксис
+
+const animationTrack = trackLess.animate([], {})  
+----- вызываю метод animate и как первый аргумент передаю массив объектов  с ключевыми кадоами ( начальная, промежуточные и 
+конечная точка кадров). А втрой аргумент это объект с настройками анимации как свойства CSS
+
+
+    const trackLess = document.querySelector('#track_less img');
+
+    const animationTrack = trackLess.animate([
+        {transform: 'translateY(5px)'},   -- начальная точка
+        {transform: 'skewX(30deg)'},  --- промежутосная
+        {transform: 'skewX(30deg)'}  ---конечная точка
+    ], {
+        duration: 3000,   ---- настройки анимаци
+        iterations: Infinity  ---- https://developer.mozilla.org/ru/docs/Web/API/Element/animate    тут все свойства дял настройки
+    });
+
+    
+3.
+Управление анимацией
+Управлять онимацией можно при поможи методов- к примену начать по клику, поставить на паузц или отменить
+https://developer.mozilla.org/ru/docs/Web/API/Animation  --- тут основные методы
+
+const trackLess = document.querySelector('#track_less img'),
+          trackOver = document.querySelector('#trackTwo_over img'),
+          btmLess = document.querySelector('#less_5'),
+          btmOver = document.querySelector('#over_5');
+
+    let animationTrack;   ------ объявляю переменную в которую запишу анимацию
+    
+    btmLess.addEventListener('click', ()=> {    --- на кнопку вешаю обработчик события на клик
+        if(!animationTrack) {   ---- условие - если данной анимации не существует, то я ее создаю
+            animationTrack = trackLess.animate([
+                {transform: 'translateY(5px)'},
+                {transform: 'skewY(30deg)'},
+                {transform: 'translateX(-200px)'},
+                {filter: 'opacity(50%)'}
+            ], {
+                duration: 500,
+                iterations: 1
+            }); 
+        }
+    })
+    также можно сделать паузу на анимацтию и еще мого всего- смотреть урок
+
+
+
+

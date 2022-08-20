@@ -1,0 +1,142 @@
+2 курс урок 63
+
+Element.classList
+Свойство classList возвращает псевдомассив DOMTokenList, содержащий все классы элемента.
+
+ClassList является геттером. Возвращаемый им объект имеет несколько методов:
+
+    add( String [,String] )  - Добавляет элементу указанные классы
+
+    remove( String [,String] )  - Удаляет у элемента указанные классы
+
+    item ( Number )  - Результат аналогичен вызову сlassList[Number]
+    
+    toggle ( String [, Boolean]) - Если класс у элемента отсутствует - добавляет, если он есть - убирает.
+    
+     Когда вторым параметром передано false - удаляет указанный класс, а если true - добавляет.
+    Если вторым параметром передан undefined или переменная с typeof == 'undefined', 
+    поведение будет аналогичным передаче только первого параметра при вызове toggle.
+    contains ( String ) - Проверяет, есть ли данный класс у элемента (вернёт true или false)
+
+И, конечно же, у ClassList есть заветное свойство length, которое возвращает количество классов у элемента.
+
+
+Свойство classList возвращает псевдомассив DOMTokenList, содержащий все классы элемента.
+
+Синтаксис
+const elementClasses = elem.classList;
+Результат - псевдомассив DOMTokenList, содержащий все классы узла elem
+
+.classList.remove('benefits__img-active');  --- удаляет выбранный класс
+.classList.add('benefits__img-active');   ---- добавляет выбранный класс
+
+
+
+/////////////////////////////-----Мои примеры:------////////////////////
+
+const btns = document.querySelectorAll('button'); - тут  получен псевдомассив из 5 кнрпок
+
+console.log(btns.classList); - так не работает, у псевдомассива нет свойства!!!!!!!!!!!!!!!!!
+                             нужно обращаться к конкретному элементу.
+
+console.log(btns[0].classList); -  вот у первой кнопки есть свойство classList   
+
+
+
+1.  console.log(btns[0].classList.item(0));  -  позволяет получить класс определенного элемента 
+вот я получил касс blue у первого элемента 
+<button class="blue some"></button>,
+а чтобы поллучит some  соответсвенно  меняем  item(1) 
+
+
+
+2.  console.log(btns[0].classList.add('red'));     -  этим методом я добавляю класы
+ниже результат в консоли
+<button class="blue some red"></button>
+
+те в стилях я прописываю разные классы с разными сценариями и динамически могу их менять 
+при помощи JS
+
+
+
+3.  console.log(btns[0].classList.remove('some'));  -  так я удалил класс some
+
+
+
+4.  console.log(btns[0].classList.toggle('blue'));  - это такой переключатель
+и работает так:
+если определенный клас есть на элементе, то он будет убран, а если его нет- то добавлен
+
+
+
+5.Метод contains позволяет - позволяет проверять налечие определенного класса на элементе и возвращает булиновое значение
+если класс есть , то true
+
+
+console.log(btns[1].classList.add('red')); - вот я второй кнопке назначил клас red
+
+if(btns[1].classList.contains('red')) {   -   тут я проверил на наличие класса, получи -true и выполнил условие
+    console.log(btns[3].classList.add('black'));
+}
+
+
+6. btns[0].addEventListener('click',  () => {
+
+});
+
+обращаюсь к первой кнопке - btns[0], назначаю обработчик события и говорю чтобы он следил за кликом - addEventListener('click',
+и запускаю функцию. Далее назначаю условие:
+
+if(!btns[1].classList.contains('red')) {
+        btns[1].classList.add('red');
+    } else {
+        btns[1].classList.remove('red');
+    }
+
+дословно тут сказано, если у второй кнопки нет класса 'red', то я его буду добавлять а если он есть - то я его буду убирать.
+
+так же проверку можно тупо заменить на переключатель toggle:
+
+btns[0].addEventListener('click',  () => {
+    btns[1].classList.toggle('red');
+});
+и это тоже работает.
+
+
+
+7. Делегирование событий
+
+Допустим я имею много кнопок, но я хочу чтобы при клике на одну из них вызывалось одно и тоже событие.
+в итоге обработчик событий нужно вешать на радителя всех эти элементов.
+- получаю радителя:
+
+wrapper = document.querySelector('.btn-block');
+
+- и назначаю на него обработчик событий
+
+wrapper.addEventListener('click', (e) => {
+
+});
+
+и назначаю условие:
+
+if(e.target && e.target.tagName =="BUTTON") {
+        console.log('kon');
+    }
+
+проверяю тегнейм который будет являться button 
+а это e.target - гугловскя рекомендация
+
+wrapper.addEventListener('click', (e) => {
+    if(e.target && e.target.tagName =="BUTTON") {
+        console.log('kon');
+    }
+});
+тут код  проверяет на тэг нейи если совпадение, то выводит console.log('kon');
+
+а вообще я могу проверять не только теги но и классы:
+
+wrapper.addEventListener('click', (e) => {
+    if(e.target && e.target.classList.contains('blue')) {
+        console.log('kon');
+    }

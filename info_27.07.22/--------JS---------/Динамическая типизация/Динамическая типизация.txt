@@ -1,0 +1,58 @@
+
+ Перевожу один тип данных в другой:
+
+//////////////////// to string
+
+- при помощи метода String();
+
+console.log(typeof(String(null)));// snting
+console.log(typeof(String(4))); // string
+
+- при помощи канкотенации
+при сложении со строкой всегда получается строка.
+
+console.log(typeof(4 + 'hi')); // string
+console.log(typeof(null + 'hi')); // string
+
+
+
+пример
+
+let num = 5;
+
+console.log("http/vk.com/catalog/" + num); // http/vk.com/catalog/5
+
+
+
+
+
+
+//////////////////////// to number  
+
+
+- при помощи метода Number();
+
+console.log(typeof(Number('4'))); // number
+
+- при помощи унарного плюса
+
+console.log(typeof(+'4')); // number
+
+
+
+
+
+/////////////// to boolean
+
+0, '', NaN, undefined; - всегда false
+все остальное всегда - true
+
+- при помощи метода Boolean();
+
+console.log(typeof(Boolean('4'))); // boolean
+
+
+- при помощи оператор двойного отрицания !!
+
+console.log(typeof(!!'4')); // boolean
+

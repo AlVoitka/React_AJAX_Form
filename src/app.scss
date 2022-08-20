@@ -59,7 +59,7 @@
         border-radius: 10px;
         cursor: pointer;
         &:focus {
-            outline: 1px solid #f57507;
+            outline: 2px solid #f57507;
         }
     }
     textarea {
@@ -74,7 +74,7 @@
         border-radius: 10px;
         resize:none;
         &:focus {
-            outline: 1px solid #5204cf;
+            outline: 2px solid #5204cf;
         }
     }
     // input[type="checkbox"] {
@@ -99,13 +99,12 @@
         border: 0;
         border-radius: 10px;
         background-image: linear-gradient(257deg, #af48eb, #bb77e9);
-        cursor: pointer;
+        // cursor: pointer;
         transition: .5s all;
-        &:hover {
-            // background-image: linear-gradient(257deg, #460868, #6d398f);
-            background:  #7f2caf;
-            color: rgb(223, 238, 8);
-        }
+        // &:hover {
+        //     background-image: linear-gradient(257deg, #460868, #6d398f);
+        //     color: rgb(218, 34, 10);
+        // }
     }
     .error {
         color: #e53e3e;

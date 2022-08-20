@@ -1,0 +1,1 @@
+document.documentElement.clientHeight  - видимая часть которую видит пользователь в данный момен на сайте

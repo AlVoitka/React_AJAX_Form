@@ -20,7 +20,7 @@ import App from './components/app/app';
 
 import './index.css';
 
-import 'bootstrap/dist/css/bootstrap.min.css';  ---------вот импортирую
+import 'bootstrap/dist/css/bootstrap.min.css';  ---------вот импортирую, это тупо по документации так нужно сделать
 
 ReactDOM.render(
   <React.StrictMode>

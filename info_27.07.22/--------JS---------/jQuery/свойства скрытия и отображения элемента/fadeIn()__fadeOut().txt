@@ -1,0 +1,25 @@
+jQuery метод .fadeIn() позволяет плавно изменить прозрачность для отдельных элементов (из скрытого состояния в видимое).
+ Другими словами, метод производит анимацию изменения прозрачности выбранных элементов плавно переводя их из скрытого состояния в видимое.
+
+Обращаю Ваше внимание, что для того, чтобы перевести элемент из видимого состояния в скрытое, изменяя при этом прозрачность элемента,
+ вы можете воспользоваться jQuery методом .fadeOut().
+
+jQuery синтаксис:
+Синтаксис 1.0:
+$( selector ).fadeIn() // метод используется без параметров
+
+$( selector ).fadeIn( duration, complete ) 
+
+duration - Number, или String
+complete - Function
+
+$( selector ).fadeIn( { options } ) // option: value (описание ниже)
+
+options - PlainObject
+
+Синтаксис 1.4.3:
+$( selector ).fadeIn( duration, easing, complete ) 
+
+duration - Number, или String
+easing - String
+complete - Function

@@ -1,0 +1,21 @@
+Свойство интерфейса Element innerHTML устанавливает или получает HTML или XML разметку дочерних элементов.
+
+Примечание: Если узлы <div>, <span>, или <noembed> (en-US) имеют дочерние текстовые узлы, содержащие символы (&), 
+(<), или (>), innerHTML вернёт эти символы как &amp, &lt и &gt соответственно. Используйте Node.textContent для 
+получения правильной копии содержимого этих текстовых узлов. 
+ Чтобы вставить HTML в документ, не меняя содержимое элемента, используйте insertAdjacentHTML().
+
+
+ Пример
+
+ const counters = document.querySelectorAll('.skills__ratings-counter'),
+      lines = document.querySelectorAll('.skills__ratings-line span');
+
+      counters.forEach( (item, i) => {
+        lines[i].style.width = item.innerHTML;
+      }); 
+
+      
+lines[i].style.width = item.innerHTML;  -- у выбранного конкретного элементва меняю инлайн стили в частности ширину
+      и присваиваю ему значение = item.innerHTML ( то значение что прописано у 
+      каждого из элементов в блоках <div class="skills__ratings-counter">85%</div>)

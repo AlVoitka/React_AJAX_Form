@@ -1,0 +1,24 @@
+1.
+Чтобы удалить ранее установленный пакет локально(с помощьюnpm install <package-name>вnode_modulesпапка, запустить
+
+npm uninstall <package-name>
+
+из корневой папки проекта (папки, содержащей папку node_modules).
+
+С использованием-Sфлаг, или--save, эта операция также удалит ссылку вpackage.jsonфайл.
+
+Если пакет был зависимостью разработки, перечисленной в devDependencies файлаpackage.jsonфайл, 
+вы должны использовать-D/--save-devфлаг, чтобы удалить его из файла:
+
+npm uninstall -S <package-name>
+npm uninstall -D <package-name>
+
+
+
+2.
+Если пакет установлен лобально, вам нужно добавить-g/--globalфлаг:
+
+npm uninstall -g <package-name>
+Например:
+
+npm uninstall -g webpack

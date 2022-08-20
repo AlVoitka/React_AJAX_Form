@@ -1,0 +1,15 @@
+
+
+const product = {  ----- есть объект с двумя свойствами
+    name: 'TV',
+    price: 59
+}
+
+function addNew = ()=> { ------------ вызвал функцию которая добавит третье свойство  status = 'order'
+    product.status = 'order'
+    console.log(product); //      product = {
+                                           name: 'TV',
+                                            price: 59,
+                                            status; 'order'  
+                                        }
+}

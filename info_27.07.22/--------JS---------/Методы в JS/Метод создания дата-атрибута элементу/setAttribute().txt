@@ -1,0 +1,10 @@
+.setAttribute()
+Добавляет новый атрибут или изменяет значение существующего атрибута у выбранного элемента.
+
+Синтаксис
+element.setAttribute(name, value); -- принимает 2 аргумента
+name - имя атрибута (строка).
+value  - значение атрибута.
+
+var b = document.querySelector("button");
+b.setAttribute("disabled", "disabled");

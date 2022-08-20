@@ -4,6 +4,7 @@ import InputMask from "react-input-mask";
 
 
 
+
 class Form extends Component {
 
     constructor(props) {
@@ -14,12 +15,29 @@ class Form extends Component {
             tel: '',
             text: '',
             focus: false,
+            blur: false,
             post: false,
             postErr: false
         }
     }
 
+    resetForm = () => {
+        this.setState({
+            ...this.state,
+            name: '',
+            email: '',
+            tel: '',
+            text: ''
+        })
+     }
+
     onValueChange = (e) => {
+       this.setState({
+            [e.target.name] : e.target.value
+        })
+    }
+
+    onValueChangeName = (e) => {
        this.setState({
             [e.target.name] : e.target.value.toUpperCase()
         })
@@ -28,13 +46,15 @@ class Form extends Component {
    
 
     onFocusChange = (e) => {
+        console.log('focus')
         this.setState({
             focus : true
         })
     }
     onBlurChange = (e) => {
+        console.log('blur')
         this.setState({
-            focus : false
+            blur : true
         })
     }
 
@@ -85,7 +105,8 @@ class Form extends Component {
             if (respons.status === 201 ) {
                 this.setState({
                     post: true
-                }) 
+                })
+                this.resetForm();
             } 
         })
         .catch(() => {
@@ -93,16 +114,19 @@ class Form extends Component {
                 postErr: true
             })
         })
+
     }
 
     render() {
 
-        const {name, email, tel, text, focus, post, postErr} = this.state;
+        const {name, email, tel, text, focus, blur, post, postErr} = this.state;
 
-        const error = name.length < 3  && focus,
-              errorEnail = !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(email) && focus,
-              erroreText = text.length < 10  && focus,
-              erroreTel = !/^(\+7|7|8)?[\s\-]?\(?[489][0-9]{2}\)?[\s\-]?[0-9]{3}[\s\-]?[0-9]{2}[\s\-]?[0-9]{2}$/i.test(tel) && focus
+        // const errorName =  name.length < 3 && focus && !/^[a-zA-Z]+$/i.test(name),
+        const errorName =  name.length < 3 && blur && !/^[a-zA-Z]+$/i.test(name),
+              errorEmail = !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(email) && blur,
+              erroreText = text.length < 10  && blur,
+              erroreTel = !/^(\+7|7|8)?[\s\-]?\(?[489][0-9]{2}\)?[\s\-]?[0-9]{3}[\s\-]?[0-9]{2}[\s\-]?[0-9]{2}$/i.test(tel) 
+                            && blur && tel.length < 10
 
 
         return (
@@ -116,11 +140,11 @@ class Form extends Component {
                     name="name"
                     type="text"
                     value={name}
-                    onChange={this.onValueChange}
-                    // onFocus={this.onFocusChange}
-                    // onBlur={this.onBlurChange}
+                    onChange={this.onValueChangeName}
+                    onFocus={this.onFocusChange}
+                    onBlur={this.onBlurChange}
                 />
-                { error ? <div className='error'>Не корректно!</div> : null}
+                { errorName ? <div className='error'>Введите от 3 до 20 симаолов!</div> : null}
     
                 <label htmlFor="email">E-mail</label>
                 <input
@@ -132,10 +156,11 @@ class Form extends Component {
                     onFocus={this.onFocusChange}
                     onBlur={this.onBlurChange}
                 />
-                { errorEnail ? <div className='error'>Это неверный адрес!</div> : null}
+                { errorEmail ? <div className='error'>Введите корректный email адрес!</div> : null}
     
                 <label htmlFor="phone">Номер телефона</label>
                 <InputMask 
+                        id='tel'
                         name="tel" 
                         mask="+7(999)999-99-99" 
                         onChange={this.props.onChange}
@@ -144,7 +169,7 @@ class Form extends Component {
                         onInput={this.onValueChange}
                         onFocus={this.onFocusChange}
                         onBlur={this.onBlurChange}/>
-                { erroreTel ? <div className='error'>Не корректный номер!</div> : null}
+                { erroreTel ? <div className='error'>Введите корректный номер!</div> : null}
     
                 <label htmlFor="date">Дата рождения</label>
                 <input
@@ -162,7 +187,7 @@ class Form extends Component {
                     onFocus={this.onFocusChange}
                     onBlur={this.onBlurChange}
                 />
-                { erroreText ? <div className='error'>Этого не достаточно</div> : null}
+                { erroreText ? <div className='error'>Более 10 символов</div> : null}
             
                 <button type="submit"
                         name="submit">

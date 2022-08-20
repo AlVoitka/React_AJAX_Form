@@ -1,0 +1,33 @@
+
+рекурсия - по простому, это когда функция вызывает сама себя внутри.
+
+Была функция которая при клике формировала список из элементов, при удалении одного из элементов нумерация в сбивалась, тк удалялся элемент 
+с номером. решение- это применить рекурсию, функция вызывалась снова внутри себя и тем самым после удаления формировала новый список 
+без удаленного элемента с правильной нумерацией.
+
+    Тоесть после удаления элемента, снова вызывается сама функция внутри себя и рендерит заново список без удаленного элемента:
+    
+
+    function createNewUserList (list, DB) {
+
+        list.innerHTML = "";
+
+        DB.forEach((vehicle,i) => {
+            list.innerHTML += `
+            <li class="interactive__interactive-item">${i + 1} ${vehicle}
+                <div class="delete"></div>
+            </li>
+            `
+        });
+
+        document.querySelectorAll('.delete').forEach((btn, i) =>{
+            btn.addEventListener('click', () =>{
+                btn.parentElement.remove();
+                typeDB.type.splice(i, 1);
+
+                createNewUserList(vehicleList, typeDB.type);  ----- вот сама функция вызывается внутри себя повторно
+            })
+        })
+        
+    }
+    createNewUserList(vehicleList, typeDB.type);

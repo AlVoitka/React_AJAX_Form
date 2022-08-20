@@ -1,0 +1,119 @@
+https://www.youtube.com/watch?v=WADswtZB-qg&t=48s
+
+
+import './app.scss';
+import {useEffect, useState} from 'react'; 
+
+
+const FormTest1 = () => {
+
+    const [email, setEmail] = useState('') ---1. Изначальное остояние для емейла и пороля,- пустая строка и сюда юуду добавлять значение
+    const [password, setPassword] = useState('')  ----1.       которое будет находится при вводе в импутах
+ 
+    const [emailDirty, setEmailDirty] = useState(false)  ---2. Создаю два состояния для импутов, которое будет отображать были лип юзер в 
+    const [passwordDirty, setPasswordDirty] = useState(false)  --2.          импуте или нет
+
+    const [emailError, setEmailError] = useState('email is not correct')  ----3. два Состояния для ошибок
+    const [passwordError, setPasswordError] = useState('possword is not correct') ---3. 
+
+    const [formValid, setFormValid] = useState(false) ------10.2 Состояние проверяющее валидна форма или нет
+    
+
+    useEffect(()=> { --10. Проверяю все импуты на правильное заполнение (в этот хук передается 2 аргумена, 1-функция, 2 -массив зависимостей)
+        if(emailError || passwordError) { ---10.3 -- если есть одна ошибки то фоорма не валидна
+            setFormValid(false)
+        } else {
+            setFormValid(true)  ---- иначе, если ошибок не возникло - меняю состояние на тру - форма валидна
+        }
+    }, [emailError, passwordError])  ---10.1 - это массив зависимостей и если ктото из них изменяется, то функция (первый аргумент)
+                                       будет вызываться
+                                   
+
+
+
+    const emailHandler = (e) => {  -------8.  метод по изменению состояния
+        setEmail(e.target.value)  ----меняю на то, что находится в значении текущего таргета (синхронно меняется на то что вводит юзер)
+
+        const re =
+            /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+
+        if(!re.test(String(e.target.value).toLocaleLowerCase())) { --- если, то что находится внутри импута(e.target.value) в данный момент 
+                                                                    !не соответсвует re
+            setEmailError("Please enter a valid email")  ---то, записываю с состояние ошибки строку
+        } else {
+            setEmailError('')   ---- а в случае если все нориально, то обнуляем состояние emailError 
+        }  
+    }
+
+    const passwordHandler = (e) => {    -------8.  метод по изменению состояния
+        setPassword(e.target.value)   ----меняю на то, что находится в значении текущего таргета (синхронно меняется на то что вводит юзер)
+
+        if (e.target.value.length < 3 || e.target.value.length > 8) {
+            setPasswordError('3-8 symbol')
+            if (!e.target.value) {    --------- и еще если  импут начнут писат на потом оставят пустым
+                setPasswordError('Not fool')     ---- в состояние запишу строку
+            }
+        } else {
+            setPasswordError('')
+        }
+    }
+
+
+    const blurHandler = (e) => { ---------6. Конструкцией свич проверяем по атрибуту name что заданы в импутах:
+        switch (e.target.name) { 
+            case 'email':         ---- если эвент сработал в импуте с атрибутом name:"email"
+                setEmailDirty(true)  --- значит изменяем его состояние на true
+                break
+            case 'password':       ---- если эвент сработал в импуте с атрибутом name: "password"
+                setPasswordDirty(true)   --- Значит изменим тут состояние на true
+                break
+        }       
+    }
+
+
+    return (
+        
+        <form className="form" >
+           
+            <h2>Registracion</h2>
+
+            <input
+                name="email"
+                type="text"
+                placeholder='Enter your email ...'
+                value={email}  --- 7. делаю импут управляемым и передаю в него состояние email - это пкстая строка ' '
+                                и теперь в импуты ничего не пишится, тк состояние теперь нужно изменять и сразу валидировать!!!
+                onBlur={e => blurHandler(e)} -----5. Вешаю обработчики на событие (уход из фокуса инпута) и вызываю функцию blurHandler
+                
+                onChange={e => emailHandler(e)}   --- 9. Вешаю обработчик на изменения, по событию вызовет функцию  
+            />
+            {(emailDirty && emailError) && <div style={{color: 'red'}}>{emailError}</div>} -----4. Тут будет появлятся блок с ошибкой, если:
+                                                            emailDirty - true теесть импут был активен
+                                                            emailError  - и  в импуте ошибка   
+                                                            то выводим состояние  {emailError} - а это строка  'email is not correct'        
+            <input
+                name="password"
+                type="password"
+                placeholder='Enter your password ...'
+                value={password}  --- 7. делаю импут управляемым и передаю в него состояние password - это пкстая строка ' '
+                                    и теперь в импуты ничего не пишится, тк состояние теперь нужно изменять и сразу валидировать!!!
+                onBlur={e => blurHandler(e)} -----5. Вешаю обработчики на событие (уход из фокуса инпута) и вызываю функцию blurHandler
+
+                onChange={e => passwordHandler(e)}  --- 9. Вешаю обработчик на изменения, по событию вызовет функцию
+            />
+            {(passwordDirty && passwordError) && <div style={{color: 'red'}}>{passwordError}</div>} -----4. Тут по аналогии
+
+            <button 
+                disabled={!formValid}  -----11. Делаю кнопу неактивной аргументом disabled и отрицание валидности формы.
+                                      тоесть- форма невалидна? значит disabled
+                type="submit"
+            >
+                {formValid ? <div>Sing in</div> : <div>Fill form</div>}
+            </button>
+           
+        </form>
+    )
+
+}
+
+export default FormTest1;

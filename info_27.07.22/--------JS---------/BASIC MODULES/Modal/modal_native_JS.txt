@@ -1,0 +1,291 @@
+
+
+Как сверстать и какие нужны элементы вся инфа в описании по созданию окон на jQuerry
+
+1. 
+Назаначаю триггеру ( элемент на котором начинается взаимодействие) дата атрибут 
+(data-modal к примеру  после черточки можно писать все что угодно):
+если триггеров несколько, то  каждому из них назначаю:
+
+<button data-modal class="btn_promo">I want it</button>
+
+2.
+так же назначаю дата-атрибут data-close на кнопки по закрытию модальных окно:
+
+<div class="overlay-JS"> 
+
+        <div class="modal-JS" id="feedback-JS"> 
+            <div data-close class="modal-JS__close">&times;</div> -----------вот
+            <div class="modal-JS__subtitle">get a discount</div>
+            <div class="modal-JS__descr">leave your number and you will be contacted within 15 minutes</div>
+            <form class="form-JS">
+                <input name="phone" required placeholder="Phone" type="number">
+                <button class="btn_modal-JS">send</button>
+            </form>
+        </div>
+
+        <div class="modal-JS" id="success-JS"> 
+            <div data-close class="modal-JS__close">&times;</div>  -----------вот
+            <div class="modal-JS__subtitle">Success</div>
+            <div class="modal-JS__descr">Will call you within 15 minutes</div>
+        </div>
+
+    </div>
+
+
+3. 
+Получаю элементы:
+
+    const modalTrigger1 = document.querySelector('[data-modal]');  ----- триггер первого окна
+   const modalTrigger2 = document.querySelector('[data-modalSuccss]'); ----- триггер кнопка внутри окна
+   const overlay = document.querySelector('.overlay-JS');   ------ оверлей
+   const modalFeedback = document.querySelector('#feedback-JS'); ---- само модальное окно
+   const modalSucces = document.querySelector('#success-JS');   ----- второе окно с успехом
+   const modalCloseFB = document.querySelector('[data-closeFB]');   ----- крестик для первого
+   const modalCloseSC = document.querySelector('[data-closeSC]');   ----- крестик для второго
+
+
+4. Основная концепция - я буду менять стили для элементов
+У меня есть оверлей и два модальных окна. Они сейчас в позиции display: none; 
+так вот при помощи скрипта я буду менять display: none;  на display: block;
+(Так же можно это сделать не с инлайн стилями, а с активацией  или переключением классв в CSS
+при помощи classList:
+overlay.classList.add('show');  --- добавляю новый класс к элементу
+overlay.classList.remove('hide'); ---удаляю тот чтобыл
+
+или можно исплдьзовать toggle:
+overlay.classList.toggle('show');  - если на элементе нет такого класса, то он его добавит, а если есть то уберет
+
+5.
+Вешаю обработчик на первый триггер:
+
+    modalTrigger1.addEventListener('click', () => {
+       overlay.style.display="block";            ---------- активирую оверлей
+       modalFeedback.style.display="block";  ----------- активирую первое модальное окно
+   })
+
+6.
+Вешаю обработчик на крестик для закрытия окна:
+
+    modalCloseFB.addEventListener('click', ()=> {
+        overlay.style.display="none";         ------ скрываю оверлей 
+        modalFeedback.style.display="none";  --------скрываю окно
+   })
+
+7.
+ Вешаю обработчик на второй триггер ( это кнопка уже внутри первого окна):
+
+    modalTrigger2.addEventListener('click', (e) => {  ----передаю эвент объект события
+        e.preventDefault();              ----------- и отключаю станд повед браузера, чтобы не перезагружал страницу
+        overlay.style.display="block";
+        modalSucces.style.display="block";   -----активирую второе окно суспехом
+        modalFeedback.style.display="none";  -----первую моталку скрываю
+    }) 
+
+8.
+вешаю обработчик на крестик второго окна - успех:
+
+        modalCloseSC.addEventListener('click', ()=> {
+            overlay.style.display="none";          -----закрываю окна
+            modalSucces.style.display="none";
+        })
+
+
+8. Оптимизирую код:
+Я получаю два крестика на каждом из модалок по отдельности, и назначаю обработчики для каждого из крестиков:
+
+    const modalCloseFB = document.querySelector('[data-closeFB]');   ----- крестик для первого
+   const modalCloseSC = document.querySelector('[data-closeSC]');   ----- крестик для второго
+
+а сейчас я в HTML задам им одинаковый атрибут data-close, и получу их в псевдомассив:
+
+const modalClose = document.querySelectorAll('[data-close]');
+
+И теперь переберу псевдомассив и назначу на каждый элемент обработчик:
+
+    modalClose.forEach(item => {
+        item.addEventListener('click',()=> { ---- на каждый элемент вешаю обработчик
+            overlay.style.display="none";      ---- скрываю оверлей
+            modalFeedback.style.display="none";   ---- скрываю первое окно
+            modalSucces.style.display="none";  ----- и вторе
+        })
+        
+    })
+
+
+9. При активном модальном окне существуе возможность скроллить страницу, это плохо и нужно решать:
+для этого задам в инлайн стилях, для свойства overflow , позицию hidden не позволяющий прокручивать страницу:
+
+    modalTrigger1.addEventListener('click', () => {
+       overlay.style.display="block";
+       modalFeedback.style.display="block";
+       document.body.style.overflow="hidden";   ------ вот отключил прокрутку
+   })
+
+ну и конечно нужно чтобы скорол начал работать после закрытия окна:
+
+    function closeModal() {
+        overlay.style.display="none";
+        modalFeedback.style.display="none";
+        modalSucces.style.display="none";
+        document.body.style.overflow="";  --- оставляю пустые кавычки и браузер сам решит чтго нужно ему по дефолту
+    }
+
+10. Если заказчик хочет чтобы модалка закрвывалась не только по клику на крестик, но и на любую облась оверлея:
+
+    overlay.addEventListener('click', (e)=> {
+        if(e.target === overlay) {
+            overlay.style.display="none";
+            modalFeedback.style.display="none";
+            modalSucces.style.display="none";
+        }
+    })
+
+на обложку вешаю обработчик на клик, и ставлю условие
+если e.target объект события строго равен оверлею, то просто все скрываем. Если не использовать объект события,
+то модалка закрывается даже когда нажимаю на само окно.
+
+11. Еще одна оптимизация.
+Если участок кокого-то кода повторяется, хотябы один раз- то его нужно выноситьт в функцию.
+У меня нажатие на крестик и оверлей дублируется:
+            overlay.style.display="none";   
+            modalFeedback.style.display="none";
+            modalSucces.style.display="none";
+
+
+поэтому создам функцию:
+
+    function closeModal() {
+        overlay.style.display="none";
+        modalFeedback.style.display="none";
+        modalSucces.style.display="none";
+    }
+
+ ----------и в первом случае я ее передам как аргумент:
+ было:
+
+    modalClose.forEach(item => {
+        item.addEventListener('click',()=> { 
+            overlay.style.display="none";     
+            modalFeedback.style.display="none";   
+            modalSucces.style.display="none";  
+        })
+    })
+
+    modalClose.forEach(item => {
+        item.addEventListener('click', closeModal)
+    })  
+
+------------- а во втором вызуву ее внутри функции тек ее нужно выполнить после условия:
+было:
+
+    overlay.addEventListener('click', (e)=> {
+        if(e.target === overlay) {
+            overlay.style.display="none";
+            modalFeedback.style.display="none";
+            modalSucces.style.display="none";
+        }
+    })
+
+
+стало:
+
+    overlay.addEventListener('click', (e)=> {
+        if(e.target === overlay) {
+           closeModal();
+        }
+    })
+
+
+
+12. 
+Создам setTimeout - чтотбы появлялось модальное окно через 6 секунд после входа
+юзера на страницу.
+
+для этого созам переменную:
+
+const modalTimerId = setTimeout(); 
+
+туда нужно поместить функционал по открытию окна, но у меня уже он есть навешенный  на первую кнопку:
+
+    modalTrigger1.addEventListener('click', () => {
+       overlay.style.display="block";
+       modalFeedback.style.display="block";
+       document.body.style.overflow="hidden";
+   })
+
+и чтобы не дублироавать код, я создам функцию и бужду ее использовать:
+
+    function openModal_1() {
+        overlay.style.display="block";  ------------- вот я в нее перенес функционал по открытию
+        modalFeedback.style.display="block";
+        document.body.style.overflow="hidden";
+    }    
+
+и теперь в обработчике ее рспользую:
+
+так было:
+modalTrigger1.addEventListener('click', () => {
+   })
+
+так стало:
+modalTrigger1.addEventListener('click', openModal_1);
+
+
+12.1 
+Но если к примеру юзер в течении этих 6 секунд успел уже нажать на кнопку и активировать это окно, естественно посторное его появление 
+по средствам setTimeout это не корректная работа, нужно отключить setTimeout если пользователь уже его просмотрел:
+
+    function openModal_1() {
+        overlay.style.display="block";
+        modalFeedback.style.display="block";
+        document.body.style.overflow="hidden";
+        clearTimeout(modalTimerId);  -----------  вот активирую clearTimeout если юзер сам вызвал окно
+    }
+
+
+13.
+Создам функционал, чтобы модалка активировалась при скролинге страницы до определенного значения в пикселях по событию scroll:
+
+- обращаюсбь к окну виндувс (видимая зона экрана юзера) и вешаю обработчик на скролл
+
+    window.addEventListener('scroll', ()=> {
+        if(window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
+            openModal_1();
+        }
+    })
+
+разбор:
+window.pageYOffset - прокрученная часть
+document.documentElement.clientHeight  - видимая часть которую видит пользователь в данный момен на сайте
+ и если ех сумма больше либо равна
+document.documentElement.scrollHeight - полная прокрутка или полный сайт 
+
+как только они совпадают, значит пользователь долистал до конца страницы.
+И если это произошло то срабатывает условие - openModal_1(); функция по открытию окна
+
+13.1 Модальное окно появляется постоянно при прокрутке до самого низа, это плохое поведение. Нужно только чтобы один раз
+окно отработало. Для этого буду удалять обработчик после ого как он сработает 1 раз.
+
+Для этого я создам функцию
+и в нее помещу функционал что открывает окно в конце cтраницы:
+
+    function showModalByScroll() {
+        if(window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
+            openModal_1();
+        }
+    }
+
+ и уже в обработчик передаю эту функцию:
+
+ window.addEventListener('scroll', showModalByScroll); 
+
+ и теперь удаляю обработчик после того как он отработает 1 раз:
+
+    function showModalByScroll() {
+        if(window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
+            openModal_1();
+            window.removeEventListener('scroll', showModalByScroll); ---- вот так и нужно передат событие и функцию
+        }
+    }  
+

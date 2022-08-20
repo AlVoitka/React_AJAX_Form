@@ -1,0 +1,41 @@
+
+Условный (тернарный) оператор
+Условный (тернарный) оператор - единственный оператор в JavaScript, принимающий три операнда: условие, 
+за которым следует знак вопроса (?), затем выражение, которое выполняется, если условие истинно, сопровождается двоеточием (:), 
+и, наконец, выражение, которое выполняется, если условие ложно. 
+Он часто используется в качестве укороченного варианта условного оператора if.
+
+Синтаксис
+условие ? выражение1 : выражение2 
+
+Пример:
+
+var stop = false, age = 23;
+
+age > 18 ? (
+    alert("Хорошо, вы можете продолжить."),
+    location.assign("continue.html")
+) : (
+    stop = true,
+    alert("Простите, вы ещё так юны!")
+);
+
+
+Реальный пример:
+
+_transformCharacter = (char) => {
+        return {
+            name: char.name,
+            description: char.description ? `${char.description.slice(0, 210)}...` : 'There is no description for this character',
+            thumbnail: char.thumbnail.path + '.' + char.thumbnail.extension,
+            homepage: char.urls[0].url,
+            wiki: char.urls[1].url
+        }
+    }
+
+
+СВойство которое должно подгрузить описание:
+description: char.description ? `${char.description.slice(0, 210)}...` : 'There is no description for this character',
+
+Тут использую тернарный оператор ? :
+если условие выполнитсся и инфа подгрузится, то ок, если нет то будет сообщение - 'There is no description for this character',

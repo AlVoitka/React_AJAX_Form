@@ -1,0 +1,71 @@
+
+Оператор typeof
+С помощью оператора typeof можно получить тип переменной:
+
+let id;
+console.log(typeof id);       // undefined
+ 
+id = 45;
+console.log(typeof id);   // number
+ 
+id = 45n;
+console.log(typeof id);     // bigint
+ 
+id = "45";
+console.log(typeof id);     // string
+
+Стоит отметить, что для значения null оператор typeof возвращает значение "object", несмотря на то, 
+что согласно спецификации JavaScript значение null представляет отдельный тип.
+
+
+
+
+Оператор typeof возвращает строку, указывающую тип операнда. Синтаксис вызова этого оператора: typeof operand. 
+Например:
+
+
+// Числа
+console.log(typeof 42); // "number"
+console.log(typeof Infinity); // "number"
+console.log(typeof NaN); // "number", несмотря на то, что смысл этого значения "Not-A-Number" (не число)
+
+
+// Строки
+console.log(typeof "строка"); // "string"
+
+
+let name = "Василий";
+console.log(typeof `Привет, ${name}`); // "string"
+
+
+// Булевы значения
+console.log(typeof true); // "boolean"
+console.log(typeof false); // "boolean"
+
+
+// Символы
+console.log(typeof Symbol()); // "symbol"
+
+
+// undefined
+let declaredButUndefinedVariable;
+console.log(typeof declaredButUndefinedVariable); // "undefined";
+
+
+// Объекты
+console.log(typeof { a: 1 }); // "object"
+console.log(typeof [1, 2, 3]); // такая структура данных, как массив, тоже "object"
+
+Но есть два значения, для которых оператор typeof не совсем корректно отражает их тип:
+Значение null, для него typeof возвращает тип “object”, что является официально признанной ошибкой в языке, 
+которая сохраняется для совместимости. На самом деле это не объект, а отдельный тип данных null.
+
+
+// null
+console.log(typeof null); // "object"
+Для функций оператор typeof возвращает тип “function”, хотя в действительности функция не является отдельным встроенным типом языка, 
+и является подвидом объекта, как и другие структуры данных.
+
+
+// function
+console.log(typeof function() {}); // "function"

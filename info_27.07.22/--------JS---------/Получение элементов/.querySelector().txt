@@ -1,0 +1,11 @@
+https://itchief.ru/javascript/get-elements
+
+Document метод querySelector() возвращает первый элемент (Element) документа, который соответствует 
+указанному селектору или группе селекторов. Если совпадений не найдено, возвращает значение null.
+
+Синтаксис
+element = document.querySelector(selectors);
+
+    const next = document.querySelector('.aboutAs__sliderJS-next');  -- получение по селектору
+    const total = document.querySelector('#total');                   --- по ID
+    let elem = document.querySelector('button');           -- по тэгу
