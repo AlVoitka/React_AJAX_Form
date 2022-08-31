@@ -2,6 +2,9 @@
 import './app.scss';
 import {useEffect, useState} from 'react'; 
 import InputMask from "react-input-mask";
+import axios from "axios";
+import SuccessModal from './SuccessModal';
+import ErrorModal from './ErrorModal';
 
 
 const FormCV = () => {
@@ -11,6 +14,7 @@ const FormCV = () => {
     const [phone, setPhone] = useState('')
     const [date, setDate] = useState('')
     const [massage, setMassage] = useState('')
+    const [post, setPost] = useState(false)
 
 
     const [nameDirty, setNameDirty] = useState(false)
@@ -25,8 +29,12 @@ const FormCV = () => {
     const [phoneError, setPhoneError] = useState('Invalid phone number')
     const [dateError, setDateError] = useState('Invalid date')
     const [massageError, setMassageError] = useState('Size must be between 10 and 300')
+    const [postError, setPostErrore] = useState(false)
 
     const [formValid, setFormValid] = useState(false)
+    const [isModalOpen, setModalOpen] = useState(false);
+    const [isModaErrlOpen, setModalErrOpen] = useState(false);
+    
     
 
     useEffect(()=> {
@@ -44,7 +52,7 @@ const FormCV = () => {
         const reg = /^[a-zA-Z]{3,30}(?:  +[a-zA-Z]{3,30})$/i;
 
         if(!re.test(e.target.value)) {
-            setNameError("Please enter a valid Name end Surname")
+            setNameError("Please enter a valid Name end Surname. Only latin letters!")
             if (e.target.value.length < 3 || e.target.value.length > 30) {
                 setNameError('Size Name and Surename must be between 3 and 30 ')
             }
@@ -80,7 +88,7 @@ const FormCV = () => {
         const re = /^(\+7|7|8)?[\s\-]?\(?[489][0-9]{2}\)?[\s\-]?[0-9]{3}[\s\-]?[0-9]{2}[\s\-]?[0-9]{2}$/i;
 
         if (!re.test(e.target.value)) {
-            setPhoneError('Invalid phone number')
+            setPhoneError('Invalid phone number.  Expected +7(8--)--- -- --   or   +7(9--)--- -- --')
             if (!e.target.value) {
                 setPhoneError('Number phone cannot be empty')
             }
@@ -115,6 +123,11 @@ const FormCV = () => {
         }
     }
 
+    const focusHandler = (e) => {
+        e.target.type="date"
+        
+    }
+
     
 
 
@@ -139,9 +152,46 @@ const FormCV = () => {
     }
 
 
+
+
+    const onPostData = (e) => {
+        e.preventDefault()
+        console.log("Ушел")
+
+        axios.post('https://jsonplaceholder.typicode.com/posts', { userId: 'Alex', title: 'Test', body: name})
+        .then(respons => {
+            console.log(respons)
+            if (respons.status === 201 ) {
+                setPost(true)
+                setModalOpen(true)
+                resetForm()
+
+            } 
+        })
+        .catch(() => {
+            // setPostErrore('true')
+            setModalErrOpen(true)
+        })
+    }
+
+    const resetForm = () => {
+        setName('')
+        setEmail('')
+        setPhone('')
+        setDate('')
+        setMassage('')
+    }
+
+
+
+
     return (
-        
-        <form className="form" >
+
+        <>
+        <form className="form"
+            name='form'
+            onSubmit={e => onPostData(e)}
+        >
            
             <h2>Feedback form</h2>
 
@@ -184,7 +234,9 @@ const FormCV = () => {
                 <input
                     id="date"
                     name="date"
-                    type="date"
+                    type="text"
+                    placeholder="Enter Date of Birth"
+                    onFocus={e => focusHandler(e)}
                     value={date}
                     onBlur={e => blurHandler(e)}
                     onChange={e => dateHandler(e)}
@@ -203,14 +255,48 @@ const FormCV = () => {
             {(massageDirty && massageError) && <div style={{color: 'red'}}>{massageError}</div>}
 
 
-            <button 
+            {/* <button 
                 disabled={!formValid}
+                style={{backgroundColor: 'red', backgroundImage:'none'}}
                 type="submit"
             >
-                {formValid ? <div>Sing in</div> : <div style={{color: 'black'}}>Fill correct form</div>}
-            </button>
+                {formValid ? <div>Sing in</div> : <div style={{color: 'red'}}>Fill correct form</div>}
+            </button> */}
+
+            { formValid ?   <button 
+                            style={{backgroundColor: 'green', backgroundImage:'none'}}
+                            type="submit"
+                            >
+                                <div>Sing in</div> 
+                            </button>
+
+                        : 
+                        
+                            <button 
+                                disabled={!formValid}
+                                style={{backgroundColor: 'red', backgroundImage:'none'}}
+                                type="submit"
+                            >
+                                <div>Fill correct form</div>
+                            </button> }
+
+
+            {/* {post ? <div style={{color: 'red'}}>Succse</div> : null } */}
+            {/* {postError ? <div style={{color: 'red'}}>Error</div> : null } */}
            
         </form>
+
+        <SuccessModal
+        modalOpen={isModalOpen}
+        modalClose={() => setModalOpen(false)}
+        />
+
+        <ErrorModal
+        modalErrOpen={isModaErrlOpen}
+        modalErrClose={() => setModalErrOpen(false)}
+        />
+
+        </>
     )
 
 }
