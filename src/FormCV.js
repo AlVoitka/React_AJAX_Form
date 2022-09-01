@@ -29,7 +29,7 @@ const FormCV = () => {
     const [phoneError, setPhoneError] = useState('Invalid phone number')
     const [dateError, setDateError] = useState('Invalid date')
     const [massageError, setMassageError] = useState('Size must be between 10 and 300')
-    const [postError, setPostErrore] = useState(false)
+    // const [postError, setPostErrore] = useState(false)
 
     const [formValid, setFormValid] = useState(false)
     const [isModalOpen, setModalOpen] = useState(false);
@@ -99,7 +99,7 @@ const FormCV = () => {
 
     const dateHandler = (e) => {
         setDate(e.target.value)
-        const re = /^\d{4}\-(0?[1-9]|1[012])\-(0?[1-9]|[12][0-9]|3[01])$/i;
+        const re = /^((((19|[2-9]\d)\d{2})\-(0[13578]|1[02])\-(0[1-9]|[12]\d|3[01]))|(((19|[2-9]\d)\d{2})\-(0[13456789]|1[012])\-(0[1-9]|[12]\d|30))|(((19|[2-9]\d)\d{2})\-02\-(0[1-9]|1\d|2[0-8]))|(((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))\-02\-29))$/;
 
         if (!re.test(e.target.value)) {
             setDateError('Invalid date')
@@ -125,7 +125,6 @@ const FormCV = () => {
 
     const focusHandler = (e) => {
         e.target.type="date"
-        
     }
 
     
@@ -165,11 +164,10 @@ const FormCV = () => {
                 setPost(true)
                 setModalOpen(true)
                 resetForm()
-
+                setFormValid(false)
             } 
         })
         .catch(() => {
-            // setPostErrore('true')
             setModalErrOpen(true)
         })
     }
@@ -235,6 +233,7 @@ const FormCV = () => {
                     id="date"
                     name="date"
                     type="text"
+                    // min="1920-01-01" max="2010-12-31"
                     placeholder="Enter Date of Birth"
                     onFocus={e => focusHandler(e)}
                     value={date}
@@ -264,7 +263,7 @@ const FormCV = () => {
             </button> */}
 
             { formValid ?   <button 
-                            style={{backgroundColor: 'green', backgroundImage:'none'}}
+                            style={{backgroundColor: '#af48eb',  backgroundImage:'none'}}
                             type="submit"
                             >
                                 <div>Sing in</div> 
@@ -274,7 +273,7 @@ const FormCV = () => {
                         
                             <button 
                                 disabled={!formValid}
-                                style={{backgroundColor: 'red', backgroundImage:'none'}}
+                                style={{backgroundColor: '#af48eb', opacity:'0.3', backgroundImage:'none'}}
                                 type="submit"
                             >
                                 <div>Fill correct form</div>
